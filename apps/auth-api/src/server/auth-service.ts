@@ -50,6 +50,11 @@ interface AuthServiceOptions {
   repository: AuthRepository;
   delivery: EmailCodeDelivery | null;
   exposeDevelopmentCode?: boolean;
+  /**
+   * Self-hosted only: the hash (base64url SHA-256 of the normalized code) of a fixed sign-in code for
+   * each listed email. That email signs in with its fixed code and gets no email, as with a password.
+   */
+  staticCodeHashes?: ReadonlyMap<string, string>;
   now?: () => number;
   flushSessionRevocations?: () => Effect.Effect<void, RemoteFailure>;
   profileChanged?: (userId: string) => Effect.Effect<void, RemoteFailure>;
@@ -80,6 +85,7 @@ class AuthDependencies extends Context.Service<
     repository: AuthRepository;
     delivery: EmailCodeDelivery | null;
     exposeDevelopmentCode: boolean;
+    staticCodeHashes: ReadonlyMap<string, string>;
     now: () => number;
     flushSessionRevocations: () => Effect.Effect<void, RemoteFailure>;
     profileChanged: (userId: string) => Effect.Effect<void, RemoteFailure>;
@@ -117,11 +123,14 @@ export class AuthService {
   readonly #configured: boolean;
 
   constructor(options: AuthServiceOptions) {
-    this.#configured = options.delivery !== null || (options.exposeDevelopmentCode ?? false);
+    const staticCodeHashes = options.staticCodeHashes ?? new Map<string, string>();
+    this.#configured =
+      options.delivery !== null || (options.exposeDevelopmentCode ?? false) || staticCodeHashes.size > 0;
     this.#layer = Layer.succeed(AuthDependencies)({
       repository: options.repository,
       delivery: options.delivery,
       exposeDevelopmentCode: options.exposeDevelopmentCode ?? false,
+      staticCodeHashes,
       now: options.now ?? Date.now,
       flushSessionRevocations: options.flushSessionRevocations ?? (() => Effect.void),
       profileChanged: options.profileChanged ?? (() => Effect.void),
@@ -151,6 +160,15 @@ export class AuthService {
         );
       }
       const email = yield* authValidate(() => normalizeEmail(emailInput));
+      const staticCodeHash = dependencies.staticCodeHashes.get(email);
+      // With fixed codes only, an email that has none can get no code at all.
+      if (!staticCodeHash && !dependencies.delivery && !dependencies.exposeDevelopmentCode) {
+        return yield* new AuthServiceError(
+          503,
+          "email_delivery_not_configured",
+          "Email sign-in delivery is not configured.",
+        );
+      }
       if (yield* dependencies.usesCompanySignIn(email)) {
         return yield* new AuthServiceError(
           409,
@@ -192,11 +210,16 @@ export class AuthService {
         );
       }
 
-      const code = dependencies.exposeDevelopmentCode
-        ? yield* developmentOneTimeCode(challengeId)
-        : generateOneTimeCode();
+      // A fixed code is never generated, returned or sent: the challenge holds only its hash.
+      let code: string | null = null;
+      let codeHash: string;
+      if (staticCodeHash) {
+        codeHash = staticCodeHash;
+      } else {
+        code = dependencies.exposeDevelopmentCode ? yield* developmentOneTimeCode(challengeId) : generateOneTimeCode();
+        codeHash = yield* sha256(normalizeOneTimeCode(code));
+      }
       const expiresAt = now + CHALLENGE_TTL_MS;
-      const codeHash = yield* sha256(normalizeOneTimeCode(code));
       const sourceIpHash = yield* sha256(normalizeSourceIp(sourceIp));
       const created = yield* dependencies.repository.createEmailChallenge({
         idHash: challengeHash,
@@ -212,9 +235,11 @@ export class AuthService {
         if (!existing) return yield* new AuthOperationError({ message: "Account operation failed." });
         return yield* this.#replayEmailSignIn(existing, email, challengeId, now);
       }
-      const delivery = dependencies.delivery;
+      const delivery = code === null ? null : dependencies.delivery;
       const deliveryResult = yield* Effect.result(
-        delivery ? delivery.send({ email, code, expiresAt }).pipe(Effect.mapError(safeDeliveryError)) : Effect.void,
+        delivery && code !== null
+          ? delivery.send({ email, code, expiresAt }).pipe(Effect.mapError(safeDeliveryError))
+          : Effect.void,
       );
       if (Result.isFailure(deliveryResult)) {
         const deliveryError = deliveryResult.failure;
@@ -240,7 +265,7 @@ export class AuthService {
         challengeId,
         expiresAt,
         resendAt: now + RESEND_COOLDOWN_MS,
-        ...(dependencies.exposeDevelopmentCode ? { developmentCode: code } : {}),
+        ...(dependencies.exposeDevelopmentCode && code !== null ? { developmentCode: code } : {}),
       };
     },
     (operation) => operation.pipe(Effect.mapError(authFailure), Effect.provide(this.#layer)),
@@ -290,7 +315,9 @@ export class AuthService {
       challengeId,
       expiresAt: challenge.expiresAt,
       resendAt: challenge.createdAt + RESEND_COOLDOWN_MS,
-      ...(dependencies.exposeDevelopmentCode ? { developmentCode: yield* developmentOneTimeCode(challengeId) } : {}),
+      ...(dependencies.exposeDevelopmentCode && !dependencies.staticCodeHashes.has(email)
+        ? { developmentCode: yield* developmentOneTimeCode(challengeId) }
+        : {}),
     };
   });
 

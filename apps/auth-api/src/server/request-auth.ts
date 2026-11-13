@@ -63,14 +63,33 @@ export function requestAccountAttribution(): AccountAttribution {
   return new AccountAttribution({ database: bindings.DB, analytics: accountAnalytics(bindings) });
 }
 
+/** `email:hash,email:hash` from `AUTH_STATIC_SIGN_IN_CODES`. A malformed pair is left out. */
+function readStaticSignInCodes(value: string | undefined): ReadonlyMap<string, string> {
+  const codes = new Map<string, string>();
+  let dropped = 0;
+  for (const pair of (value ?? "").split(",")) {
+    const separator = pair.lastIndexOf(":");
+    const email = pair.slice(0, separator).trim().toLowerCase();
+    const hash = pair.slice(separator + 1).trim();
+    if (separator > 0 && email.includes("@") && /^[A-Za-z0-9_-]{43}$/u.test(hash)) codes.set(email, hash);
+    else if (pair.trim()) dropped += 1;
+  }
+  // Only the count: an entry holds an email and a code hash.
+  if (dropped) console.warn(`AUTH_STATIC_SIGN_IN_CODES: ${dropped} malformed entries were left out.`);
+  return codes;
+}
+
 export function requestAuthService(): AuthService {
   const bindings = requireWorkerBindings(env);
-  const exposeDevelopmentCode = bindings.AUTH_EXPOSE_DEVELOPMENT_CODE === "true";
+  const staticCodeHashes = readStaticSignInCodes(bindings.AUTH_STATIC_SIGN_IN_CODES);
+  // Fixed codes mean a public self-hosted stack: it never returns a code, whatever else is set.
+  const exposeDevelopmentCode = bindings.AUTH_EXPOSE_DEVELOPMENT_CODE === "true" && staticCodeHashes.size === 0;
   const analytics = accountAnalytics(bindings);
   return new AuthService({
     repository: new D1AuthRepository(bindings.DB),
     delivery: exposeDevelopmentCode ? null : createEmailCodeDelivery(bindings, analytics),
     exposeDevelopmentCode,
+    staticCodeHashes,
     // The revocation is already written and the cron redelivers it, so the answer does not wait.
     flushSessionRevocations: () => Effect.sync(() => schedule(deliverPendingRemoteAuthEvents(bindings, Date.now()))),
     profileChanged: (userId) => notifyAccountProfileChanged(bindings, userId, schedule),

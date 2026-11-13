@@ -22,6 +22,11 @@ export interface WorkerBindings {
   /** Checked by the bug report route only, so a Worker without it keeps its other routes. */
   FEEDBACK_RATE_LIMITER?: RateLimit;
   AUTH_EXPOSE_DEVELOPMENT_CODE?: string;
+  /**
+   * Self-hosted only: a fixed sign-in code for each listed email, which works as its password.
+   * `email:hash,email:hash`, where hash is the base64url SHA-256 of the normalized 8-character code.
+   */
+  AUTH_STATIC_SIGN_IN_CODES?: string;
   EMAIL_SMTP_HOST?: string;
   EMAIL_SMTP_PORT?: string;
   EMAIL_SMTP_USERNAME?: string;
