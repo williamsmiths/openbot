@@ -2,29 +2,29 @@ import type { PartialTranslation } from "../../../message";
 import type { messages as source } from "../../en/error/connector";
 
 export const messages = {
-  "error.connector.githubUnavailable": "בגרסה הזאת של OpenBot אין GitHub App.",
+  "error.connector.githubUnavailable": "בגרסה הזאת של kongCowork אין GitHub App.",
   "error.connector.githubDenied": "ההתחברות ל-GitHub נדחתה.",
   "error.connector.githubCodeExpired": "הקוד של GitHub פג תוקף. יש לחבר את GitHub מחדש.",
   "error.connector.githubDeviceFlowDisabled": "ה-GitHub App לא מאפשר התחברות מהתקן.",
   "error.connector.githubClientUnknown": "GitHub לא מכיר את ה-Client ID של ה-GitHub App הזה.",
   "error.connector.githubUnexpected": "GitHub שלח תשובה לא צפויה: {detail}",
-  "error.connector.githubUnreachable": "OpenBot לא מצליח להגיע אל GitHub: {detail}",
+  "error.connector.githubUnreachable": "kongCowork לא מצליח להגיע אל GitHub: {detail}",
   "error.connector.githubExpired": "החיבור ל-GitHub פג תוקף. יש לחבר את GitHub מחדש.",
   "error.connector.githubFileUnreadable": "קובץ החיבור ל-GitHub אינו קריא.",
   "error.connector.githubFileTooLarge": "קובץ החיבור ל-GitHub גדול מדי.",
   "error.connector.linkDenied": "ההתחברות ל-Link נדחתה.",
   "error.connector.linkCodeExpired": "ההתחברות ל-Link פגה. יש לחבר את Link מחדש.",
   "error.connector.linkUnexpected": "Link שלח תשובה לא צפויה: {detail}",
-  "error.connector.linkUnreachable": "OpenBot לא מצליח להגיע אל Link: {detail}",
+  "error.connector.linkUnreachable": "kongCowork לא מצליח להגיע אל Link: {detail}",
   "error.connector.linkExpired": "החיבור ל-Link פג תוקף. יש לחבר את Link מחדש.",
   "error.connector.linkNotConnected": "Link לא מחובר. אפשר לחבר אותו בהגדרות השרת > כספת > כרטיסים.",
   "error.connector.linkNoCard": "בחשבון Link אין כרטיס. יש להוסיף כרטיס ב-Link.",
   "error.connector.linkFileUnreadable": "קובץ החיבור ל-Link אינו קריא.",
   "error.connector.linkFileTooLarge": "קובץ החיבור ל-Link גדול מדי.",
   "error.connector.onePasswordCliMissing":
-    "OpenBot לא מוצא את ה-CLI של 1Password. יש להתקין אותו ולהפעיל את האינטגרציה שלו באפליקציית 1Password, או להשתמש באסימון של חשבון שירות.",
+    "kongCowork לא מוצא את ה-CLI של 1Password. יש להתקין אותו ולהפעיל את האינטגרציה שלו באפליקציית 1Password, או להשתמש באסימון של חשבון שירות.",
   "error.connector.onePasswordCliInstallFailed":
-    "OpenBot לא הצליח להתקין את ה-CLI של 1Password. יש לבדוק את החיבור לאינטרנט ולנסות שוב.",
+    "kongCowork לא הצליח להתקין את ה-CLI של 1Password. יש לבדוק את החיבור לאינטרנט ולנסות שוב.",
   "error.connector.onePasswordCliSignedOut":
     "ה-CLI של 1Password לא מחובר. יש להפעיל את האינטגרציה שלו באפליקציית 1Password ולהתחבר שוב.",
   "error.connector.onePasswordCliFailed": "ה-CLI של 1Password נכשל: {detail}",
@@ -42,7 +42,7 @@ export const messages = {
   "error.connector.bitwardenCliInstallFailed":
     "לא ניתן להתקין את ה-CLI של Bitwarden בשרת הזה. יש לבדוק את חיבור הרשת שלו ולהתחבר שוב.",
   "error.connector.bitwardenFileUnreadable": "קובץ החיבור ל-Bitwarden אינו קריא.",
-  "error.connector.passwordManagerUnknown": "OpenBot לא מכיר את מנהל הסיסמאות הזה.",
+  "error.connector.passwordManagerUnknown": "kongCowork לא מכיר את מנהל הסיסמאות הזה.",
   "error.connector.passwordManagerMethod": "מנהל הסיסמאות הזה לא יכול להתחבר בדרך הזאת.",
   "error.connector.passwordManagerNoSignIn": "אין דף התחברות פתוח. יש להתחבר שוב.",
   "error.connector.protonPassFailed": "לא ניתן לחבר את Proton Pass. יש להתחבר שוב.",

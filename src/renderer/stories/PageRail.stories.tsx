@@ -1,6 +1,5 @@
 import { accountUsageProviderRows } from "@openbot/ui/features/account/account-usage-view";
 import { ServerMenu } from "@openbot/ui/features/servers/ServerMenu";
-import { HelpMenu } from "@openbot/ui/features/updates/HelpMenu";
 import {
   type CustomAgentUsageRailRow,
   PageRail,
@@ -97,18 +96,6 @@ function RailPreview(props: {
               onSetMuted={fn()}
               onOpenNotificationSettings={fn()}
               onOpenSettings={fn()}
-            />
-          }
-          help={
-            <HelpMenu
-              news={[]}
-              triggerClass="window-rail-button"
-              onOpenWhatsNew={fn()}
-              onOpenChangelog={fn()}
-              onOpenGuides={fn()}
-              onOpenDiscord={fn()}
-              onReportProblem={fn()}
-              onSendFeedback={fn()}
             />
           }
         />

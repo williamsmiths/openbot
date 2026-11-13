@@ -10,6 +10,7 @@
 
 import { createServer, type Server } from "node:http";
 import type { Socket } from "node:net";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import type { AppTextKey } from "@openbot/i18n";
 import type { LanguageService } from "./language-service";
 import { listenLoopback, listenLoopbackExact } from "./listen-loopback";
@@ -131,5 +132,5 @@ function isLoopbackHost(host: string | undefined): boolean {
  * authorization server reaches the markup.
  */
 function callbackPage(locale: string, message: string): string {
-  return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><title>OpenBot</title></head><body style="font-family:system-ui;padding:2rem"><p>${message}</p></body></html>`;
+  return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><title>${PRODUCT_NAME}</title></head><body style="font-family:system-ui;padding:2rem"><p>${message}</p></body></html>`;
 }

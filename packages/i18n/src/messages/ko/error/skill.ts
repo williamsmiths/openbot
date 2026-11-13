@@ -47,7 +47,7 @@ export const messages = {
   "error.skill.tooManySkills": "에이전트에는 스킬을 최대 {limit}개까지 둘 수 있어요.",
   "error.skill.unmanagedExists": "{path}에 관리되지 않는 스킬이 이미 있어요.",
   "error.skill.managedSlug":
-    "OpenBot은 모든 에이전트에 자체 {slug} 스킬을 제공해요. 이 스킬에는 다른 이름을 지정해 주세요.",
+    "kongCowork는 모든 에이전트에 자체 {slug} 스킬을 제공해요. 이 스킬에는 다른 이름을 지정해 주세요.",
   "error.skill.templateMarkdownTooLarge": "{name}: SKILL.md가 64KB보다 커요. 게시하기 전에 줄여 주세요.",
   "error.skill.localNoRevisions": "로컬 스킬에 게시된 수정본이 없어요.",
   "error.skill.localNotFound": "이 로컬 스킬은 없어요. 로컬 스킬 목록에서 ID를 확인해 주세요.",

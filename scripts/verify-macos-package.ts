@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { FuseV1Options, getCurrentFuseWire } from "@electron/fuses";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import { isDynamicRecord } from "@openbot/contracts/runtime-values";
 import { createOpenBotLogger } from "@openbot/logging";
 import { isMissingFileError } from "../src/backend/file-errors";
@@ -127,7 +128,8 @@ await assertAbsent(
 
 const plist = JSON.parse(run("plutil", ["-convert", "json", "-o", "-", plistPath]));
 if (!isDynamicRecord(plist)) throw new Error("Info.plist is not a JSON object.");
-expectEqual(plist.CFBundleDisplayName, "OpenBot", "display name");
+expectEqual(plist.CFBundleDisplayName, PRODUCT_NAME, "display name");
+expectEqual(plist.CFBundleName, "OpenBot", "bundle name (the helper apps are found by it)");
 expectEqual(plist.CFBundleExecutable, "OpenBot", "executable name");
 expectEqual(plist.CFBundleIdentifier, "app.openbot.desktop", "bundle identifier");
 expectEqual(plist.CFBundleIconFile, "icon.icns", "application icon");

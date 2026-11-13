@@ -9,10 +9,10 @@ export const messages = {
   "mobile.server.drawer.leaveFailed": "Не удалось покинуть {name}",
   "mobile.server.drawer.removeFailed": "Не удалось удалить {name}",
   "mobile.server.drawer.deleteFailed": "Не удалось удалить {name}",
-  "mobile.server.drawer.actionFailed": "OpenBot не смог выполнить это действие. Повторите попытку.",
+  "mobile.server.drawer.actionFailed": "kongCowork не смог выполнить это действие. Повторите попытку.",
   "mobile.server.drawer.moveUp": "Выше",
   "mobile.server.drawer.moveDown": "Ниже",
-  "mobile.server.drawer.orderHint": "OpenBot открывается на первом сервере. Порядок сохраняется на этом устройстве.",
+  "mobile.server.drawer.orderHint": "kongCowork открывается на первом сервере. Порядок сохраняется на этом устройстве.",
   "mobile.server.drawer.title": "Серверы",
   "mobile.server.drawer.serverSettings": "Настройки сервера",
   "mobile.server.drawer.serverListHint": "Показывает или скрывает серверы",
@@ -38,8 +38,8 @@ export const messages = {
   "mobile.server.drawer.close": "Закрыть список серверов",
   "mobile.server.invite.noExpiry": "{role} · Без срока",
   "mobile.server.invite.expires": "{role} · Действует до {date}",
-  "mobile.server.invite.loadFailed": "OpenBot не удалось загрузить это приглашение.",
-  "mobile.server.invite.joinFailed": "OpenBot не удалось присоединиться к серверу.",
+  "mobile.server.invite.loadFailed": "kongCowork не удалось загрузить это приглашение.",
+  "mobile.server.invite.joinFailed": "kongCowork не удалось присоединиться к серверу.",
   "mobile.server.invite.checking": "Проверка приглашения…",
   "mobile.server.invite.unavailable": "Приглашение недоступно",
   "mobile.server.invite.verifying": "Проверяем подлинность сервера.",
@@ -97,7 +97,7 @@ export const messages = {
   "mobile.server.local.optionHint": "На компьютере, где работает {name}, со своими агентами, чатами и файлами.",
   "mobile.server.local.title": "Новый сервер",
   "mobile.server.local.description":
-    "Сервер работает на компьютере, где работает {name}, со своими агентами, чатами и файлами. Он доступен, пока OpenBot работает на этом компьютере.",
+    "Сервер работает на компьютере, где работает {name}, со своими агентами, чатами и файлами. Он доступен, пока kongCowork работает на этом компьютере.",
   "mobile.server.local.nameLabel": "Имя сервера",
   "mobile.server.local.nameTooShort": "Используйте не менее {limit} символов.",
   "mobile.server.local.create": "Создать",
@@ -109,22 +109,22 @@ export const messages = {
   "mobile.server.local.createdOn": "{name} работает на том же компьютере, что и {computer}.",
   "mobile.server.local.waiting": "Ожидание, пока {name} будет в сети…",
   "mobile.server.local.notPublished":
-    "{name} работает, но этот телефон пока не может его открыть. Убедитесь, что в OpenBot на компьютере, где работает {computer}, выполнен вход и он в сети.",
+    "{name} работает, но этот телефон пока не может его открыть. Убедитесь, что в kongCowork на компьютере, где работает {computer}, выполнен вход и он в сети.",
   "mobile.server.local.open": "Открыть сервер",
   "mobile.server.local.ownerOnly": "Только владелец может создать сервер на этом компьютере.",
-  "mobile.server.local.unsupported": "Обновите OpenBot на этом компьютере, чтобы создать здесь сервер.",
+  "mobile.server.local.unsupported": "Обновите kongCowork на этом компьютере, чтобы создать здесь сервер.",
   "mobile.server.local.deleteOffline":
-    "Удалить этот сервер может только его компьютер. Откройте OpenBot на этом компьютере и повторите попытку.",
+    "Удалить этот сервер может только его компьютер. Откройте kongCowork на этом компьютере и повторите попытку.",
   "mobile.server.hosted.intro.title": "Ваши агенты всегда на связи",
   "mobile.server.hosted.intro.description":
-    "Облачный сервер выполняет ваших агентов и регулярные задачи, когда компьютер выключен. OpenBot настраивает его и поддерживает в рабочем состоянии.",
+    "Облачный сервер выполняет ваших агентов и регулярные задачи, когда компьютер выключен. kongCowork настраивает его и поддерживает в рабочем состоянии.",
   "mobile.server.hosted.planFacts": "{members} · {storage} · {sites} · {speed}",
   "mobile.server.hosted.computer.title": "На компьютере",
   "mobile.server.hosted.computer.add": "Добавить облачный сервер",
   "mobile.server.hosted.computer.addHint":
-    "В OpenBot откройте «Настройки» → «Облачные серверы» и выберите «Добавить сервер».",
+    "В kongCowork откройте «Настройки» → «Облачные серверы» и выберите «Добавить сервер».",
   "mobile.server.hosted.computer.change": "Сменить тариф",
-  "mobile.server.hosted.computer.changeHint": "В OpenBot откройте «Настройки» → «Оплата».",
+  "mobile.server.hosted.computer.changeHint": "В kongCowork откройте «Настройки» → «Оплата».",
   "mobile.server.hosted.yourServers": "Ваши серверы",
   "mobile.server.hosted.plans": "Тарифы",
   "mobile.server.hosted.currentPlan": "Ваш тариф",
@@ -141,7 +141,7 @@ export const messages = {
   "mobile.server.hosted.paymentTitle": "Ожидание оплаты",
   "mobile.server.hosted.paymentDescription": "Настройка начнётся, когда оплата будет подтверждена.",
   "mobile.server.hosted.progressTitle": "Настройка «{name}»",
-  "mobile.server.hosted.progressDescription": "OpenBot готовит для вас отдельную машину.",
+  "mobile.server.hosted.progressDescription": "kongCowork готовит для вас отдельную машину.",
   "mobile.server.hosted.closeHint":
     "Можно закрыть это окно. Настройка продолжится, а готовый сервер появится в вашем списке.",
   "mobile.server.hosted.readyTitle": "«{name}» готов",
@@ -149,21 +149,21 @@ export const messages = {
   "mobile.server.hosted.open": "Открыть сервер",
   "mobile.server.hosted.failedTitle": "Не удалось запустить сервер",
   "mobile.server.hosted.failedDescription":
-    "Повторите попытку. Если снова не получится, удалите сервер в настройках OpenBot на компьютере.",
+    "Повторите попытку. Если снова не получится, удалите сервер в настройках kongCowork на компьютере.",
   "mobile.server.hosted.retrying": "Запуск…",
   "mobile.server.hosted.expiredTitle": "Страница оплаты устарела",
   "mobile.server.hosted.expiredDescription": "Сервер не был оплачен, поэтому он удалён.",
   "mobile.server.hosted.step.payment": "Подтвердить оплату",
   "mobile.server.hosted.step.create": "Создать машину",
-  "mobile.server.hosted.step.start": "Запустить OpenBot",
+  "mobile.server.hosted.step.start": "Запустить kongCowork",
   "mobile.server.hosted.step.connect": "Подключить к аккаунту",
   "mobile.server.hosted.detail.payment": "Ожидаем Stripe",
   "mobile.server.hosted.detail.reserve": "Резервируем отдельную машину",
-  "mobile.server.hosted.detail.copy": "Копируем OpenBot на машину",
+  "mobile.server.hosted.detail.copy": "Копируем kongCowork на машину",
   "mobile.server.hosted.detail.key": "Добавляем одноразовый ключ входа",
   "mobile.server.hosted.detail.boot": "Включаем машину",
-  "mobile.server.hosted.detail.app": "Запускаем OpenBot",
-  "mobile.server.hosted.detail.wait": "Ждём ответа OpenBot",
+  "mobile.server.hosted.detail.app": "Запускаем kongCowork",
+  "mobile.server.hosted.detail.wait": "Ждём ответа kongCowork",
   "mobile.server.hosted.detail.signIn": "Входим от вашего имени",
   "mobile.server.hosted.detail.publish": "Добавляем сервер в ваш аккаунт",
   "mobile.server.hosted.detail.check": "Проверяем подключение",
@@ -171,7 +171,7 @@ export const messages = {
   "mobile.server.hosted.stepActive": "выполняется",
   "mobile.server.hosted.stepPending": "не начато",
   "mobile.server.hosted.stepFailed": "ошибка",
-  "mobile.server.scan.notInvitation": "Этот QR-код не является приглашением OpenBot.",
+  "mobile.server.scan.notInvitation": "Этот QR-код не является приглашением kongCowork.",
   "mobile.server.scan.title": "Сканировать приглашение",
   "mobile.server.role.owner": "владелец",
   "mobile.server.role.admin": "администратор",
@@ -223,7 +223,7 @@ export const messages = {
   "mobile.server.routines.status.paused": "Приостановлена",
   "mobile.server.routines.status.failed": "Ошибка",
   "mobile.server.routines.status.completed": "Завершена",
-  "mobile.server.threads.unsupported": "Этот хост не поддерживает ветки. Обновите OpenBot на хосте.",
+  "mobile.server.threads.unsupported": "Этот хост не поддерживает ветки. Обновите kongCowork на хосте.",
   "mobile.server.threads.ask": "Что нужно сделать?",
   "mobile.server.threads.chooseAgent": "Начать ветку с",
   "mobile.server.threads.agentLabel": "Начать ветку с {name}",
@@ -308,7 +308,7 @@ export const messages = {
   "mobile.server.settings.remove": "Удалить сервер",
   "mobile.server.settings.deleteTitle": "Удалить {name}?",
   "mobile.server.settings.deleteBody":
-    "OpenBot останавливает сервер на его компьютере и перемещает его агентов, чаты и файлы в корзину этого компьютера. Сервер исчезнет из списка серверов на всех ваших устройствах.",
+    "kongCowork останавливает сервер на его компьютере и перемещает его агентов, чаты и файлы в корзину этого компьютера. Сервер исчезнет из списка серверов на всех ваших устройствах.",
   "mobile.server.settings.delete": "Удалить сервер",
   "mobile.server.settings.name": "Название сервера",
   "mobile.server.settings.nameLength": "Длина — от {min} до {max} символов.",
@@ -321,7 +321,7 @@ export const messages = {
   "mobile.server.settings.identityNotAllowed":
     "Менять название и логотип сервера может только владелец или администратор.",
   "mobile.server.settings.identityUnsupported":
-    "Обновите OpenBot на этом сервере, чтобы менять его название и логотип здесь.",
+    "Обновите kongCowork на этом сервере, чтобы менять его название и логотип здесь.",
   "mobile.server.settings.identityOffline": "Подключитесь к серверу, чтобы изменить его название и логотип.",
   "mobile.server.route.cropLogo": "Кадрирование логотипа",
   "mobile.server.members.remove": "Удалить участника",
@@ -382,7 +382,7 @@ export const messages = {
   "mobile.server.storage.category.caches": "Кэш файлов сервера",
   "mobile.server.storage.category.runtimes": "Среды выполнения провайдеров",
   "mobile.server.storage.category.logs": "Журналы",
-  "mobile.server.storage.total": "OpenBot · {name}",
+  "mobile.server.storage.total": "kongCowork · {name}",
   "mobile.server.storage.used": "Занято",
   "mobile.server.storage.byType": "Хранилище по типам",
   "mobile.server.storage.free": "Свободно на этом диске: {size}",
@@ -408,10 +408,10 @@ export const messages = {
   "mobile.server.storage.clearCategory": "Очистить: {category}",
   "mobile.server.storage.clearTitle.caches": "Очистить кэш файлов сервера?",
   "mobile.server.storage.clearTitle.logs": "Очистить журналы?",
-  "mobile.server.storage.clearBody.caches": "Копии файлов сервера. OpenBot скачает их снова, когда вы их откроете.",
+  "mobile.server.storage.clearBody.caches": "Копии файлов сервера. kongCowork скачает их снова, когда вы их откроете.",
   "mobile.server.storage.clearBody.logs": "Диагностические журналы. Новые начнут вестись сразу.",
   "mobile.server.storage.clearFailed": "Не удалось очистить данные",
-  "mobile.server.storage.clearFailedBody": "OpenBot не удалось очистить эти данные на сервере.",
+  "mobile.server.storage.clearFailedBody": "kongCowork не удалось очистить эти данные на сервере.",
   "mobile.server.storage.noFiles": "На этом сервере нет сохранённых файлов.",
   "mobile.server.library.type.all": "Все",
   "mobile.server.library.type.images": "Изображения",
@@ -477,7 +477,7 @@ export const messages = {
   "mobile.server.settings.timezoneUnavailable":
     "Подключитесь к этому серверу как владелец или администратор, чтобы изменить его часовой пояс.",
   "mobile.server.settings.timezoneUnsupported":
-    "Обновите OpenBot на этом сервере, чтобы изменить здесь его часовой пояс.",
+    "Обновите kongCowork на этом сервере, чтобы изменить здесь его часовой пояс.",
   "mobile.server.settings.keySection": "Ключ сервера",
   "mobile.server.settings.keyChanged": "Последнее изменение",
   "mobile.server.settings.keyChange": "Сменить ключ",
@@ -495,13 +495,13 @@ export const messages = {
     "Сервер использует новый ключ. Приложение перейдёт на него, когда список серверов загрузится снова.",
   "mobile.server.settings.keyChangeFailed": "Не удалось сменить ключ сервера. Попробуйте ещё раз.",
   "mobile.server.settings.keyOwnerOnly": "Сменить ключ сервера может только владелец.",
-  "mobile.server.settings.keyUnsupported": "Обновите OpenBot на этом сервере, чтобы сменить его ключ здесь.",
+  "mobile.server.settings.keyUnsupported": "Обновите kongCowork на этом сервере, чтобы сменить его ключ здесь.",
   "mobile.server.settings.memoryLimit": "Записей памяти на агента",
   "mobile.server.settings.memoryLimitDescription": "Сколько записей памяти может хранить каждый агент на этом сервере.",
   "mobile.server.settings.memoryLimitLoadFailed": "Не удалось загрузить лимит памяти этого сервера.",
   "mobile.server.settings.memoryLimitSaveFailed": "Не удалось сохранить лимит воспоминаний. Повторите попытку.",
   "mobile.server.settings.memoryLimitUnsupported":
-    "Обновите OpenBot на этом сервере, чтобы изменить здесь его лимит воспоминаний.",
+    "Обновите kongCowork на этом сервере, чтобы изменить здесь его лимит воспоминаний.",
   "mobile.server.settings.responseStyleDescription":
     "Естественный: агенты присылают короткие обновления во время работы, и чат их показывает. Классический: агенты отвечают один раз, когда закончат.",
   "mobile.server.settings.responseStyleNatural": "Естественный",
@@ -509,17 +509,17 @@ export const messages = {
   "mobile.server.settings.personalityLoadFailed": "Не удалось загрузить характер сервера.",
   "mobile.server.settings.personalitySaveFailed": "Не удалось сохранить стиль ответов. Повторите попытку.",
   "mobile.server.settings.personalityUnsupported":
-    "Обновите OpenBot на этом сервере, чтобы изменить здесь его стиль ответов.",
+    "Обновите kongCowork на этом сервере, чтобы изменить здесь его стиль ответов.",
   "mobile.server.settings.personalityUnavailable":
     "Подключитесь к этому серверу как владелец или администратор, чтобы изменить личность агента.",
   "mobile.server.route.browserProfiles": "Профили браузера",
   "mobile.server.browserProfiles.unavailable":
     "Управлять профилями браузера сервера в сети может только владелец или администратор.",
   "mobile.server.browserProfiles.unsupported":
-    "Обновите OpenBot на этом сервере, чтобы управлять его профилями браузера здесь.",
+    "Обновите kongCowork на этом сервере, чтобы управлять его профилями браузера здесь.",
   "mobile.server.browserProfiles.loading": "Загрузка профилей браузера…",
-  "mobile.server.browserProfiles.loadFailed": "OpenBot не удалось загрузить профили браузера.",
-  "mobile.server.browserProfiles.saveFailed": "OpenBot не удалось изменить профиль браузера.",
+  "mobile.server.browserProfiles.loadFailed": "kongCowork не удалось загрузить профили браузера.",
+  "mobile.server.browserProfiles.saveFailed": "kongCowork не удалось изменить профиль браузера.",
   "mobile.server.browserProfiles.description":
     "Каждый профиль хранит свои входы, файлы cookie и данные сайтов на компьютере, где работает сервер. Агенты с одним профилем используют общие входы.",
   "mobile.server.browserProfiles.shared": "Общий",
@@ -562,13 +562,13 @@ export const messages = {
   "mobile.server.browserProfiles.deleteBody":
     "Будут удалены входы, файлы cookie и данные сайтов профиля. Его открытые вкладки закроются.",
   "mobile.server.browserProfiles.deleteAgents": "Эти агенты перейдут в общий профиль: {agents}.",
-  "mobile.server.browserProxies.unsupported": "Обновите OpenBot на этом сервере, чтобы управлять его прокси здесь.",
+  "mobile.server.browserProxies.unsupported": "Обновите kongCowork на этом сервере, чтобы управлять его прокси здесь.",
   "mobile.server.browserProxies.loading": "Загрузка прокси…",
-  "mobile.server.browserProxies.loadFailed": "OpenBot не удалось загрузить прокси.",
-  "mobile.server.browserProxies.saveFailed": "OpenBot не удалось изменить прокси.",
+  "mobile.server.browserProxies.loadFailed": "kongCowork не удалось загрузить прокси.",
+  "mobile.server.browserProxies.saveFailed": "kongCowork не удалось изменить прокси.",
   "mobile.server.browserProxies.title": "Прокси",
   "mobile.server.browserProxies.sectionHint":
-    "Профиль с прокси открывает свои страницы через этот прокси. Участник предоставляет компьютер из настольного приложения OpenBot.",
+    "Профиль с прокси открывает свои страницы через этот прокси. Участник предоставляет компьютер из настольного приложения kongCowork.",
   "mobile.server.browserProxies.limit": "У сервера может быть не более {limit} прокси.",
   "mobile.server.browserProxies.add": "Добавить прокси",
   "mobile.server.browserProxies.new": "Новый прокси",
@@ -601,7 +601,7 @@ export const messages = {
   "mobile.server.browserProxies.addressInvalid":
     "Это не адрес прокси. Используйте socks5://host:1080, http://user:password@host:3128 или host:port:user:password.",
   "mobile.server.browserProxies.computerHint":
-    "Страницы профилей, которые используют этот компьютер, идут через его интернет-подключение, пока его участник предоставляет его в настольном приложении OpenBot. Компьютер открывает только общедоступные интернет-адреса.",
+    "Страницы профилей, которые используют этот компьютер, идут через его интернет-подключение, пока его участник предоставляет его в настольном приложении kongCowork. Компьютер открывает только общедоступные интернет-адреса.",
   "mobile.server.browserProxies.profilesTitle": "Профили",
   "mobile.server.browserProxies.delete": "Удалить прокси",
   "mobile.server.browserProxies.deleteHint": "Удаление переводит профили этого прокси на «Автоматически».",
@@ -623,11 +623,12 @@ export const messages = {
   "mobile.server.browserProxies.choiceHint":
     "«Автоматически» использует настройки прокси компьютера, на котором работает сервер. Изменение закрывает открытые вкладки профиля.",
   "mobile.server.browserProxies.shareHint":
-    "Чтобы использовать свой компьютер, откройте к нему доступ в настольном приложении OpenBot.",
+    "Чтобы использовать свой компьютер, откройте к нему доступ в настольном приложении kongCowork.",
   "mobile.server.route.connectors": "Коннекторы",
   "mobile.server.connectors.unavailable":
     "Подключитесь к этому серверу как владелец или администратор, чтобы управлять его коннекторами.",
-  "mobile.server.connectors.unsupported": "Обновите OpenBot на этом сервере, чтобы управлять его коннекторами здесь.",
+  "mobile.server.connectors.unsupported":
+    "Обновите kongCowork на этом сервере, чтобы управлять его коннекторами здесь.",
   "mobile.server.connectors.loading": "Загрузка коннекторов…",
   "mobile.server.connectors.localOnly": "Только в приложении для компьютера",
   "mobile.server.connectors.statusConnected": "Подключено",
@@ -676,7 +677,7 @@ export const messages = {
   "mobile.server.connectors.github.title": "GitHub",
   "mobile.server.connectors.github.description":
     "Каждый агент на сервере {host} может работать с вашими репозиториями, задачами и пул-реквестами GitHub, а также с gh и git.",
-  "mobile.server.connectors.github.unavailable": "OpenBot на этом сервере не может подключить GitHub.",
+  "mobile.server.connectors.github.unavailable": "kongCowork на этом сервере не может подключить GitHub.",
   "mobile.server.connectors.github.connect": "Подключить GitHub",
   "mobile.server.connectors.github.codeTitle": "Введите этот код на GitHub",
   "mobile.server.connectors.github.codeFooter":
@@ -689,7 +690,7 @@ export const messages = {
     "Агенты могут использовать только те репозитории, где установлено приложение OpenBot GitHub App.",
   "mobile.server.connectors.github.repositoriesTitle": "Репозитории",
   "mobile.server.connectors.github.repositoriesLoading": "Чтение репозиториев с GitHub",
-  "mobile.server.connectors.github.repositoriesFailed": "OpenBot не удалось прочитать репозитории с GitHub.",
+  "mobile.server.connectors.github.repositoriesFailed": "kongCowork не удалось прочитать репозитории с GitHub.",
   "mobile.server.connectors.github.noRepositories":
     "Приложение OpenBot GitHub App пока не установлено ни в один репозиторий.",
   "mobile.server.connectors.github.moreRepositories": {
@@ -707,12 +708,12 @@ export const messages = {
   "mobile.server.connectors.github.disconnect": "Отключить GitHub",
   "mobile.server.connectors.github.disconnectTitle": "Отключить GitHub?",
   "mobile.server.connectors.github.disconnectBody":
-    "Вход @{login} будет удалён с {host}, и все агенты потеряют инструменты GitHub, gh и git. Затем откроется GitHub, где можно отозвать доступ OpenBot.",
+    "Вход @{login} будет удалён с {host}, и все агенты потеряют инструменты GitHub, gh и git. Затем откроется GitHub, где можно отозвать доступ kongCowork.",
   "mobile.server.connectors.onePassword.title": "1Password",
   "mobile.server.connectors.onePassword.description":
-    "Предоставьте OpenBot на {host} доступ к отдельному хранилищу 1Password через сервисный аккаунт, чтобы агенты на {host} могли входить на сайты в его браузере.",
+    "Предоставьте kongCowork на {host} доступ к отдельному хранилищу 1Password через сервисный аккаунт, чтобы агенты на {host} могли входить на сайты в его браузере.",
   "mobile.server.connectors.onePassword.howItWorks":
-    "На 1Password.com создайте сервисный аккаунт, который может читать только хранилище, открытое для OpenBot, и вставьте сюда его токен. {host} проверяет токен и хранит его; этот телефон его не хранит. Агенты никогда не видят пароль.",
+    "На 1Password.com создайте сервисный аккаунт, который может читать только хранилище, открытое для kongCowork, и вставьте сюда его токен. {host} проверяет токен и хранит его; этот телефон его не хранит. Агенты никогда не видят пароль.",
   "mobile.server.connectors.onePassword.token": "Токен сервисного аккаунта",
   "mobile.server.connectors.onePassword.tokenPlaceholder": "ops_…",
   "mobile.server.connectors.onePassword.connect": "Подключить 1Password",
@@ -734,9 +735,9 @@ export const messages = {
     "{host} забудет токен. Хранилище и сервисный аккаунт останутся в 1Password; если они больше не нужны, удалите их там.",
   "mobile.server.connectors.protonPass.title": "Proton Pass",
   "mobile.server.connectors.protonPass.description":
-    "Откройте OpenBot на {host} доступ к одному хранилищу Proton Pass, чтобы агенты на {host} могли входить на сайты в его браузере.",
+    "Откройте kongCowork на {host} доступ к одному хранилищу Proton Pass, чтобы агенты на {host} могли входить на сайты в его браузере.",
   "mobile.server.connectors.protonPass.keyHelp":
-    "Создайте в Proton Pass ключ доступа, который может читать только хранилище, открытое для OpenBot, и вставьте его сюда. {host} хранит ключ; этот телефон — нет.",
+    "Создайте в Proton Pass ключ доступа, который может читать только хранилище, открытое для kongCowork, и вставьте его сюда. {host} хранит ключ; этот телефон — нет.",
   "mobile.server.connectors.protonPass.keyPlaceholder": "pst_…",
   "mobile.server.connectors.passwordManager.unavailable": "{name} недоступен на этом сервере.",
   "mobile.server.connectors.passwordManager.howItWorks":
@@ -802,14 +803,14 @@ export const messages = {
   "mobile.server.connectors.slack.workspaceTitle": "Рабочее пространство",
   "mobile.server.connectors.slack.workspaceDescription": "Люди упоминают @OpenBot или пишут ему личным сообщением.",
   "mobile.server.connectors.slack.missingScopes":
-    "У OpenBot нет этих разрешений в Slack: {scopes}. Отключите рабочее пространство и подключите его снова.",
-  "mobile.server.connectors.slack.retryAt": "Slack попросил OpenBot подождать. Следующая попытка в {time}.",
+    "У kongCowork нет этих разрешений в Slack: {scopes}. Отключите рабочее пространство и подключите его снова.",
+  "mobile.server.connectors.slack.retryAt": "Slack попросил kongCowork подождать. Следующая попытка в {time}.",
   "mobile.server.connectors.slack.helpInvalidToken":
-    "Slack больше не принимает OpenBot в этом рабочем пространстве. Возможно, приложение удалили. Подключите рабочее пространство заново.",
+    "Slack больше не принимает kongCowork в этом рабочем пространстве. Возможно, приложение удалили. Подключите рабочее пространство заново.",
   "mobile.server.connectors.slack.helpSecretStorage":
-    "OpenBot не может прочитать сохранённые токены на {host}. Отключите рабочее пространство и подключите его снова.",
+    "kongCowork не может прочитать сохранённые токены на {host}. Отключите рабочее пространство и подключите его снова.",
   "mobile.server.connectors.slack.helpRelay":
-    "OpenBot на {host} не может получать события Slack. На {host} войдите в аккаунт, задайте серверу имя в настройках сервера и не закрывайте OpenBot.",
+    "kongCowork на {host} не может получать события Slack. На {host} войдите в аккаунт, задайте серверу имя в настройках сервера и не закрывайте kongCowork.",
   "mobile.server.connectors.slack.orchestratorTitle": "Оркестратор Slack",
   "mobile.server.connectors.slack.orchestratorDescription":
     "Этот агент получает все запросы из Slack. Короткие он обрабатывает сам, остальную работу передаёт нужному агенту и публикует ответ в ветке.",
@@ -819,9 +820,9 @@ export const messages = {
     "OpenBot сам присоединяется ко всем публичным каналам и к каждому новому. В закрытый канал его нужно пригласить: /invite @OpenBot.",
   "mobile.server.connectors.slack.disconnectTitle": "Отключить {workspace}?",
   "mobile.server.connectors.slack.disconnectBody":
-    "OpenBot перестанет отвечать в {workspace} и удалит свой токен Slack с {host}.",
-  "mobile.server.connectors.slack.disconnectKept": "Диалоги и Оркестратор Slack останутся в OpenBot.",
-  "mobile.server.connectors.slack.disconnectDeleted": "Оркестратор Slack и его диалоги будут удалены из OpenBot.",
+    "kongCowork перестанет отвечать в {workspace} и удалит свой токен Slack с {host}.",
+  "mobile.server.connectors.slack.disconnectKept": "Диалоги и Оркестратор Slack останутся в kongCowork.",
+  "mobile.server.connectors.slack.disconnectDeleted": "Оркестратор Slack и его диалоги будут удалены из kongCowork.",
   "mobile.server.connectors.slack.agentPromptTitle": "Добавить Оркестратора Slack?",
   "mobile.server.connectors.slack.agentPromptBody":
     "Этот новый агент отвечает на всё, что люди отправляют @OpenBot в {workspace}.",
@@ -849,26 +850,27 @@ export const messages = {
   "mobile.server.connectors.discord.workspaceDescription":
     "Упомяните @OpenBot в канале. Ответьте OpenBot, чтобы продолжить.",
   "mobile.server.connectors.discord.missingScopes":
-    "У OpenBot нет этих разрешений в Discord: {scopes}. Отключите сервер Discord и подключите его снова.",
-  "mobile.server.connectors.discord.retryAt": "Discord попросил OpenBot подождать. Следующая попытка в {time}.",
+    "У kongCowork нет этих разрешений в Discord: {scopes}. Отключите сервер Discord и подключите его снова.",
+  "mobile.server.connectors.discord.retryAt": "Discord попросил kongCowork подождать. Следующая попытка в {time}.",
   "mobile.server.connectors.discord.helpInvalidToken":
-    "Discord больше не принимает OpenBot на этом сервере Discord. Возможно, приложение удалили. Подключите сервер Discord заново.",
+    "Discord больше не принимает kongCowork на этом сервере Discord. Возможно, приложение удалили. Подключите сервер Discord заново.",
   "mobile.server.connectors.discord.helpSecretStorage":
-    "OpenBot не может прочитать сохранённые токены на {host}. Отключите сервер Discord и подключите его снова.",
+    "kongCowork не может прочитать сохранённые токены на {host}. Отключите сервер Discord и подключите его снова.",
   "mobile.server.connectors.discord.helpRelay":
-    "OpenBot на {host} не может получать события Discord. На {host} войдите в аккаунт, задайте серверу имя в настройках сервера и не закрывайте OpenBot.",
+    "kongCowork на {host} не может получать события Discord. На {host} войдите в аккаунт, задайте серверу имя в настройках сервера и не закрывайте kongCowork.",
   "mobile.server.connectors.discord.orchestratorTitle": "Оркестратор Discord",
   "mobile.server.connectors.discord.orchestratorDescription":
     "Этот агент получает все запросы из Discord. Короткие он обрабатывает сам, остальную работу передаёт нужному агенту и отвечает в канале.",
   "mobile.server.connectors.discord.orchestratorNone":
     "Добавьте Оркестратора Discord, иначе Discord не получит ответа.",
   "mobile.server.connectors.discord.addAgent": "Добавить Оркестратора Discord",
-  "mobile.server.connectors.discord.note": "OpenBot видит каналы, доступные его роли.",
+  "mobile.server.connectors.discord.note": "kongCowork видит каналы, доступные его роли.",
   "mobile.server.connectors.discord.disconnectTitle": "Отключить {workspace}?",
   "mobile.server.connectors.discord.disconnectBody":
-    "OpenBot перестанет отвечать в {workspace} и удалит подключение к Discord с {host}.",
-  "mobile.server.connectors.discord.disconnectKept": "Диалоги и Оркестратор Discord останутся в OpenBot.",
-  "mobile.server.connectors.discord.disconnectDeleted": "Оркестратор Discord и его диалоги будут удалены из OpenBot.",
+    "kongCowork перестанет отвечать в {workspace} и удалит подключение к Discord с {host}.",
+  "mobile.server.connectors.discord.disconnectKept": "Диалоги и Оркестратор Discord останутся в kongCowork.",
+  "mobile.server.connectors.discord.disconnectDeleted":
+    "Оркестратор Discord и его диалоги будут удалены из kongCowork.",
   "mobile.server.connectors.discord.agentPromptTitle": "Добавить Оркестратора Discord?",
   "mobile.server.connectors.discord.agentPromptBody":
     "Этот новый агент отвечает на всё, что люди отправляют @OpenBot в {workspace}.",
@@ -889,10 +891,10 @@ export const messages = {
   "mobile.server.connectors.telegram.helpRemoved":
     "Бота OpenBot больше нет в этом чате. Отключите чат, затем снова добавьте бота.",
   "mobile.server.connectors.telegram.helpRelay":
-    "OpenBot на {host} не может получать сообщения Telegram. На {host} войдите в аккаунт, задайте серверу имя в настройках сервера и не закрывайте OpenBot.",
+    "kongCowork на {host} не может получать сообщения Telegram. На {host} войдите в аккаунт, задайте серверу имя в настройках сервера и не закрывайте kongCowork.",
   "mobile.server.connectors.telegram.helpError":
-    "OpenBot не может связаться с этим чатом. Подключите его заново или отключите чат.",
-  "mobile.server.connectors.telegram.retryAt": "Telegram попросил OpenBot подождать. Следующая попытка в {time}.",
+    "kongCowork не может связаться с этим чатом. Подключите его заново или отключите чат.",
+  "mobile.server.connectors.telegram.retryAt": "Telegram попросил kongCowork подождать. Следующая попытка в {time}.",
   "mobile.server.connectors.telegram.linkTitle": "Привязать чат",
   "mobile.server.connectors.telegram.linkAnother": "Привязать ещё один чат",
   "mobile.server.connectors.telegram.linkFooter":
@@ -907,15 +909,15 @@ export const messages = {
   "mobile.server.connectors.telegram.openDirectChat": "Открыть личный чат",
   "mobile.server.connectors.telegram.orchestratorTitle": "Оркестратор Telegram",
   "mobile.server.connectors.telegram.orchestratorDescription":
-    "Этот агент получает сообщения для OpenBot из всех ваших чатов Telegram. Короткие он обрабатывает сам, остальную работу передаёт нужному агенту и публикует ответ в чате.",
+    "Этот агент получает сообщения для kongCowork из всех ваших чатов Telegram. Короткие он обрабатывает сам, остальную работу передаёт нужному агенту и публикует ответ в чате.",
   "mobile.server.connectors.telegram.orchestratorNone":
     "Добавьте Оркестратора Telegram, иначе Telegram не получит ответа.",
   "mobile.server.connectors.telegram.addAgent": "Добавить Оркестратора Telegram",
   "mobile.server.connectors.telegram.disconnectTitle": "Отключить {chat}?",
   "mobile.server.connectors.telegram.disconnectBody": "Бот OpenBot покинет {chat}, и OpenBot перестанет там отвечать.",
-  "mobile.server.connectors.telegram.disconnectKept": "Диалоги и Оркестратор Telegram останутся в OpenBot.",
+  "mobile.server.connectors.telegram.disconnectKept": "Диалоги и Оркестратор Telegram останутся в kongCowork.",
   "mobile.server.connectors.telegram.disconnectDeleted":
-    "Это последний чат, поэтому Оркестратор Telegram и его диалоги будут удалены из OpenBot.",
+    "Это последний чат, поэтому Оркестратор Telegram и его диалоги будут удалены из kongCowork.",
   "mobile.server.connectors.whatsapp.title": "WhatsApp",
   "mobile.server.connectors.whatsapp.description":
     "Привяжите номер WhatsApp к этому серверу. Оркестратор WhatsApp спрашивает нужного агента и отвечает.",
@@ -928,24 +930,24 @@ export const messages = {
   "mobile.server.connectors.whatsapp.numbersTitle": "Номера",
   "mobile.server.connectors.whatsapp.linkNumber": "Привязать номер",
   "mobile.server.connectors.whatsapp.ownNumberNote":
-    "OpenBot получает сообщения из вашего чата «Сообщение себе» и от людей, которым вы разрешили писать.",
+    "kongCowork получает сообщения из вашего чата «Сообщение себе» и от людей, которым вы разрешили писать.",
   "mobile.server.connectors.whatsapp.dedicatedNote":
-    "OpenBot получает сообщения от людей, которым вы разрешили писать. Остальные получают код, который нужно передать вам.",
+    "kongCowork получает сообщения от людей, которым вы разрешили писать. Остальные получают код, который нужно передать вам.",
   "mobile.server.connectors.whatsapp.helpLoggedOut":
     "WhatsApp удалил этот сервер из связанных устройств. Привяжите номер заново.",
   "mobile.server.connectors.whatsapp.helpError":
-    "OpenBot не может связаться с WhatsApp на этом номере. Переподключите или отключите номер.",
-  "mobile.server.connectors.whatsapp.retryAt": "WhatsApp попросил OpenBot подождать. Следующая попытка в {time}.",
+    "kongCowork не может связаться с WhatsApp на этом номере. Переподключите или отключите номер.",
+  "mobile.server.connectors.whatsapp.retryAt": "WhatsApp попросил kongCowork подождать. Следующая попытка в {time}.",
   "mobile.server.connectors.whatsapp.linkAgain": "Привязать заново",
   "mobile.server.connectors.whatsapp.ownNumber": "Личный номер",
   "mobile.server.connectors.whatsapp.ownNumberDescription":
-    "Писать могут только вы в чате «Сообщение себе» и люди, которым вы разрешили. Выключите, если номер только для OpenBot.",
+    "Писать могут только вы в чате «Сообщение себе» и люди, которым вы разрешили. Выключите, если номер только для kongCowork.",
   "mobile.server.connectors.whatsapp.workingMessage": "Сообщение «Уже работаю…»",
   "mobile.server.connectors.whatsapp.workingMessageDescription":
-    "OpenBot отправляет его, пока агент работает, а затем заменяет ответом. Выключите, чтобы отправлять только ответ.",
+    "kongCowork отправляет его, пока агент работает, а затем заменяет ответом. Выключите, чтобы отправлять только ответ.",
   "mobile.server.connectors.whatsapp.orchestratorTitle": "Оркестратор WhatsApp",
   "mobile.server.connectors.whatsapp.orchestratorDescription":
-    "Этот агент получает сообщения для OpenBot со всех ваших привязанных номеров. Короткие он обрабатывает сам, остальную работу передаёт нужному агенту и отвечает в WhatsApp.",
+    "Этот агент получает сообщения для kongCowork со всех ваших привязанных номеров. Короткие он обрабатывает сам, остальную работу передаёт нужному агенту и отвечает в WhatsApp.",
   "mobile.server.connectors.whatsapp.orchestratorNone":
     "Добавьте Оркестратора WhatsApp, иначе WhatsApp не получит ответа.",
   "mobile.server.connectors.whatsapp.addAgent": "Добавьте Оркестратора WhatsApp",
@@ -955,12 +957,12 @@ export const messages = {
   "mobile.server.connectors.whatsapp.linkDescription":
     "Выберите номер, затем привяжите этот сервер в WhatsApp на телефоне.",
   "mobile.server.connectors.whatsapp.codeOnly":
-    "На телефоне привяжите номер кодом привязки. Чтобы сканировать QR-код, используйте OpenBot на компьютере.",
+    "На телефоне привяжите номер кодом привязки. Чтобы сканировать QR-код, используйте kongCowork на компьютере.",
   "mobile.server.connectors.whatsapp.kindLabel": "Номер",
   "mobile.server.connectors.whatsapp.kindPersonal": "Мой личный номер",
   "mobile.server.connectors.whatsapp.kindPersonalDescription":
-    "OpenBot отвечает только в вашем чате «Сообщение себе» и людям, которым вы разрешили.",
-  "mobile.server.connectors.whatsapp.kindDedicated": "Номер только для OpenBot",
+    "kongCowork отвечает только в вашем чате «Сообщение себе» и людям, которым вы разрешили.",
+  "mobile.server.connectors.whatsapp.kindDedicated": "Номер только для kongCowork",
   "mobile.server.connectors.whatsapp.kindDedicatedDescription":
     "Незнакомые люди получают код, который нужно передать вам. Вы одобряете их здесь.",
   "mobile.server.connectors.whatsapp.phoneLabel": "Номер телефона",
@@ -982,20 +984,20 @@ export const messages = {
   "mobile.server.connectors.whatsapp.failedBusy":
     "Уже идёт другая привязка. Дождитесь её завершения и повторите попытку.",
   "mobile.server.connectors.whatsapp.failedUnavailable":
-    "OpenBot не может связаться с WhatsApp. Проверьте подключение к интернету.",
+    "kongCowork не может связаться с WhatsApp. Проверьте подключение к интернету.",
   "mobile.server.connectors.whatsapp.tryAgain": "Повторить",
   "mobile.server.connectors.whatsapp.agentStepDescription":
-    "Этот новый агент отвечает на сообщения для OpenBot на {number} и на каждом номере, который вы привяжете позже.",
-  "mobile.server.connectors.whatsapp.doneTitle": "OpenBot привязан к {number}",
+    "Этот новый агент отвечает на сообщения для kongCowork на {number} и на каждом номере, который вы привяжете позже.",
+  "mobile.server.connectors.whatsapp.doneTitle": "kongCowork привязан к {number}",
   "mobile.server.connectors.whatsapp.done": "Готово",
   "mobile.server.connectors.whatsapp.disconnectTitle": "Отключить {number}?",
   "mobile.server.connectors.whatsapp.disconnectBody":
-    "OpenBot выйдет из WhatsApp на {number}. Если OpenBot был выключен, также удалите устройство в WhatsApp > Связанные устройства.",
+    "kongCowork выйдет из WhatsApp на {number}. Если kongCowork был выключен, также удалите устройство в WhatsApp > Связанные устройства.",
   "mobile.server.connectors.whatsapp.disconnectEffect":
     "Люди больше не смогут обращаться к вашим агентам через {number}.",
-  "mobile.server.connectors.whatsapp.removeEffectKept": "Диалоги и Оркестратор WhatsApp останутся в OpenBot.",
+  "mobile.server.connectors.whatsapp.removeEffectKept": "Диалоги и Оркестратор WhatsApp останутся в kongCowork.",
   "mobile.server.connectors.whatsapp.removeEffectDeleted":
-    "Это последний номер, поэтому Оркестратор WhatsApp и его диалоги будут удалены из OpenBot.",
+    "Это последний номер, поэтому Оркестратор WhatsApp и его диалоги будут удалены из kongCowork.",
   "mobile.server.connectors.whatsapp.keep": "Оставить привязанным",
   "mobile.server.connectors.whatsapp.sendersTitle": "Кто может писать на {number}",
   "mobile.server.connectors.whatsapp.sendersDescription": "Эти контакты и группы могут поручать работу вашим агентам.",
@@ -1016,7 +1018,7 @@ export const messages = {
   "mobile.server.connectors.whatsapp.groupDescription": "Участники этой группы могут поручать работу вашим агентам.",
   "mobile.server.connectors.whatsapp.groupSearch": "Поиск групп",
   "mobile.server.connectors.whatsapp.groupsLoading": "Загрузка групп…",
-  "mobile.server.connectors.whatsapp.groupsLoadFailed": "OpenBot не смог прочитать группы",
+  "mobile.server.connectors.whatsapp.groupsLoadFailed": "kongCowork не смог прочитать группы",
   "mobile.server.connectors.whatsapp.groupsEmpty": "Этот номер не состоит ни в одной группе.",
   "mobile.server.connectors.whatsapp.groupsNoMatch": "Нет группы с таким названием.",
   "mobile.server.connectors.whatsapp.groupAdded": "Добавлена",
@@ -1045,9 +1047,9 @@ export const messages = {
   "mobile.server.providers.runtimesFailed": "Не удалось получить загрузки этого сервера.",
   "mobile.server.providers.unavailable":
     "Подключитесь к этому серверу как владелец или администратор, чтобы управлять его провайдерами.",
-  "mobile.server.providers.unsupported": "Обновите OpenBot на этом сервере, чтобы управлять здесь его провайдерами.",
+  "mobile.server.providers.unsupported": "Обновите kongCowork на этом сервере, чтобы управлять здесь его провайдерами.",
   "mobile.server.providers.signInUnsupported": "Этот сервер не может выполнить вход в этого провайдера с телефона.",
-  "mobile.server.providers.actionFailed": "OpenBot не удалось выполнить это действие. Повторите попытку.",
+  "mobile.server.providers.actionFailed": "kongCowork не удалось выполнить это действие. Повторите попытку.",
   "mobile.server.providers.openFailed": "Не удалось открыть страницу входа.",
   "mobile.server.providers.copyFailed": "Не удалось скопировать код.",
   "mobile.server.providers.statusLabel": "Состояние",
@@ -1056,10 +1058,10 @@ export const messages = {
   "mobile.server.providers.connect": "Подключить",
   "mobile.server.providers.reconnect": "Переподключить",
   "mobile.server.providers.connectHint":
-    "Сервер начинает вход. Затем OpenBot показывает шаги, и вы завершаете их на этом телефоне.",
+    "Сервер начинает вход. Затем kongCowork показывает шаги, и вы завершаете их на этом телефоне.",
   "mobile.server.providers.relayHint":
-    "OpenBot открывает страницу входа провайдера на этом телефоне. Если нужно скопировать что-то обратно, OpenBot сначала показывает шаги.",
-  "mobile.server.providers.connectOnComputer": "Подключите этого провайдера в OpenBot на компьютере.",
+    "kongCowork открывает страницу входа провайдера на этом телефоне. Если нужно скопировать что-то обратно, kongCowork сначала показывает шаги.",
+  "mobile.server.providers.connectOnComputer": "Подключите этого провайдера в kongCowork на компьютере.",
   "mobile.server.providers.signInTo": "Вход в {name}",
   "mobile.server.providers.starting": "Запуск входа на сервере…",
   "mobile.server.providers.openPage": "Открыть страницу входа",
@@ -1070,15 +1072,15 @@ export const messages = {
     "В ChatGPT на компьютере откройте настройки безопасности и включите вход по коду устройства для Codex. Для рабочего аккаунта его включает администратор рабочего пространства.",
   "mobile.server.providers.codeStepCopy": "Скопируйте код.",
   "mobile.server.providers.codeStepEnter": "Откройте страницу входа и введите код.",
-  "mobile.server.providers.codeStepReturn": "Вернитесь в OpenBot. Вход завершится сам.",
+  "mobile.server.providers.codeStepReturn": "Вернитесь в kongCowork. Вход завершится сам.",
   "mobile.server.providers.pasteStepSignIn": "Откройте страницу входа и войдите.",
   "mobile.server.providers.pasteStepCopy": "Скопируйте код, который показывает страница.",
-  "mobile.server.providers.pasteStepReturn": "Вернитесь в OpenBot и вставьте код ниже.",
+  "mobile.server.providers.pasteStepReturn": "Вернитесь в kongCowork и вставьте код ниже.",
   "mobile.server.providers.relayStepSignIn": "Откройте страницу входа и войдите.",
   "mobile.server.providers.relayStepBlank": "Последняя страница не загрузится. Так и должно быть.",
   "mobile.server.providers.relayStepCopy": "Нажмите на адресную строку и скопируйте весь адрес.",
-  "mobile.server.providers.relayStepReturn": "Вернитесь в OpenBot и вставьте адрес ниже.",
-  "mobile.server.providers.linkHint": "Войдите на странице. OpenBot продолжит сам.",
+  "mobile.server.providers.relayStepReturn": "Вернитесь в kongCowork и вставьте адрес ниже.",
+  "mobile.server.providers.linkHint": "Войдите на странице. kongCowork продолжит сам.",
   "mobile.server.providers.relayWaiting": "Ожидание страницы входа от сервера…",
   "mobile.server.providers.code": "Код со страницы",
   "mobile.server.providers.codePlaceholder": "Вставьте код сюда",
@@ -1134,7 +1136,7 @@ export const messages = {
   "mobile.server.providers.accountsPooledHint":
     "Агенты используют эти аккаунты вместе. Новый аккаунт входит на своей странице на этом телефоне.",
   "mobile.server.providers.accountsPooledOnComputer":
-    "Агенты используют эти аккаунты вместе. Добавьте аккаунт в OpenBot на компьютере.",
+    "Агенты используют эти аккаунты вместе. Добавьте аккаунт в kongCowork на компьютере.",
   "mobile.server.providers.inUse": "Используется",
   "mobile.server.providers.notInPool": "Вне пула",
   "mobile.server.providers.leaveOutOfPool": "Исключить из пула",
@@ -1172,7 +1174,7 @@ export const messages = {
   "mobile.server.providers.disconnect": "Отключить",
   "mobile.server.providers.disconnectTitle": "Отключить {name}?",
   "mobile.server.providers.disconnectBody":
-    "OpenBot выходит из {provider} на сервере. Агенты ждут, пока вы снова не подключите {provider}.",
+    "kongCowork выходит из {provider} на сервере. Агенты ждут, пока вы снова не подключите {provider}.",
   "mobile.server.providers.resetUsage": "Сбросить использование",
   "mobile.server.providers.resettingUsage": "Сброс…",
   "mobile.server.providers.resetUsageTitle": "Сбросить использование {name}?",
@@ -1190,7 +1192,7 @@ export const messages = {
   "mobile.server.providers.sectionRuntime": "Среда выполнения",
   "mobile.server.providers.updateTo": "Обновить до {version}",
   "mobile.server.providers.versionInstalledByUser": "{version} · установлена вами",
-  "mobile.server.providers.versionDownloaded": "{version} · загружена OpenBot",
+  "mobile.server.providers.versionDownloaded": "{version} · загружена kongCowork",
   "mobile.server.providers.keyFree": "Бесплатно",
   "mobile.server.providers.keyOptional": "Необязательно. Ключ добавляет платные модели.",
   "mobile.server.providers.geminiKeyInUse":
@@ -1219,7 +1221,7 @@ export const messages = {
     many: "{count} серверов",
     other: "{count} сервера",
   },
-  "mobile.server.mcp.unsupported": "Обновите OpenBot на этом сервере, чтобы управлять его серверами MCP здесь.",
+  "mobile.server.mcp.unsupported": "Обновите kongCowork на этом сервере, чтобы управлять его серверами MCP здесь.",
   "mobile.server.mcp.unavailable":
     "Подключитесь к этому серверу как владелец или администратор, чтобы управлять его серверами MCP.",
   "mobile.server.mcp.description":
@@ -1238,7 +1240,7 @@ export const messages = {
   "mobile.server.mcp.addConfirm": "Добавить",
   "mobile.server.mcp.name": "Название",
   "mobile.server.mcp.namePlaceholder": "Название сервера MCP",
-  "mobile.server.mcp.nameReserved": "OpenBot уже использует название {name}.",
+  "mobile.server.mcp.nameReserved": "kongCowork уже использует название {name}.",
   "mobile.server.mcp.transport": "Транспорт",
   "mobile.server.mcp.stdio": "Команда (STDIO)",
   "mobile.server.mcp.http": "URL (HTTP)",
@@ -1248,12 +1250,12 @@ export const messages = {
   "mobile.server.mcp.command": "Команда",
   "mobile.server.mcp.commandHint": "Только программа. Каждое следующее слово укажите в аргументах.",
   "mobile.server.mcp.arguments": "Аргументы",
-  "mobile.server.mcp.argumentsHint": "OpenBot передаёт программе каждый аргумент как одно слово.",
+  "mobile.server.mcp.argumentsHint": "kongCowork передаёт программе каждый аргумент как одно слово.",
   "mobile.server.mcp.addArgument": "Добавить аргумент",
   "mobile.server.mcp.argument": "Аргумент {position}",
   "mobile.server.mcp.removeArgument": "Удалить аргумент {position}",
   "mobile.server.mcp.environment": "Переменные окружения",
-  "mobile.server.mcp.environmentHint": "OpenBot передаёт эти переменные серверу MCP при запуске.",
+  "mobile.server.mcp.environmentHint": "kongCowork передаёт эти переменные серверу MCP при запуске.",
   "mobile.server.mcp.addVariable": "Добавить переменную",
   "mobile.server.mcp.variableKey": "Имя переменной {position}",
   "mobile.server.mcp.variableValue": "Значение переменной {position}",
@@ -1269,7 +1271,7 @@ export const messages = {
   "mobile.server.mcp.url": "URL сервера",
   "mobile.server.mcp.urlInvalid": "Введите адрес http или https.",
   "mobile.server.mcp.headers": "Заголовки",
-  "mobile.server.mcp.headersHint": "OpenBot отправляет эти заголовки с каждым запросом.",
+  "mobile.server.mcp.headersHint": "kongCowork отправляет эти заголовки с каждым запросом.",
   "mobile.server.mcp.addHeader": "Добавить заголовок",
   "mobile.server.mcp.headerName": "Имя заголовка {position}",
   "mobile.server.mcp.headerValue": "Значение заголовка {position}",
@@ -1291,7 +1293,7 @@ export const messages = {
     other: "Подключено · {count} инструмента",
   },
   "mobile.server.mcp.signInOnComputer":
-    "Этот сервер MCP просит войти. Войдите через OpenBot на компьютере и проверьте снова.",
+    "Этот сервер MCP просит войти. Войдите через kongCowork на компьютере и проверьте снова.",
   "mobile.server.mcp.signedInDescription": "{server} выполнил вход на этот сервер MCP.",
   "mobile.server.mcp.signOut": "Выйти",
   "mobile.server.mcp.saveFailed": "Не удалось сохранить изменение. Повторите попытку.",
@@ -1340,8 +1342,8 @@ export const messages = {
   "mobile.server.settings.updates": "Обновления",
   "mobile.server.settings.updateAvailable": "Доступно обновление",
   "mobile.server.route.updates": "Обновления",
-  "mobile.server.update.hostTitle": "OpenBot · {name}",
-  "mobile.server.update.version": "OpenBot {version}",
+  "mobile.server.update.hostTitle": "kongCowork · {name}",
+  "mobile.server.update.version": "kongCowork {version}",
   "mobile.server.update.status.idle": "Проверьте обновления, чтобы найти последний релиз.",
   "mobile.server.update.status.checking": "Проверка обновлений…",
   "mobile.server.update.status.available": "Доступна версия {version}.",
@@ -1349,28 +1351,28 @@ export const messages = {
   "mobile.server.update.status.downloadingUnknown": "Скачивание {version}…",
   "mobile.server.update.status.ready": "Версия {version} скачана.",
   "mobile.server.update.status.installing": "{name} перезапускается, чтобы установить обновление.",
-  "mobile.server.update.status.upToDate": "На {name} установлена последняя версия OpenBot.",
+  "mobile.server.update.status.upToDate": "На {name} установлена последняя версия kongCowork.",
   "mobile.server.update.status.checkFailed": "{name} не удалось проверить обновления. Повторите попытку.",
   "mobile.server.update.status.downloadFailed": "{name} не удалось скачать обновление. Повторите попытку.",
   "mobile.server.update.status.installFailed":
-    "{name} не удалось установить обновление. Убедитесь, что другие пользователи этого компьютера не запускают OpenBot, и повторите попытку.",
+    "{name} не удалось установить обновление. Убедитесь, что другие пользователи этого компьютера не запускают kongCowork, и повторите попытку.",
   "mobile.server.update.releaseCheckFailed":
     "{name} не удалось прочитать ленту релизов. Проверьте сетевое подключение хоста и повторите попытку.",
   "mobile.server.update.releaseUnavailable":
     "Для этой сборки проверка релизов недоступна. Попросите администратора хоста проверить совместимый релиз.",
   "mobile.server.update.externalTitle": "Установкой управляет хост",
   "mobile.server.update.path.hostManager":
-    "OpenBot Host Manager ставит обновления, когда все пользователи свободны. Если обновление не начинается, попросите администратора проверить статус Host Manager.",
+    "kongCowork Host Manager ставит обновления, когда все пользователи свободны. Если обновление не начинается, попросите администратора проверить статус Host Manager.",
   "mobile.server.update.path.hosted":
     "Облачный сервис скачивает обновления в фоне. Скачанное обновление ставится при следующем запуске сервера. Дождитесь окончания текущей работы, прежде чем остановить и снова запустить сервер. Если версия не меняется, свяжитесь с администратором хоста.",
   "mobile.server.update.path.system":
-    "На хосте выполните sudo openbot update, чтобы поставить последний релиз. Команда останавливает OpenBot, поэтому сначала дождитесь окончания текущей работы. Автоматически скачанные обновления ставятся при следующей загрузке.",
+    "На хосте выполните sudo openbot update, чтобы поставить последний релиз. Команда останавливает kongCowork, поэтому сначала дождитесь окончания текущей работы. Автоматически скачанные обновления ставятся при следующей загрузке.",
   "mobile.server.update.path.container":
-    "На Docker-хосте скачайте новый образ OpenBot и пересоздайте контейнер с теми же томами данных. Сначала дождитесь окончания текущей работы. Сохраните существующие тома, чтобы не потерять данные.",
+    "На Docker-хосте скачайте новый образ kongCowork и пересоздайте контейнер с теми же томами данных. Сначала дождитесь окончания текущей работы. Сохраните существующие тома, чтобы не потерять данные.",
   "mobile.server.update.path.manual":
-    "Эта установка не может обновить себя сама. Попросите администратора хоста поставить совместимый релиз с github.com/nightly-labs/openbot/releases. Сохраните существующие данные OpenBot.",
+    "Эта установка не может обновить себя сама. Попросите администратора хоста поставить совместимый релиз с github.com/nightly-labs/openbot/releases. Сохраните существующие данные kongCowork.",
   "mobile.server.update.path.unavailable":
-    "Это сборка для разработки. Чтобы проверять обновления, используйте установленный релиз OpenBot.",
+    "Это сборка для разработки. Чтобы проверять обновления, используйте установленный релиз kongCowork.",
   "mobile.server.update.check": "Проверить обновления",
   "mobile.server.update.start": "Обновить при простое",
   "mobile.server.update.restartNow": "Перезапустить сейчас",
@@ -1381,27 +1383,27 @@ export const messages = {
   "mobile.server.update.automatic": "{name} устанавливает обновления автоматически.",
   "mobile.server.update.autoDownloadTitle": "Скачивать обновления автоматически",
   "mobile.server.update.autoDownloadDescription":
-    "{name} скачивает каждую новую версию OpenBot, как только она выходит.",
+    "{name} скачивает каждую новую версию kongCowork, как только она выходит.",
   "mobile.server.update.autoInstallTitle": "Устанавливать обновления автоматически",
   "mobile.server.update.autoInstallDescription":
     "{name} перезапустится со скачанным обновлением, когда его агенты простаивают. Участники ненадолго отключатся и подключатся снова автоматически.",
   "mobile.server.update.waitingFor": "Ожидание: {reasons}.",
   "mobile.server.update.disabledTitle": "Удалённые обновления отключены",
   "mobile.server.update.disabledDescription":
-    "Пользователь {name} отключил обновления от участников сервера. Попросите его обновить OpenBot или включить эту настройку.",
+    "Пользователь {name} отключил обновления от участников сервера. Попросите его обновить kongCowork или включить эту настройку.",
   "mobile.server.update.managedTitle": "Обновлениями управляет Host Manager",
   "mobile.server.update.managedDescription":
-    "OpenBot Host Manager обновляет {name}. Обратитесь к администратору хоста.",
+    "kongCowork Host Manager обновляет {name}. Обратитесь к администратору хоста.",
   "mobile.server.update.unsupportedTitle": "{name} не может обновляться сам",
   "mobile.server.update.unsupportedDescription":
-    "В этой сборке OpenBot нет средства обновления. Установите новую версию на {name}.",
+    "В этой сборке kongCowork нет средства обновления. Установите новую версию на {name}.",
   "mobile.server.update.restarting": "Перезапуск…",
   "mobile.server.update.loadFailed": "Не удалось загрузить статус обновления {name}.",
-  "mobile.server.update.dialog.offerTitle": "Обновить {name} до OpenBot {version}",
+  "mobile.server.update.dialog.offerTitle": "Обновить {name} до kongCowork {version}",
   "mobile.server.update.dialog.offerDescription":
-    "{name} использует OpenBot {current}. Сначала скачивается обновление, затем сервер перезапускается.",
+    "{name} использует kongCowork {current}. Сначала скачивается обновление, затем сервер перезапускается.",
   "mobile.server.update.dialog.offerReadyDescription":
-    "{name} использует OpenBot {current}. Обновление скачано. {name} перезапустится, чтобы установить его.",
+    "{name} использует kongCowork {current}. Обновление скачано. {name} перезапустится, чтобы установить его.",
   "mobile.server.update.dialog.waitIdleDescription":
     "Перезапуск ждёт завершения ходов агентов и запусков регулярных задач.",
   "mobile.server.update.dialog.updateNow": "Обновить сейчас",
@@ -1417,10 +1419,10 @@ export const messages = {
   "mobile.server.update.reason.fileTransfer": "передача файла",
   "mobile.server.update.reason.browserControl": "управление браузером агентом",
   "mobile.server.update.reason.updateOperation": "другой шаг обновления",
-  "mobile.server.update.reason.initialization": "запуск OpenBot",
+  "mobile.server.update.reason.initialization": "запуск kongCowork",
   "mobile.server.update.reason.other": "другая работа",
   "mobile.server.update.actionFailed": "Не удалось выполнить действие с сервером.",
-  "mobile.server.update.unavailable": "Подключитесь к этому серверу, чтобы увидеть его обновления OpenBot.",
+  "mobile.server.update.unavailable": "Подключитесь к этому серверу, чтобы увидеть его обновления kongCowork.",
   "mobile.server.update.loading": "Загрузка обновлений…",
   "mobile.server.route.sites": "Сайты",
   "mobile.server.settings.sites": "Сайты",
@@ -1449,13 +1451,13 @@ export const messages = {
   "mobile.server.sites.deleteDescription": "Этот адрес сразу начнёт возвращать 410 Gone.",
   "mobile.server.sites.deleteFailed": "Не удалось удалить сайт.",
   "mobile.server.sites.openFailed": "Не удалось открыть сайт.",
-  "mobile.server.sites.unsupported": "Обновите OpenBot на этом сервере, чтобы видеть его сайты здесь.",
+  "mobile.server.sites.unsupported": "Обновите kongCowork на этом сервере, чтобы видеть его сайты здесь.",
   "mobile.server.sites.offline": "Подключитесь к серверу, чтобы увидеть его сайты.",
   "mobile.server.route.roles": "Права доступа",
   "mobile.server.route.role": "Роль",
   "mobile.server.roles.description":
     "Выберите агентов, которыми могут пользоваться участники. Владельцы и администраторы могут пользоваться всеми агентами.",
-  "mobile.server.roles.unsupported": "Обновите OpenBot на этом сервере, чтобы управлять ролями.",
+  "mobile.server.roles.unsupported": "Обновите kongCowork на этом сервере, чтобы управлять ролями.",
   "mobile.server.roles.unavailable": "Управлять ролями может только владелец или администратор сервера в сети.",
   "mobile.server.roles.loading": "Загрузка ролей…",
   "mobile.server.roles.loadFailed": "Не удалось загрузить роли этого сервера.",
@@ -1501,7 +1503,7 @@ export const messages = {
   "mobile.server.route.audit": "Журнал аудита",
   "mobile.server.audit.description":
     "Изменения участников, ролей и доступа к агентам этого сервера, сначала новые. Хост хранит 500 последних изменений.",
-  "mobile.server.audit.unsupported": "Обновите OpenBot на этом сервере, чтобы увидеть журнал аудита.",
+  "mobile.server.audit.unsupported": "Обновите kongCowork на этом сервере, чтобы увидеть журнал аудита.",
   "mobile.server.audit.unavailable": "Журнал аудита видит только владелец или администратор сервера в сети.",
   "mobile.server.audit.loading": "Загрузка изменений…",
   "mobile.server.audit.loadFailed": "Не удалось загрузить журнал аудита этого сервера.",
@@ -1529,7 +1531,7 @@ export const messages = {
   // Server settings › Import agents: Grok Bot and Hermes exports (`agent-import-v1`).
   "mobile.server.settings.importAgents": "Импорт агентов",
   "mobile.server.route.import": "Импорт агентов",
-  "mobile.server.import.unsupported": "Обновите OpenBot на этом сервере, чтобы импортировать агентов отсюда.",
+  "mobile.server.import.unsupported": "Обновите kongCowork на этом сервере, чтобы импортировать агентов отсюда.",
   "mobile.server.import.unavailable": "Подключитесь к этому серверу, чтобы импортировать агентов.",
   "mobile.server.import.count.agent": {
     one: "{count} агент",
@@ -1569,10 +1571,10 @@ export const messages = {
   },
   "mobile.server.import.sourceTitle": "Где сейчас ваши агенты?",
   "mobile.server.import.sourceLede":
-    "OpenBot скопирует их на этот сервер. Вы увидите каждый элемент, прежде чем что-либо изменится.",
+    "kongCowork скопирует их на этот сервер. Вы увидите каждый элемент, прежде чем что-либо изменится.",
   "mobile.server.import.hermesNote": "Экспортируйте файл .zip из Hermes.",
   "mobile.server.import.grokNote": "В облаке. Агент экспорта там создаст файл .zip.",
-  "mobile.server.import.transfer": "Другой сервер OpenBot",
+  "mobile.server.import.transfer": "Другой сервер kongCowork",
   "mobile.server.import.transferNote": "Используйте «Перенос», чтобы перенести агентов и настройки вместе.",
   "mobile.server.import.grokLede":
     "Агент экспорта в Grok Bot упаковывает имена, инструкции, аватары, навыки, регулярные задачи, записи памяти и выбранные вами файлы в один файл .zip.",
@@ -1634,7 +1636,7 @@ export const messages = {
   "mobile.server.route.transfer": "Перенос",
   "mobile.server.route.transferExport": "Экспорт",
   "mobile.server.route.transferImport": "Импорт",
-  "mobile.server.transfer.unsupported": "Обновите OpenBot на этом сервере, чтобы выполнить перенос отсюда.",
+  "mobile.server.transfer.unsupported": "Обновите kongCowork на этом сервере, чтобы выполнить перенос отсюда.",
   "mobile.server.transfer.unavailable":
     "Подключитесь к этому серверу как владелец или администратор, чтобы выполнить перенос.",
   "mobile.server.transfer.title": "Перенос сервера на другой компьютер",
@@ -1678,8 +1680,8 @@ export const messages = {
   "mobile.server.transfer.reading": "Чтение файла…",
   "mobile.server.transfer.sending": "Отправка файла… {percent}%",
   "mobile.server.transfer.openFailed": "Не удалось открыть файл.",
-  "mobile.server.transfer.source": "OpenBot {version} · экспорт {date}",
-  "mobile.server.transfer.sourceNoDate": "OpenBot {version}",
+  "mobile.server.transfer.source": "kongCowork {version} · экспорт {date}",
+  "mobile.server.transfer.sourceNoDate": "kongCowork {version}",
   "mobile.server.transfer.importWarnings": "Перед началом импорта",
   "mobile.server.transfer.importAgents": "Агенты в файле",
   "mobile.server.transfer.nameExists": "Имя уже занято",

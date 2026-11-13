@@ -1,4 +1,5 @@
 import type { AppInfo } from "@openbot/contracts/ipc";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import { SOFTWARE_RENDERING_ATTRIBUTE } from "@openbot/ui/document-rendering";
 import { createSignal, flush, onSettled } from "solid-js";
 import { appPort } from "./app-port";
@@ -49,7 +50,7 @@ const Platform = createSimpleContext({
           })
           .catch(() =>
             setAppInfo({
-              name: "OpenBot",
+              name: PRODUCT_NAME,
               version: "unavailable",
               platform: "darwin",
               variant: "production",

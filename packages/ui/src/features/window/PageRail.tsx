@@ -220,8 +220,6 @@ export interface PageRailProps {
   onSettings: (button: HTMLElement) => void;
   /** A notice for the Settings button, such as an update, when no other place shows it. A dot marks it. */
   settingsNotice?: string | undefined;
-  /** The Help menu, between Marketplace and Settings. */
-  help: JSX.Element;
   /** The menu of the open server, below Settings. Absent where the window has one server and no menu. */
   server?: JSX.Element;
   /**
@@ -425,7 +423,6 @@ export function PageRail(props: PageRailProps) {
               </RailButton>
             )}
           </Show>
-          {props.help}
           <RailButton
             label={
               props.settingsNotice

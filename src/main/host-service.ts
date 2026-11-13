@@ -50,6 +50,7 @@ import {
   SIGNED_OUT_CHANNEL_MEMBER_ID,
 } from "@openbot/contracts/ipc";
 import type { LiveActivityRelayPush } from "@openbot/contracts/live-activity-relay";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import type { HostRestartState } from "@openbot/contracts/team-protocol/host-update-v1";
 import { sourceText } from "@openbot/i18n/source";
 import { createOpenBotLogger, toLogValue } from "@openbot/logging";
@@ -1086,7 +1087,7 @@ export class HostService extends EventEmitter<HostEvents> {
     // change starts the next route sync, so the host is not made a second time here.
     if (this.#boundAccountId !== this.#signedInAccountId()) return;
     if (!this.#options.store.configured) {
-      yield* this.configure({ serverName: "OpenBot" }, true);
+      yield* this.configure({ serverName: PRODUCT_NAME }, true);
       return;
     }
     const register = this.#options.registerRemoteHost;

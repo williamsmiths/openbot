@@ -434,7 +434,7 @@ export const messages = {
   "chat.suggestion.detailsNamed": "マーケットプレイスで {name} を開く",
   "chat.suggestion.dismissed": "{name} の提案を閉じました。",
   "chat.suggestion.undo": "元に戻す",
-  "chat.suggestion.localOnly": "{name} は自分のコンピューターの OpenBot で接続してください。",
+  "chat.suggestion.localOnly": "{name} は自分のコンピューターの kongCowork で接続してください。",
   "chat.suggestion.unavailable": "このサーバーでは {name} を接続できません。",
   "chat.serverInstall.title": "新しいサーバー",
   "chat.serverInstall.expired": "コマンドの有効期限が切れました。エージェントに新しいコマンドを頼んでください。",
@@ -449,6 +449,6 @@ export const messages = {
   "chat.reference.open.thread": "スレッド {name} を開く",
   "chat.feedbackSent.title": "フィードバックありがとうございます 🙏",
   "chat.feedbackSent.badge": "送信済み",
-  "chat.feedbackSent.body": "OpenBot チームが確認して対応します 💜",
+  "chat.feedbackSent.body": "kongCowork チームが確認して対応します 💜",
   "chat.feedbackSent.openNamed": "GitHub で issue #{number} を開く",
 } as const satisfies PartialTranslation<typeof source>;

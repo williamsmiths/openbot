@@ -3,21 +3,21 @@ import type { messages as source } from "../../en/error/provider";
 
 export const messages = {
   "error.provider.mcpConfig":
-    "OpenBot kon geen MCP-servers registreren in de configuratie van Codex. Controleer of je Codex-config.toml geldig en beschrijfbaar is en start OpenBot opnieuw.",
+    "kongCowork kon geen MCP-servers registreren in de configuratie van Codex. Controleer of je Codex-config.toml geldig en beschrijfbaar is en start kongCowork opnieuw.",
   "error.provider.computerUseConfig":
-    "OpenBot kon Computerbesturing niet registreren in de configuratie van Codex. Controleer of je Codex-config.toml geldig en beschrijfbaar is en start OpenBot opnieuw. Je kunt Computerbesturing uitzetten in de instellingen van de teamgenoot om zonder door te gaan.",
-  "error.provider.codexUnresponsive": "Codex reageerde niet meer, dus OpenBot heeft het proces beëindigd.",
-  "error.provider.acpUnresponsive": "{provider} reageerde niet op tijd, dus OpenBot heeft het proces beëindigd.",
+    "kongCowork kon Computerbesturing niet registreren in de configuratie van Codex. Controleer of je Codex-config.toml geldig en beschrijfbaar is en start kongCowork opnieuw. Je kunt Computerbesturing uitzetten in de instellingen van de teamgenoot om zonder door te gaan.",
+  "error.provider.codexUnresponsive": "Codex reageerde niet meer, dus kongCowork heeft het proces beëindigd.",
+  "error.provider.acpUnresponsive": "{provider} reageerde niet op tijd, dus kongCowork heeft het proces beëindigd.",
   "error.provider.acpSignInLost":
-    "{provider} is zijn aanmelding kwijt, dus OpenBot heeft het proces beëindigd. Stuur je bericht opnieuw.",
+    "{provider} is zijn aanmelding kwijt, dus kongCowork heeft het proces beëindigd. Stuur je bericht opnieuw.",
   "error.provider.acpPlanUsedUp":
     "{provider} meldt dat je abonnement op is. Kies een ander model of upgrade je {provider}-abonnement.",
   "error.provider.acpMcpNotLoaded":
-    "{provider} heeft de tools van OpenBot niet geladen, dus deze agent kan ze niet gebruiken en zijn teamgenoten niet bereiken. Een teambeleid van {provider} kan lokale MCP-servers blokkeren. Vraag je teambeheerder om ze toe te staan en probeer het opnieuw.",
+    "{provider} heeft de tools van kongCowork niet geladen, dus deze agent kan ze niet gebruiken en zijn teamgenoten niet bereiken. Een teambeleid van {provider} kan lokale MCP-servers blokkeren. Vraag je teambeheerder om ze toe te staan en probeer het opnieuw.",
   "error.provider.acpOwnMcpServerFailed":
-    "{provider} kon de MCP-server {name} niet starten, dus het antwoord is gestopt. Deze server staat in je eigen {provider}-instellingen, niet in OpenBot. Verwijder of herstel de server daar en start dan een nieuwe chat.",
+    "{provider} kon de MCP-server {name} niet starten, dus het antwoord is gestopt. Deze server staat in je eigen {provider}-instellingen, niet in kongCowork. Verwijder of herstel de server daar en start dan een nieuwe chat.",
   "error.provider.endpointsReadOnly":
-    "De opgeslagen endpoints zijn geschreven door een nieuwere versie van OpenBot, of het bestand kan niet worden gelezen. Werk OpenBot bij om ze te wijzigen.",
+    "De opgeslagen endpoints zijn geschreven door een nieuwere versie van kongCowork, of het bestand kan niet worden gelezen. Werk kongCowork bij om ze te wijzigen.",
   "error.provider.endpointNoSecureStorage":
     "Deze computer heeft geen beveiligde opslag, dus een API-sleutel of header kan niet worden opgeslagen. Verwijder ze, of gebruik een endpoint dat geen inloggegevens nodig heeft.",
   "error.provider.endpointDuplicate":
@@ -28,7 +28,7 @@ export const messages = {
   "error.provider.endpointSecretUnreadable":
     "Deze computer kan de opgeslagen API-sleutel en headers niet lezen. Voer de API-sleutel en de headers opnieuw in, zodat er niets verloren gaat.",
   "error.provider.discoveryTimeout": "{host} reageerde niet op tijd.",
-  "error.provider.discoveryUnreachable": "OpenBot kon geen verbinding maken met {host}.",
+  "error.provider.discoveryUnreachable": "kongCowork kon geen verbinding maken met {host}.",
   "error.provider.discoveryRedirect":
     "{host} stuurde een doorverwijzing. Voer het uiteindelijke adres van de server in.",
   "error.provider.discoveryRefused": "{host} heeft het verzoek geweigerd. Controleer de API-sleutel en de headers.",
@@ -36,7 +36,7 @@ export const messages = {
   "error.provider.discoveryTooLarge": "De modellenlijst van {host} is te groot.",
   "error.provider.discoveryInvalid": "{host} stuurde geen OpenAI-compatibele modellenlijst.",
   "error.provider.detectionSettingsReadOnly":
-    "De detectie-instellingen zijn geschreven door een nieuwere versie van OpenBot, of het bestand kan niet worden gelezen. Werk OpenBot bij om ze te wijzigen.",
+    "De detectie-instellingen zijn geschreven door een nieuwere versie van kongCowork, of het bestand kan niet worden gelezen. Werk kongCowork bij om ze te wijzigen.",
   "error.provider.detectionEntryInvalid":
     "Een adres moet een http://- of https://-URL zonder wachtwoord zijn, en een map moet een absoluut pad zijn.",
   "error.provider.detectionEntriesTooMany": "Er zijn te veel adressen of mappen.",
@@ -64,10 +64,10 @@ export const messages = {
   "error.provider.bunLicenseChecksum": "Checksum van de Bun-licentie komt niet overeen.",
   "error.provider.bunxDamaged": "De runner van de Bun-pakketbeheerder ontbreekt of is beschadigd.",
   "error.provider.releaseSourcesUnreachable":
-    "OpenBot kon de releasebronnen van de aanbieder niet bereiken. Controleer de verbinding en probeer het opnieuw.",
+    "kongCowork kon de releasebronnen van de aanbieder niet bereiken. Controleer de verbinding en probeer het opnieuw.",
   "error.provider.runtimesUnsupported": "Runtimes van aanbieders zijn niet beschikbaar op dit platform.",
-  "error.provider.closing": "OpenBot wordt gesloten.",
-  "error.provider.cliOverride": "Verwijder het expliciet ingestelde CLI-pad voordat je bijwerkt in OpenBot.",
+  "error.provider.closing": "kongCowork wordt gesloten.",
+  "error.provider.cliOverride": "Verwijder het expliciet ingestelde CLI-pad voordat je bijwerkt in kongCowork.",
   "error.provider.runtimeUpdateIncomplete": "De update van de runtime is niet voltooid.",
   "error.provider.downloadHttp": "Download van de runtime is mislukt met HTTP {status}.",
   "error.provider.downloadNoData": "Download van de runtime gaf geen gegevens.",
@@ -83,7 +83,7 @@ export const messages = {
   "error.provider.unexpectedVersion": "De runtime van de aanbieder gaf een onverwachte versie.",
   "error.provider.metadataNoData": "Download van de runtime-metadata gaf geen gegevens.",
   "error.provider.metadataTooLarge": "De runtime-metadata zijn te groot.",
-  "error.provider.requestFailed": "OpenBot kon {url} niet downloaden. {reason}",
+  "error.provider.requestFailed": "kongCowork kon {url} niet downloaden. {reason}",
   "error.provider.installRecordMismatch": "Het installatierecord van de runtime komt niet overeen.",
   "error.provider.runtimeChecksum": "Checksum van de runtime van de aanbieder komt niet overeen.",
   "error.provider.codexReleaseShape": "De Codex-release heeft een onverwachte vorm.",
@@ -125,30 +125,30 @@ export const messages = {
     "De sleutel van de aanbieder bevat een spatie of een teken dat een sleutel niet kan bevatten.",
   "error.provider.noModel": "De gekozen aanbieder heeft geen beschikbaar model.",
   "error.provider.noModelNamed": "{provider} heeft geen model beschikbaar.",
-  "error.provider.acpNoModels": "ACP CLI heeft geen ACP-modellen aangeboden. OpenBot raadt geen reservemodel.",
+  "error.provider.acpNoModels": "ACP CLI heeft geen ACP-modellen aangeboden. kongCowork raadt geen reservemodel.",
   "error.provider.endpointRemoveBusy":
     "Wacht tot de actieve beurt en de wachtrij klaar zijn voordat je dit endpoint verwijdert.",
-  "error.provider.codexOutdated": "Codex CLI {version} is te oud. OpenBot vereist 0.156.0 of nieuwer.",
+  "error.provider.codexOutdated": "Codex CLI {version} is te oud. kongCowork vereist 0.156.0 of nieuwer.",
   "error.provider.codexNotStarted": "Codex CLI is gevonden, maar kon niet worden gestart.",
   "error.provider.codexNotStartedHint":
     "Codex CLI is gevonden, maar kon niet worden gestart. Voer `codex --version` uit in een nieuwe terminal.",
   "error.provider.codexManagedNotStarted":
-    "ChatGPT is gedownload, maar kon niet worden gestart. Download het opnieuw in OpenBot.",
-  "error.provider.codexMissing": "ChatGPT is niet gedownload. Download het in OpenBot om door te gaan.",
-  "error.provider.claudeOutdated": "Claude Code {version} is te oud. OpenBot vereist 2.1.232 of nieuwer.",
+    "ChatGPT is gedownload, maar kon niet worden gestart. Download het opnieuw in kongCowork.",
+  "error.provider.codexMissing": "ChatGPT is niet gedownload. Download het in kongCowork om door te gaan.",
+  "error.provider.claudeOutdated": "Claude Code {version} is te oud. kongCowork vereist 2.1.232 of nieuwer.",
   "error.provider.claudeNotStarted": "Claude CLI is gevonden, maar kon niet worden gestart.",
   "error.provider.claudeNotStartedHint":
     "Claude CLI is gevonden, maar kon niet worden gestart. Voer `claude --version` uit in een nieuwe terminal.",
   "error.provider.claudeManagedNotStarted":
-    "Claude is gedownload, maar kon niet worden gestart. Download het opnieuw in OpenBot.",
-  "error.provider.claudeMissing": "Claude is niet gedownload. Download het in OpenBot om door te gaan.",
-  "error.provider.grokOutdated": "Grok CLI {version} is te oud. OpenBot vereist 1.0.5 of nieuwer.",
+    "Claude is gedownload, maar kon niet worden gestart. Download het opnieuw in kongCowork.",
+  "error.provider.claudeMissing": "Claude is niet gedownload. Download het in kongCowork om door te gaan.",
+  "error.provider.grokOutdated": "Grok CLI {version} is te oud. kongCowork vereist 1.0.5 of nieuwer.",
   "error.provider.grokNotStarted": "Grok CLI is gevonden, maar kon niet worden gestart.",
   "error.provider.grokNotStartedHint":
     "Grok CLI is gevonden, maar kon niet worden gestart. Voer `grok --version` uit in een nieuwe terminal.",
-  "error.provider.grokMissing": "Grok is niet gedownload. Download het in OpenBot om door te gaan.",
+  "error.provider.grokMissing": "Grok is niet gedownload. Download het in kongCowork om door te gaan.",
   "error.provider.opencodeNotStarted": "OpenCode kon niet starten. Voer `opencode --version` uit in een terminal.",
-  "error.provider.opencodeMissing": "OpenCode is niet gedownload. Download het in OpenBot om door te gaan.",
+  "error.provider.opencodeMissing": "OpenCode is niet gedownload. Download het in kongCowork om door te gaan.",
   "error.provider.codexVersionUnreadable": "Kan de versie van Codex CLI niet lezen.",
   "error.provider.claudeVersionUnreadable": "Kan de versie van Claude CLI niet lezen.",
   "error.provider.grokVersionUnreadable": "Kan de versie van Grok CLI niet lezen.",
@@ -157,7 +157,7 @@ export const messages = {
   "error.provider.connectBeforeProfile": "Verbind de gekozen aanbieder voordat je een profiel maakt.",
   "error.provider.cliNotReady": "{provider} CLI is niet klaar of niet ingelogd.",
   "error.provider.cliTimedOut":
-    "{provider} reageerde niet op tijd. De computer is misschien bezet. OpenBot probeert het opnieuw.",
+    "{provider} reageerde niet op tijd. De computer is misschien bezet. kongCowork probeert het opnieuw.",
   "error.provider.cliTimedOutRefresh":
     "{provider} reageerde niet op tijd. De computer is misschien bezet. Vernieuw de aanbieders om het opnieuw te proberen.",
   "error.provider.acpStartTimedOut":
@@ -165,7 +165,7 @@ export const messages = {
   "error.provider.acpModelsTimedOut":
     "{provider} gaf de modellen niet binnen {seconds} s. De computer is misschien bezet.",
   "error.provider.startStopped":
-    "{provider} is meerdere keren achter elkaar niet gestart, dus OpenBot probeert het niet meer. Vernieuw de aanbieders om het opnieuw te proberen.",
+    "{provider} is meerdere keren achter elkaar niet gestart, dus kongCowork probeert het niet meer. Vernieuw de aanbieders om het opnieuw te proberen.",
   "error.provider.tempDiskSpace":
     "{provider} heeft minstens 1 GB vrije schijfruimte nodig om te starten. Maak ruimte vrij en vernieuw daarna de aanbieders.",
   "error.provider.noCodeSignIn": "Bij {provider} kun je niet inloggen met een code.",
@@ -181,10 +181,10 @@ export const messages = {
   "error.provider.cliSigningIn":
     "De {provider} CLI is bezig met inloggen. Rond het inloggen af of annuleer het, en werk dan bij.",
   "error.provider.cliBusyUpdate": "De {provider} CLI werkt aan een beurt. Wacht tot die klaar is en werk dan bij.",
-  "error.provider.cliSelectFailed": "OpenBot kon de geïnstalleerde beheerde CLI niet selecteren.",
+  "error.provider.cliSelectFailed": "kongCowork kon de geïnstalleerde beheerde CLI niet selecteren.",
   "error.provider.noAuthenticatedAccount": "{provider} gaf geen geverifieerd account terug.",
   "error.provider.signInExpired": "Je inlog bij {provider} is verlopen. Log opnieuw in om door te gaan.",
-  "error.provider.cliActivateFailed": "OpenBot kon de beheerde CLI niet activeren.",
+  "error.provider.cliActivateFailed": "kongCowork kon de beheerde CLI niet activeren.",
   "error.provider.noMainlandChinaSignIn": "{provider} heeft geen aanmelding voor het Chinese vasteland.",
   "error.provider.cliNewVersionNotStarted": "De nieuwe versie is niet gestart.",
   "error.provider.cliBusyReconnect":
@@ -222,13 +222,13 @@ export const messages = {
   "error.provider.opencodeIncompleteReply":
     "Het antwoord van het model werd afgebroken of was ongeldig. Stuur je bericht opnieuw of kies een ander model.\n{detail}",
   "error.provider.opencodeNetwork":
-    "OpenCode kon geen verbinding maken met de modelaanbieder. Controleer de netwerkverbinding van de computer waarop OpenBot draait en probeer het opnieuw.\n{detail}",
+    "OpenCode kon geen verbinding maken met de modelaanbieder. Controleer de netwerkverbinding van de computer waarop kongCowork draait en probeer het opnieuw.\n{detail}",
   "error.provider.codexStateBusy":
     "ChatGPT bereidt na een eerdere start nog de lokale geschiedenis voor. Wacht een paar minuten en probeer het opnieuw.",
   "error.provider.codexThreadInUse":
     "Een andere Codex-app heeft deze chat open, zoals de Codex-desktopapp, de Codex CLI of een IDE-extensie. Maar één app tegelijk kan naar een Codex-chat schrijven. Sluit de chat in die app en stuur je bericht dan opnieuw.",
   "error.provider.realtimeLimitZero":
-    "Linux heeft de provider gestopt, omdat OpenBot een realtime-CPU-limiet van 0 heeft. De limiet komt van je systeem. Installeer en start rtkit (`rtkit-daemon`), voer `systemctl --user restart xdg-desktop-portal` uit en start OpenBot daarna opnieuw. Alleen xdg-desktop-portal opnieuw starten helpt niet zolang rtkit ontbreekt.",
+    "Linux heeft de provider gestopt, omdat kongCowork een realtime-CPU-limiet van 0 heeft. De limiet komt van je systeem. Installeer en start rtkit (`rtkit-daemon`), voer `systemctl --user restart xdg-desktop-portal` uit en start kongCowork daarna opnieuw. Alleen xdg-desktop-portal opnieuw starten helpt niet zolang rtkit ontbreekt.",
   "error.provider.cpuUnsupported":
     "De processor van deze computer kan deze aanbieder niet uitvoeren. Gebruik een andere aanbieder.",
   "error.provider.opencodeDatabaseNewer":
@@ -239,20 +239,20 @@ export const messages = {
     "Het OpenCode-model beëindigde de beurt na het redeneren, zonder antwoord. Probeer het opnieuw, of kies een ander model.",
   "error.provider.acpNoAnswer":
     "{provider} beëindigde de beurt zonder antwoord. Stuur het bericht opnieuw, of begin een nieuwe chat.",
-  "error.provider.chatgptPageFailed": "OpenBot kon de verbindingspagina van ChatGPT niet openen.",
+  "error.provider.chatgptPageFailed": "kongCowork kon de verbindingspagina van ChatGPT niet openen.",
   "error.provider.noneReady": "Er is geen agentaanbieder klaar.",
   "error.provider.claudeTurnActive": "Wacht op de actieve Claude-beurt voordat je de context vernieuwt.",
   "error.provider.codexLoginRequired": "Codex vereist inloggen met een ChatGPT-abonnement. Voer `codex login` uit.",
-  "error.provider.cliUpdateFailed": "OpenBot kon de {provider} CLI niet bijwerken. {reason}",
+  "error.provider.cliUpdateFailed": "kongCowork kon de {provider} CLI niet bijwerken. {reason}",
   "error.provider.tryAgain": "Probeer het opnieuw.",
   "error.provider.noAgentProcess": "{provider} heeft geen proces dat draait voor deze agent.",
   "error.provider.stoppedBeforeAgentProcess": "{provider} is gestopt voordat het proces van de agent startte.",
   "error.provider.archiveUnreadable":
     "Het runtime-archief kan niet worden gelezen of gebruikt een niet-ondersteunde indeling.",
-  "error.provider.antigravityMissing": "Gemini is niet gedownload. Download het in OpenBot om door te gaan.",
+  "error.provider.antigravityMissing": "Gemini is niet gedownload. Download het in kongCowork om door te gaan.",
   "error.provider.antigravityNotStarted": "De Gemini-server is gevonden, maar de versie kan niet worden gelezen.",
   "error.provider.antigravityOverrideInvalid":
-    "De Gemini-server in OPENBOT_ANTIGRAVITY_PATH ontbreekt of is niet uitvoerbaar. Corrigeer het pad of verwijder de variabele en start OpenBot daarna opnieuw.",
+    "De Gemini-server in OPENBOT_ANTIGRAVITY_PATH ontbreekt of is niet uitvoerbaar. Corrigeer het pad of verwijder de variabele en start kongCowork daarna opnieuw.",
   "error.provider.antigravityVersionUnreadable": "Kan de versie van de Gemini-server niet lezen.",
   "error.provider.antigravitySignIn": "Log in met Google om Gemini te gebruiken.",
   "error.provider.antigravityRateLimited":
@@ -272,7 +272,7 @@ export const messages = {
   "error.provider.cursorArchivePath": "Het Cursor-archief bevat een onverwacht bestand.",
   "error.provider.cursorChecksum": "Checksum van de Cursor-runtime komt niet overeen.",
   "error.provider.cursorReleaseShape": "De Cursor-release heeft een onverwachte vorm.",
-  "error.provider.cursorMissing": "Cursor is niet gedownload. Download het in OpenBot om door te gaan.",
+  "error.provider.cursorMissing": "Cursor is niet gedownload. Download het in kongCowork om door te gaan.",
   "error.provider.cursorNotStarted": "De Cursor-agent is gevonden, maar de versie kan niet worden gelezen.",
   "error.provider.cursorVersionUnreadable": "Kan de versie van de Cursor-agent niet lezen.",
   "error.provider.cursorSignIn": "Log in met Cursor of stel CURSOR_API_KEY in om Cursor te gebruiken.",
@@ -280,16 +280,16 @@ export const messages = {
   "error.provider.clinePackageMismatch": "Het Cline-pakket komt niet overeen met de runtimecatalogus.",
   "error.provider.clineChecksum": "Checksum van de Cline-runtime komt niet overeen.",
   "error.provider.clineLicenseChecksum": "Checksum van de Cline-licentie komt niet overeen.",
-  "error.provider.clineMissing": "Cline is niet gedownload. Download het in OpenBot om door te gaan.",
-  "error.provider.clineOutdated": "Cline CLI {version} is te oud. OpenBot vereist 3.0.68 of nieuwer.",
+  "error.provider.clineMissing": "Cline is niet gedownload. Download het in kongCowork om door te gaan.",
+  "error.provider.clineOutdated": "Cline CLI {version} is te oud. kongCowork vereist 3.0.68 of nieuwer.",
   "error.provider.clineNotStarted": "Cline kon niet starten. Voer `cline --version` uit in een terminal.",
   "error.provider.clineVersionUnreadable": "Kan de versie van Cline CLI niet lezen.",
   "error.provider.clineSignIn": "Log in met Cline of stel CLINE_API_KEY in om Cline te gebruiken.",
   "error.provider.kimiArchivePath": "Het Kimi-archief heeft een onverwacht pad.",
   "error.provider.kimiChecksum": "Checksum van de Kimi-runtime komt niet overeen.",
   "error.provider.kimiLicenseChecksum": "Checksum van de Kimi-licentie komt niet overeen.",
-  "error.provider.kimiMissing": "Kimi is niet gedownload. Download het in OpenBot om door te gaan.",
-  "error.provider.kimiOutdated": "Kimi CLI {version} is te oud. OpenBot vereist 1.52.0 of nieuwer.",
+  "error.provider.kimiMissing": "Kimi is niet gedownload. Download het in kongCowork om door te gaan.",
+  "error.provider.kimiOutdated": "Kimi CLI {version} is te oud. kongCowork vereist 1.52.0 of nieuwer.",
   "error.provider.kimiNotStarted": "Kimi kon niet starten. Voer `kimi --version` uit in een terminal.",
   "error.provider.kimiVersionUnreadable": "Kan de versie van Kimi CLI niet lezen.",
   "error.provider.kimiSignIn": "Log in met Kimi Code om Kimi te gebruiken.",
@@ -303,23 +303,23 @@ export const messages = {
     "Log in met Nous Portal of voer `hermes setup` uit in een terminal om Hermes te gebruiken.",
   "error.provider.usageLimitReached": "Het account heeft de gebruikslimiet bereikt.",
   "error.provider.claudeContextFull":
-    "Deze chat is te lang geworden voor Claude. OpenBot heeft een nieuwe Claude Code-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
+    "Deze chat is te lang geworden voor Claude. kongCowork heeft een nieuwe Claude Code-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
   "error.provider.claudeApiKeyNoCredit":
     "De Anthropic-API-sleutel heeft geen API-tegoed. Een Claude-abonnement betaalt geen verzoeken met een API-sleutel. Voeg tegoed toe in de Anthropic Console, of log bij Instellingen in bij Claude en kies het Claude-account in het modelmenu van de agent.",
   "error.provider.foreignReasoning":
-    "{provider} heeft het eerdere redeneren in deze chat niet geaccepteerd, omdat een ander account of een andere API-sleutel het heeft ontvangen. OpenBot heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
+    "{provider} heeft het eerdere redeneren in deze chat niet geaccepteerd, omdat een ander account of een andere API-sleutel het heeft ontvangen. kongCowork heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
   "error.provider.imageTooSmall":
-    "Het model accepteerde een afbeelding in deze chat niet, omdat de afbeelding te klein is. OpenBot heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
+    "Het model accepteerde een afbeelding in deze chat niet, omdat de afbeelding te klein is. kongCowork heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
   "error.provider.imageTooLarge":
-    "Het model accepteerde een afbeelding in deze chat niet, omdat de afbeelding te groot is. OpenBot heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
+    "Het model accepteerde een afbeelding in deze chat niet, omdat de afbeelding te groot is. kongCowork heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
   "error.provider.imageCountLimit":
-    "Het model accepteerde deze chat niet, omdat de chat te veel afbeeldingen bevat. OpenBot heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
+    "Het model accepteerde deze chat niet, omdat de chat te veel afbeeldingen bevat. kongCowork heeft een nieuwe {provider}-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
   "error.provider.opencodeSessionRejected":
-    "OpenCode heeft het verzoek geweigerd zonder de oorzaak te geven. Dit kan gebeuren in een lange chat of na een modelwijziging. OpenBot heeft een nieuwe OpenCode-sessie gestart met de chatgeschiedenis. Probeer het opnieuw. Blijft de fout, kies dan een ander model of een lager niveau.",
+    "OpenCode heeft het verzoek geweigerd zonder de oorzaak te geven. Dit kan gebeuren in een lange chat of na een modelwijziging. kongCowork heeft een nieuwe OpenCode-sessie gestart met de chatgeschiedenis. Probeer het opnieuw. Blijft de fout, kies dan een ander model of een lager niveau.",
   "error.provider.museMcpStartupFault":
-    "Muse kon een MCP-server niet starten en heeft MCP in deze sessie geblokkeerd. OpenBot heeft een nieuwe Muse-sessie gestart met de chatgeschiedenis. Probeer het opnieuw. Blijft de fout, zet dan Computerbesturing of de mislukte MCP-server uit voor deze agent.",
+    "Muse kon een MCP-server niet starten en heeft MCP in deze sessie geblokkeerd. kongCowork heeft een nieuwe Muse-sessie gestart met de chatgeschiedenis. Probeer het opnieuw. Blijft de fout, zet dan Computerbesturing of de mislukte MCP-server uit voor deze agent.",
   "error.provider.claudeSessionMissing":
-    "Claude Code heeft de opgeslagen sessie van deze chat niet gevonden. OpenBot heeft een nieuwe Claude Code-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
+    "Claude Code heeft de opgeslagen sessie van deze chat niet gevonden. kongCowork heeft een nieuwe Claude Code-sessie gestart met de chatgeschiedenis. Probeer het opnieuw.",
   "error.provider.grokSignIn": "Voer `grok login` uit of stel XAI_API_KEY in om Grok te gebruiken.",
   "error.provider.acpSignInTimedOut": "Het inloggen duurde te lang.",
   "error.provider.acpSignInStopped": "Het inloggen is gestopt voordat het klaar was.",
@@ -347,7 +347,7 @@ export const messages = {
   "error.provider.modelServiceRefusedReason":
     "De modeldienst heeft het verzoek geweigerd: {reason}. Kies een ander model of controleer je toegang tot dit model bij de dienst.",
   "error.provider.messageTooLarge":
-    "OpenBot heeft {provider} gestopt, omdat het een bericht groter dan {limit} MB stuurde.",
+    "kongCowork heeft {provider} gestopt, omdat het een bericht groter dan {limit} MB stuurde.",
   "error.provider.customAgentIdInvalid":
     "Een agent-ID mag alleen kleine letters, cijfers of `-` bevatten, en mag niet de ID van een ingebouwde aanbieder zijn.",
   "error.provider.customAgentEnvInvalid":
@@ -358,10 +358,11 @@ export const messages = {
   "error.provider.customAgentArgsInvalid": "Een argument mag geen regeleinde bevatten. Gebruik maximaal 32 argumenten.",
   "error.provider.customAgentWindowsScript":
     "Een .cmd- of .bat-opdracht accepteert alleen letters, cijfers en - _ . , : = @ + / \\ in de argumenten.",
-  "error.provider.customAgentNotFound": "OpenBot kan {command} niet vinden. Voer het volledige pad van de opdracht in.",
+  "error.provider.customAgentNotFound":
+    "kongCowork kan {command} niet vinden. Voer het volledige pad van de opdracht in.",
   "error.provider.customAgentCheckTimedOut": "De agent reageerde niet binnen 20 seconden.",
   "error.provider.customAgentCheckStopped": "De agent is gestopt voordat hij antwoordde.",
-  "error.provider.customAgentProtocolVersion": "De agent gebruikt ACP-versie {version}. OpenBot gebruikt versie 1.",
+  "error.provider.customAgentProtocolVersion": "De agent gebruikt ACP-versie {version}. kongCowork gebruikt versie 1.",
   "error.provider.customAgentCheckFailed": "De agent antwoordde niet als een ACP-agent.",
   "error.provider.customAgentRemoveBusy":
     "Wacht tot de actieve beurt en de wachtrij klaar zijn voordat je deze aangepaste agent verwijdert.",
@@ -369,7 +370,7 @@ export const messages = {
   "error.provider.customAgentMissing": "Deze aangepaste agent is nu niet opgeslagen. Kies een ander model.",
   "error.provider.customAgentSignIn": "Log in met de eigen opdracht van de agent en probeer het opnieuw.",
   "error.provider.customAgentsReadOnly":
-    "De opgeslagen aangepaste agents zijn geschreven door een nieuwere versie van OpenBot, of het bestand kan niet worden gelezen. Werk OpenBot bij om ze te wijzigen.",
+    "De opgeslagen aangepaste agents zijn geschreven door een nieuwere versie van kongCowork, of het bestand kan niet worden gelezen. Werk kongCowork bij om ze te wijzigen.",
   "error.provider.customAgentNoSecureStorage":
     "Deze computer heeft geen beveiligde opslag, dus omgevingswaarden kunnen niet worden opgeslagen. Verwijder ze en probeer het opnieuw.",
   "error.provider.customAgentNotSaved":
@@ -378,17 +379,17 @@ export const messages = {
     "{reason}. ‘Alleen werkruimte’ blokkeert dit. Probeer ‘Volledige toegang’.",
   "error.provider.customAgentTooMany": "Je kunt maximaal {count} aangepaste agents opslaan.",
   "error.provider.customAgentEnvValueMissing": "Voer een waarde in voor {name}.",
-  "error.provider.off": "{provider} staat uit in OpenBot. Zet het eerst aan in de instellingen voor aanbieders.",
+  "error.provider.off": "{provider} staat uit in kongCowork. Zet het eerst aan in de instellingen voor aanbieders.",
   "error.provider.inUse":
     "Een agent gebruikt {provider}. Wijzig het model van de agent voordat je deze aanbieder uitzet.",
   "error.provider.useBusy": "Wacht tot de controle van de aanbieder of het inloggen klaar is en probeer het opnieuw.",
   "error.provider.useSettingsReadOnly":
-    "De opgeslagen instellingen voor aanbieders kunnen niet worden gelezen. Werk OpenBot bij voordat je ze wijzigt.",
-  "error.provider.useChangeFailed": "OpenBot kon de instelling van de aanbieder niet wijzigen.",
+    "De opgeslagen instellingen voor aanbieders kunnen niet worden gelezen. Werk kongCowork bij voordat je ze wijzigt.",
+  "error.provider.useChangeFailed": "kongCowork kon de instelling van de aanbieder niet wijzigen.",
   "error.provider.accountsUnsupported": "{provider} kan maar één account hebben.",
   "error.provider.accountNeedsConnection": "Verbind {provider} voordat je nog een account toevoegt.",
   "error.provider.usageResetUnsupported": "{provider} kan gebruikslimieten niet resetten.",
-  "error.provider.signOutUnsupported": "OpenBot kan de {provider}-aanmelding niet verbreken.",
+  "error.provider.signOutUnsupported": "kongCowork kan de {provider}-aanmelding niet verbreken.",
   "error.provider.usageResetNotConnected": "Log opnieuw in bij dit {provider}-account voordat je het gebruik reset.",
   "error.provider.accountLimit": "{provider} kan maximaal {limit} accounts hebben.",
   "error.provider.accountNotFound":
@@ -399,7 +400,7 @@ export const messages = {
     "Dit {provider}-account gebruikt de opgeslagen API-sleutel en heeft geen inlog. Wijzig de sleutel in Serverinstellingen → Aanbieders.",
   "error.provider.accountInUse": "Een agent op dit account is aan het werk. Probeer het opnieuw als de agent stopt.",
   "error.provider.accountsReadOnly":
-    "De opgeslagen accounts van aanbieders kunnen niet worden gelezen. Werk OpenBot bij voordat je ze wijzigt.",
+    "De opgeslagen accounts van aanbieders kunnen niet worden gelezen. Werk kongCowork bij voordat je ze wijzigt.",
   "error.provider.accountSignedOut": "Dit {provider}-account is uitgelogd. Log opnieuw in.",
   "error.provider.sessionSettingUnavailable":
     "Deze instelling is niet beschikbaar in de huidige sessie van de aanbieder.",
@@ -433,7 +434,7 @@ export const messages = {
   "error.provider.museConnectionFailed":
     "Verbinding met Muse is mislukt. Hervat het gesprek om de opgeslagen geschiedenis te herstellen.",
   "error.provider.museUnknownSession": "Onbekende Muse-sessie.",
-  "error.provider.museInvalidToolResult": "Ongeldig resultaat van een OpenBot-tool.",
+  "error.provider.museInvalidToolResult": "Ongeldig resultaat van een kongCowork-tool.",
   "error.provider.museMcpRequired": "Muse moet MCP-servers per sessie ondersteunen.",
   "error.provider.museSessionMismatch": "Muse gaf een andere sessie terug.",
   "error.provider.museCompactRejected": "Muse heeft het comprimeren niet geaccepteerd.",

@@ -18,7 +18,6 @@ import {
 import { accountUsageProviderRows } from "@openbot/ui/features/account/account-usage-view";
 import { Sidebar } from "@openbot/ui/features/sidebar/Sidebar";
 import type { SidebarView } from "@openbot/ui/features/sidebar/sidebar-types";
-import { HelpMenu } from "@openbot/ui/features/updates/HelpMenu";
 import { PageRail, type PageRailPage } from "@openbot/ui/features/window/PageRail";
 import { WorkflowCanvas } from "@openbot/ui/features/workflows/WorkflowCanvas";
 import { WORKFLOW_FEATURES_V1, type WorkflowFeatures } from "@openbot/ui/features/workflows/workflow-model";
@@ -213,18 +212,6 @@ export function WorkflowInAppStory(props: { workflows: readonly StoryWorkflow[];
         onUsage={() => setPage("usage")}
         onMarketplace={fn()}
         onSettings={() => setPage("settings")}
-        help={
-          <HelpMenu
-            news={[]}
-            triggerClass="window-rail-button"
-            onOpenWhatsNew={fn()}
-            onOpenChangelog={fn()}
-            onOpenGuides={fn()}
-            onOpenDiscord={fn()}
-            onReportProblem={fn()}
-            onSendFeedback={fn()}
-          />
-        }
       />
       <div
         class="app-frame app-frame-edge app-frame-platform-darwin"

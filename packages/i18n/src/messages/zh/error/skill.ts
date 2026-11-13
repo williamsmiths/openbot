@@ -43,7 +43,7 @@ export const messages = {
   "error.skill.publishUntracked": "{name} 在精确版本跟踪之前就已安装，请先更新或修复再发布。",
   "error.skill.tooManySkills": "一个助手最多可有 {limit} 个技能。",
   "error.skill.unmanagedExists": "{path} 处已存在一个未受管理的技能。",
-  "error.skill.managedSlug": "OpenBot 会为每个智能体提供自带的 {slug} 技能。请为此技能换一个名称。",
+  "error.skill.managedSlug": "kongCowork 会为每个智能体提供自带的 {slug} 技能。请为此技能换一个名称。",
   "error.skill.templateMarkdownTooLarge": "{name}：SKILL.md 大于 64 KB，请精简后再发布。",
   "error.skill.localNoRevisions": "本地技能没有已发布的修订版本。",
   "error.skill.localNotFound": "此本地技能不存在。请在本地技能列表中核对其 ID。",

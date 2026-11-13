@@ -3,21 +3,22 @@ import type { messages as source } from "../../en/error/provider";
 
 export const messages = {
   "error.provider.mcpConfig":
-    "OpenBot は Codex の設定に MCP サーバーを登録できませんでした。Codex の config.toml が有効で書き込み可能であることを確認してから、OpenBot を再起動してください。",
+    "kongCowork は Codex の設定に MCP サーバーを登録できませんでした。Codex の config.toml が有効で書き込み可能であることを確認してから、kongCowork を再起動してください。",
   "error.provider.computerUseConfig":
-    "OpenBot は Codex の設定に Computer Use を登録できませんでした。Codex の config.toml が有効で書き込み可能であることを確認してから、OpenBot を再起動してください。Computer Use なしで続行するには、エージェントの設定で Computer Use をオフにできます。",
-  "error.provider.codexUnresponsive": "Codex が応答しなくなったため、OpenBot がそのプロセスを終了しました。",
-  "error.provider.acpUnresponsive": "{provider} が時間内に応答しなかったため、OpenBot がそのプロセスを終了しました。",
+    "kongCowork は Codex の設定に Computer Use を登録できませんでした。Codex の config.toml が有効で書き込み可能であることを確認してから、kongCowork を再起動してください。Computer Use なしで続行するには、エージェントの設定で Computer Use をオフにできます。",
+  "error.provider.codexUnresponsive": "Codex が応答しなくなったため、kongCowork がそのプロセスを終了しました。",
+  "error.provider.acpUnresponsive":
+    "{provider} が時間内に応答しなかったため、kongCowork がそのプロセスを終了しました。",
   "error.provider.acpSignInLost":
-    "{provider} のサインインが失われたため、OpenBot がそのプロセスを終了しました。メッセージをもう一度送信してください。",
+    "{provider} のサインインが失われたため、kongCowork がそのプロセスを終了しました。メッセージをもう一度送信してください。",
   "error.provider.acpPlanUsedUp":
     "{provider} のプランの利用上限に達しました。別のモデルを選ぶか、{provider} のプランをアップグレードしてください。",
   "error.provider.acpMcpNotLoaded":
-    "{provider} が OpenBot のツールを読み込まなかったため、このエージェントはツールを使えず、チームメイトにも連絡できません。{provider} のチームポリシーがローカル MCP サーバーをブロックしている可能性があります。チーム管理者に許可を依頼してから、もう一度お試しください。",
+    "{provider} が kongCowork のツールを読み込まなかったため、このエージェントはツールを使えず、チームメイトにも連絡できません。{provider} のチームポリシーがローカル MCP サーバーをブロックしている可能性があります。チーム管理者に許可を依頼してから、もう一度お試しください。",
   "error.provider.acpOwnMcpServerFailed":
-    "{provider} が MCP サーバー {name} を起動できなかったため、応答が止まりました。このサーバーは OpenBot ではなく、ご自身の {provider} の設定にあります。そこでサーバーを削除するか修復してから、新しいチャットを始めてください。",
+    "{provider} が MCP サーバー {name} を起動できなかったため、応答が止まりました。このサーバーは kongCowork ではなく、ご自身の {provider} の設定にあります。そこでサーバーを削除するか修復してから、新しいチャットを始めてください。",
   "error.provider.endpointsReadOnly":
-    "保存されたエンドポイントは新しいバージョンの OpenBot で書き込まれたか、ファイルを読み取れません。変更するには OpenBot を更新してください。",
+    "保存されたエンドポイントは新しいバージョンの kongCowork で書き込まれたか、ファイルを読み取れません。変更するには kongCowork を更新してください。",
   "error.provider.endpointNoSecureStorage":
     "このコンピューターには安全なストレージがないため、API キーやヘッダーを保存できません。それらを削除するか、認証情報が不要なエンドポイントを使用してください。",
   "error.provider.endpointDuplicate":
@@ -28,7 +29,7 @@ export const messages = {
   "error.provider.endpointSecretUnreadable":
     "このコンピューターは保存済みの API キーとヘッダーを読み取れません。失われないように、API キーとヘッダーをもう一度入力してください。",
   "error.provider.discoveryTimeout": "{host} から時間内に応答がありませんでした。",
-  "error.provider.discoveryUnreachable": "OpenBot は {host} に接続できませんでした。",
+  "error.provider.discoveryUnreachable": "kongCowork は {host} に接続できませんでした。",
   "error.provider.discoveryRedirect":
     "{host} がリダイレクトを返しました。サーバーの最終的なアドレスを入力してください。",
   "error.provider.discoveryRefused": "{host} がリクエストを拒否しました。API キーとヘッダーを確認してください。",
@@ -36,7 +37,7 @@ export const messages = {
   "error.provider.discoveryTooLarge": "{host} のモデル一覧が大きすぎます。",
   "error.provider.discoveryInvalid": "{host} は OpenAI 互換のモデル一覧を返しませんでした。",
   "error.provider.detectionSettingsReadOnly":
-    "検出の設定は新しいバージョンの OpenBot で書き込まれたか、ファイルを読み取れません。変更するには OpenBot を更新してください。",
+    "検出の設定は新しいバージョンの kongCowork で書き込まれたか、ファイルを読み取れません。変更するには kongCowork を更新してください。",
   "error.provider.detectionEntryInvalid":
     "アドレスはパスワードを含まない http:// または https:// の URL に、フォルダーは絶対パスにしてください。",
   "error.provider.detectionEntriesTooMany": "アドレスまたはフォルダーが多すぎます。",
@@ -64,15 +65,15 @@ export const messages = {
   "error.provider.bunLicenseChecksum": "Bun ライセンスのチェックサムが一致しません。",
   "error.provider.bunxDamaged": "Bun パッケージマネージャーの実行ツールが見つからないか、破損しています。",
   "error.provider.releaseSourcesUnreachable":
-    "OpenBot はプロバイダーのリリース元に接続できませんでした。接続を確認して、もう一度お試しください。",
+    "kongCowork はプロバイダーのリリース元に接続できませんでした。接続を確認して、もう一度お試しください。",
   "error.provider.runtimesUnsupported": "このプラットフォームではプロバイダーのランタイムを使用できません。",
-  "error.provider.closing": "OpenBot を終了しています。",
+  "error.provider.closing": "kongCowork を終了しています。",
   "error.provider.removeWhileOn": "ダウンロードを削除する前に、プロバイダーをオフにしてください。",
   "error.provider.removeWhileDownloading": "ダウンロードが終わってから削除してください。",
   "error.provider.removeIncomplete":
     "この CLI のファイルを別のプログラムが使用しています。閉じてから、もう一度お試しください。",
   "error.provider.removeDownloadsFailed": "{providers} の CLI のダウンロードを削除できませんでした。",
-  "error.provider.cliOverride": "OpenBot で更新する前に、明示的な CLI パスの指定を削除してください。",
+  "error.provider.cliOverride": "kongCowork で更新する前に、明示的な CLI パスの指定を削除してください。",
   "error.provider.runtimeUpdateIncomplete": "ランタイムの更新が完了しませんでした。",
   "error.provider.downloadHttp": "ランタイムのダウンロードが HTTP {status} で失敗しました。",
   "error.provider.downloadNoData": "ランタイムのダウンロードでデータが返されませんでした。",
@@ -87,7 +88,7 @@ export const messages = {
   "error.provider.unexpectedVersion": "プロバイダーのランタイムが予期しないバージョンを返しました。",
   "error.provider.metadataNoData": "ランタイムのメタデータのダウンロードでデータが返されませんでした。",
   "error.provider.metadataTooLarge": "ランタイムのメタデータが大きすぎます。",
-  "error.provider.requestFailed": "OpenBot は {url} をダウンロードできませんでした。{reason}",
+  "error.provider.requestFailed": "kongCowork は {url} をダウンロードできませんでした。{reason}",
   "error.provider.installRecordMismatch": "ランタイムのインストール記録が一致しません。",
   "error.provider.runtimeChecksum": "プロバイダーのランタイムのチェックサムが一致しません。",
   "error.provider.codexReleaseShape": "Codex のリリース情報の形式が予期しないものです。",
@@ -128,34 +129,34 @@ export const messages = {
   "error.provider.keyInvalidCharacters": "プロバイダーキーに、キーに使えない空白または文字が含まれています。",
   "error.provider.noModel": "選択したプロバイダーに使用できるモデルがありません。",
   "error.provider.noModelNamed": "{provider} に使用できるモデルがありません。",
-  "error.provider.acpNoModels": "ACP CLI が ACP モデルを通知しませんでした。OpenBot は代替モデルを推測しません。",
+  "error.provider.acpNoModels": "ACP CLI が ACP モデルを通知しませんでした。kongCowork は代替モデルを推測しません。",
   "error.provider.endpointRemoveBusy":
     "このエンドポイントを削除する前に、実行中のターンとキューが終わるまでお待ちください。",
-  "error.provider.codexOutdated": "Codex CLI {version} は古すぎます。OpenBot には 0.156.0 以降が必要です。",
+  "error.provider.codexOutdated": "Codex CLI {version} は古すぎます。kongCowork には 0.156.0 以降が必要です。",
   "error.provider.codexNotStarted": "Codex CLI は見つかりましたが、起動できませんでした。",
   "error.provider.codexNotStartedHint":
     "Codex CLI は見つかりましたが、起動できませんでした。新しいターミナルで `codex --version` を実行してください。",
   "error.provider.codexManagedNotStarted":
-    "ChatGPT はダウンロード済みですが、起動できませんでした。OpenBot でもう一度ダウンロードしてください。",
+    "ChatGPT はダウンロード済みですが、起動できませんでした。kongCowork でもう一度ダウンロードしてください。",
   "error.provider.codexMissing":
-    "ChatGPT はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
-  "error.provider.claudeOutdated": "Claude Code {version} は古すぎます。OpenBot には 2.1.232 以降が必要です。",
+    "ChatGPT はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
+  "error.provider.claudeOutdated": "Claude Code {version} は古すぎます。kongCowork には 2.1.232 以降が必要です。",
   "error.provider.claudeNotStarted": "Claude CLI は見つかりましたが、起動できませんでした。",
   "error.provider.claudeNotStartedHint":
     "Claude CLI は見つかりましたが、起動できませんでした。新しいターミナルで `claude --version` を実行してください。",
   "error.provider.claudeManagedNotStarted":
-    "Claude はダウンロード済みですが、起動できませんでした。OpenBot でもう一度ダウンロードしてください。",
+    "Claude はダウンロード済みですが、起動できませんでした。kongCowork でもう一度ダウンロードしてください。",
   "error.provider.claudeMissing":
-    "Claude はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
-  "error.provider.grokOutdated": "Grok CLI {version} は古すぎます。OpenBot には 1.0.5 以降が必要です。",
+    "Claude はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
+  "error.provider.grokOutdated": "Grok CLI {version} は古すぎます。kongCowork には 1.0.5 以降が必要です。",
   "error.provider.grokNotStarted": "Grok CLI は見つかりましたが、起動できませんでした。",
   "error.provider.grokNotStartedHint":
     "Grok CLI は見つかりましたが、起動できませんでした。新しいターミナルで `grok --version` を実行してください。",
-  "error.provider.grokMissing": "Grok はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
+  "error.provider.grokMissing": "Grok はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
   "error.provider.opencodeNotStarted":
     "OpenCode を起動できませんでした。ターミナルで `opencode --version` を実行してください。",
   "error.provider.opencodeMissing":
-    "OpenCode はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
+    "OpenCode はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
   "error.provider.codexVersionUnreadable": "Codex CLI のバージョンを読み取れません。",
   "error.provider.claudeVersionUnreadable": "Claude CLI のバージョンを読み取れません。",
   "error.provider.grokVersionUnreadable": "Grok CLI のバージョンを読み取れません。",
@@ -164,7 +165,7 @@ export const messages = {
   "error.provider.connectBeforeProfile": "プロフィールを生成する前に、選択したプロバイダーに接続してください。",
   "error.provider.cliNotReady": "{provider} CLI の準備ができていないか、サインインしていません。",
   "error.provider.cliTimedOut":
-    "{provider} が時間内に応答しませんでした。コンピューターの負荷が高い可能性があります。OpenBot が再試行します。",
+    "{provider} が時間内に応答しませんでした。コンピューターの負荷が高い可能性があります。kongCowork が再試行します。",
   "error.provider.cliTimedOutRefresh":
     "{provider} が時間内に応答しませんでした。コンピューターの負荷が高い可能性があります。プロバイダーを更新して再試行してください。",
   "error.provider.acpStartTimedOut":
@@ -172,7 +173,7 @@ export const messages = {
   "error.provider.acpModelsTimedOut":
     "{provider} が {seconds} 秒以内にモデルを一覧表示しませんでした。コンピューターの負荷が高い可能性があります。",
   "error.provider.startStopped":
-    "{provider} の起動に続けて何度も失敗したため、OpenBot は再試行を停止しました。プロバイダーを更新して再試行してください。",
+    "{provider} の起動に続けて何度も失敗したため、kongCowork は再試行を停止しました。プロバイダーを更新して再試行してください。",
   "error.provider.tempDiskSpace":
     "{provider} の起動には 1 GB 以上の空きディスク容量が必要です。空き容量を確保してから、プロバイダーを更新してください。",
   "error.provider.noCodeSignIn": "{provider} にはコードでサインインできません。",
@@ -187,11 +188,11 @@ export const messages = {
   "error.provider.cliSigningIn":
     "{provider} CLI はサインイン中です。サインインを完了するかキャンセルしてから更新してください。",
   "error.provider.cliBusyUpdate": "{provider} CLI はターンを処理中です。終わるまで待ってから更新してください。",
-  "error.provider.cliSelectFailed": "OpenBot はインストール済みの管理対象 CLI を選択できませんでした。",
+  "error.provider.cliSelectFailed": "kongCowork はインストール済みの管理対象 CLI を選択できませんでした。",
   "error.provider.noAuthenticatedAccount": "{provider} は認証済みのアカウントを返しませんでした。",
   "error.provider.signInExpired":
     "{provider} のサインインの有効期限が切れました。続けるには、もう一度サインインしてください。",
-  "error.provider.cliActivateFailed": "OpenBot は管理対象 CLI を有効にできませんでした。",
+  "error.provider.cliActivateFailed": "kongCowork は管理対象 CLI を有効にできませんでした。",
   "error.provider.noMainlandChinaSignIn": "{provider} には中国本土向けのログインがありません。",
   "error.provider.cliNewVersionNotStarted": "新しいバージョンが起動しませんでした。",
   "error.provider.cliBusyReconnect": "{provider} CLI はターンを処理中です。終わるまで待ってから再接続してください。",
@@ -227,13 +228,13 @@ export const messages = {
   "error.provider.opencodeIncompleteReply":
     "モデルの応答が途中で切れたか、無効でした。メッセージをもう一度送信するか、別のモデルを選んでください。\n{detail}",
   "error.provider.opencodeNetwork":
-    "OpenCode がモデルプロバイダーに接続できませんでした。OpenBot を実行しているコンピューターのネットワーク接続を確認してから、もう一度お試しください。\n{detail}",
+    "OpenCode がモデルプロバイダーに接続できませんでした。kongCowork を実行しているコンピューターのネットワーク接続を確認してから、もう一度お試しください。\n{detail}",
   "error.provider.codexStateBusy":
     "ChatGPT は前回の起動後、まだローカル履歴を準備しています。数分待ってから、もう一度お試しください。",
   "error.provider.codexThreadInUse":
     "別の Codex アプリ (Codex デスクトップアプリ、Codex CLI、IDE 拡張機能など) がこのチャットを開いています。Codex のチャットに書き込めるアプリは一度に 1 つだけです。そのアプリでチャットを閉じてから、メッセージをもう一度送信してください。",
   "error.provider.realtimeLimitZero":
-    "OpenBot のリアルタイム CPU 制限が 0 のため、Linux がプロバイダーを停止しました。この制限はシステムから来ています。rtkit をインストールして起動し (`rtkit-daemon`)、`systemctl --user restart xdg-desktop-portal` を実行してから OpenBot を再起動してください。rtkit がない間は、xdg-desktop-portal を再起動するだけでは解決しません。",
+    "kongCowork のリアルタイム CPU 制限が 0 のため、Linux がプロバイダーを停止しました。この制限はシステムから来ています。rtkit をインストールして起動し (`rtkit-daemon`)、`systemctl --user restart xdg-desktop-portal` を実行してから kongCowork を再起動してください。rtkit がない間は、xdg-desktop-portal を再起動するだけでは解決しません。",
   "error.provider.cpuUnsupported":
     "このコンピューターのプロセッサーでは、このプロバイダーを実行できません。別のプロバイダーを使用してください。",
   "error.provider.opencodeDatabaseNewer":
@@ -244,21 +245,21 @@ export const messages = {
     "OpenCode のモデルが、推論のあと回答がないままターンを終了しました。もう一度お試しいただくか、別のモデルを選択してください。",
   "error.provider.acpNoAnswer":
     "{provider} が回答なしでターンを終了しました。メッセージをもう一度送信するか、新しいチャットを開始してください。",
-  "error.provider.chatgptPageFailed": "OpenBot は ChatGPT の接続ページを開けませんでした。",
+  "error.provider.chatgptPageFailed": "kongCowork は ChatGPT の接続ページを開けませんでした。",
   "error.provider.noneReady": "準備ができているエージェントのプロバイダーがありません。",
   "error.provider.claudeTurnActive": "コンテキストを更新する前に、実行中の Claude のターンが終わるまでお待ちください。",
   "error.provider.codexLoginRequired":
     "Codex には ChatGPT サブスクリプションでのサインインが必要です。`codex login` を実行してください。",
-  "error.provider.cliUpdateFailed": "OpenBot は {provider} CLI を更新できませんでした。{reason}",
+  "error.provider.cliUpdateFailed": "kongCowork は {provider} CLI を更新できませんでした。{reason}",
   "error.provider.tryAgain": "もう一度お試しください。",
   "error.provider.noAgentProcess": "{provider} には、このエージェント用に実行中のプロセスがありません。",
   "error.provider.stoppedBeforeAgentProcess": "エージェントのプロセスが開始する前に {provider} が停止しました。",
   "error.provider.archiveUnreadable": "ランタイムのアーカイブを読み取れないか、対応していない形式です。",
   "error.provider.antigravityMissing":
-    "Gemini はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
+    "Gemini はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
   "error.provider.antigravityNotStarted": "Gemini サーバーは見つかりましたが、バージョンを読み取れません。",
   "error.provider.antigravityOverrideInvalid":
-    "OPENBOT_ANTIGRAVITY_PATH の Gemini サーバーが見つからないか、実行できません。パスを修正するか変数を削除してから、OpenBot を再起動してください。",
+    "OPENBOT_ANTIGRAVITY_PATH の Gemini サーバーが見つからないか、実行できません。パスを修正するか変数を削除してから、kongCowork を再起動してください。",
   "error.provider.antigravityVersionUnreadable": "Gemini サーバーのバージョンを読み取れません。",
   "error.provider.antigravitySignIn": "Gemini を使うには Google でサインインしてください。",
   "error.provider.antigravityRateLimited":
@@ -279,7 +280,7 @@ export const messages = {
   "error.provider.cursorChecksum": "Cursor ランタイムのチェックサムが一致しません。",
   "error.provider.cursorReleaseShape": "Cursor のリリースの形式が予期しないものです。",
   "error.provider.cursorMissing":
-    "Cursor はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
+    "Cursor はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
   "error.provider.cursorNotStarted": "Cursor エージェントは見つかりましたが、バージョンを読み取れません。",
   "error.provider.cursorVersionUnreadable": "Cursor エージェントのバージョンを読み取れません。",
   "error.provider.cursorSignIn": "Cursor を使うには Cursor でサインインするか、CURSOR_API_KEY を設定してください。",
@@ -287,16 +288,17 @@ export const messages = {
   "error.provider.clinePackageMismatch": "Cline のパッケージがランタイムカタログと一致しません。",
   "error.provider.clineChecksum": "Cline ランタイムのチェックサムが一致しません。",
   "error.provider.clineLicenseChecksum": "Cline のライセンスのチェックサムが一致しません。",
-  "error.provider.clineMissing": "Cline はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
-  "error.provider.clineOutdated": "Cline CLI {version} は古すぎます。OpenBot には 3.0.68 以降が必要です。",
+  "error.provider.clineMissing":
+    "Cline はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
+  "error.provider.clineOutdated": "Cline CLI {version} は古すぎます。kongCowork には 3.0.68 以降が必要です。",
   "error.provider.clineNotStarted": "Cline を起動できませんでした。ターミナルで `cline --version` を実行してください。",
   "error.provider.clineVersionUnreadable": "Cline CLI のバージョンを読み取れません。",
   "error.provider.clineSignIn": "Cline を使うには Cline でサインインするか、CLINE_API_KEY を設定してください。",
   "error.provider.kimiArchivePath": "Kimi のアーカイブに予期しないパスがあります。",
   "error.provider.kimiChecksum": "Kimi ランタイムのチェックサムが一致しません。",
   "error.provider.kimiLicenseChecksum": "Kimi のライセンスのチェックサムが一致しません。",
-  "error.provider.kimiMissing": "Kimi はダウンロードされていません。続けるには OpenBot でダウンロードしてください。",
-  "error.provider.kimiOutdated": "Kimi CLI {version} は古すぎます。OpenBot には 1.52.0 以降が必要です。",
+  "error.provider.kimiMissing": "Kimi はダウンロードされていません。続けるには kongCowork でダウンロードしてください。",
+  "error.provider.kimiOutdated": "Kimi CLI {version} は古すぎます。kongCowork には 1.52.0 以降が必要です。",
   "error.provider.kimiNotStarted": "Kimi を起動できませんでした。ターミナルで `kimi --version` を実行してください。",
   "error.provider.kimiVersionUnreadable": "Kimi CLI のバージョンを読み取れません。",
   "error.provider.kimiSignIn": "Kimi を使うには Kimi Code でサインインしてください。",
@@ -314,23 +316,23 @@ export const messages = {
     "Hermes を使うには、Nous Portal でサインインするか、ターミナルで `hermes setup` を実行してください。",
   "error.provider.usageLimitReached": "アカウントが使用量の上限に達しました。",
   "error.provider.claudeContextFull":
-    "このチャットは Claude には長くなりすぎました。OpenBot はチャット履歴を引き継いだ新しい Claude Code セッションを開始しました。もう一度お試しください。",
+    "このチャットは Claude には長くなりすぎました。kongCowork はチャット履歴を引き継いだ新しい Claude Code セッションを開始しました。もう一度お試しください。",
   "error.provider.claudeApiKeyNoCredit":
     "Anthropic API キーに API クレジットがありません。Claude のプランは API キーでのリクエストには使われません。Anthropic Console でクレジットを追加するか、設定で Claude にサインインして、エージェントのモデルメニューで Claude アカウントを選択してください。",
   "error.provider.foreignReasoning":
-    "別のアカウントまたは API キーが受け取ったため、{provider} はこのチャットの以前の推論を受け付けませんでした。OpenBot はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
+    "別のアカウントまたは API キーが受け取ったため、{provider} はこのチャットの以前の推論を受け付けませんでした。kongCowork はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
   "error.provider.imageTooSmall":
-    "画像が小さすぎるため、モデルはこのチャットの画像を受け付けませんでした。OpenBot はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
+    "画像が小さすぎるため、モデルはこのチャットの画像を受け付けませんでした。kongCowork はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
   "error.provider.imageTooLarge":
-    "画像が大きすぎるため、モデルはこのチャットの画像を受け付けませんでした。OpenBot はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
+    "画像が大きすぎるため、モデルはこのチャットの画像を受け付けませんでした。kongCowork はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
   "error.provider.imageCountLimit":
-    "画像が多すぎるため、モデルはこのチャットを受け付けませんでした。OpenBot はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
+    "画像が多すぎるため、モデルはこのチャットを受け付けませんでした。kongCowork はチャット履歴を引き継いだ新しい {provider} セッションを開始しました。もう一度お試しください。",
   "error.provider.opencodeSessionRejected":
-    "OpenCode がリクエストを拒否しましたが、原因は示されていません。長いチャットやモデルの変更後に起こることがあります。OpenBot はチャット履歴を引き継いだ新しい OpenCode セッションを開始しました。もう一度お試しください。エラーが続く場合は、別のモデルを選ぶか推論レベルを下げてください。",
+    "OpenCode がリクエストを拒否しましたが、原因は示されていません。長いチャットやモデルの変更後に起こることがあります。kongCowork はチャット履歴を引き継いだ新しい OpenCode セッションを開始しました。もう一度お試しください。エラーが続く場合は、別のモデルを選ぶか推論レベルを下げてください。",
   "error.provider.museMcpStartupFault":
-    "Muse が MCP サーバーを起動できず、このセッションで MCP をブロックしました。OpenBot はチャット履歴を引き継いだ新しい Muse セッションを開始しました。もう一度お試しください。エラーが続く場合は、このエージェントの Computer Use または失敗した MCP サーバーをオフにしてください。",
+    "Muse が MCP サーバーを起動できず、このセッションで MCP をブロックしました。kongCowork はチャット履歴を引き継いだ新しい Muse セッションを開始しました。もう一度お試しください。エラーが続く場合は、このエージェントの Computer Use または失敗した MCP サーバーをオフにしてください。",
   "error.provider.claudeSessionMissing":
-    "Claude Code はこのチャットの保存済みセッションを見つけられませんでした。OpenBot はチャット履歴を引き継いだ新しい Claude Code セッションを開始しました。もう一度お試しください。",
+    "Claude Code はこのチャットの保存済みセッションを見つけられませんでした。kongCowork はチャット履歴を引き継いだ新しい Claude Code セッションを開始しました。もう一度お試しください。",
   "error.provider.grokSignIn": "Grok を使うには `grok login` を実行するか、XAI_API_KEY を設定してください。",
   "error.provider.acpSignInTimedOut": "サインインがタイムアウトしました。",
   "error.provider.acpSignInStopped": "サインインが完了する前に停止しました。",
@@ -358,7 +360,7 @@ export const messages = {
   "error.provider.modelServiceRefusedReason":
     "モデルサービスがリクエストを拒否しました: {reason}。別のモデルを選択するか、サービスでこのモデルへのアクセス権を確認してください。",
   "error.provider.messageTooLarge":
-    "{limit} MB を超えるメッセージを送信したため、OpenBot は {provider} を停止しました。",
+    "{limit} MB を超えるメッセージを送信したため、kongCowork は {provider} を停止しました。",
   "error.provider.customAgentIdInvalid":
     "エージェント ID には英小文字、数字、`-` のみを使用してください。組み込みプロバイダーの ID は使用できません。",
   "error.provider.customAgentEnvInvalid":
@@ -370,11 +372,11 @@ export const messages = {
   "error.provider.customAgentWindowsScript":
     ".cmd または .bat のコマンドの引数には、英字、数字、および - _ . , : = @ + / \\ のみを使用できます。",
   "error.provider.customAgentNotFound":
-    "OpenBot は {command} を見つけられません。コマンドの完全なパスを入力してください。",
+    "kongCowork は {command} を見つけられません。コマンドの完全なパスを入力してください。",
   "error.provider.customAgentCheckTimedOut": "エージェントは 20 秒以内に応答しませんでした。",
   "error.provider.customAgentCheckStopped": "エージェントは応答する前に停止しました。",
   "error.provider.customAgentProtocolVersion":
-    "このエージェントは ACP バージョン {version} を使用しています。OpenBot はバージョン 1 を使用します。",
+    "このエージェントは ACP バージョン {version} を使用しています。kongCowork はバージョン 1 を使用します。",
   "error.provider.customAgentCheckFailed": "エージェントは ACP エージェントとして応答しませんでした。",
   "error.provider.customAgentRemoveBusy":
     "このカスタムエージェントを削除する前に、実行中のターンとキューが終わるまでお待ちください。",
@@ -382,7 +384,7 @@ export const messages = {
   "error.provider.customAgentMissing": "このカスタムエージェントは現在保存されていません。別のモデルを選んでください。",
   "error.provider.customAgentSignIn": "エージェント自身のコマンドでサインインしてから、もう一度お試しください。",
   "error.provider.customAgentsReadOnly":
-    "保存されたカスタムエージェントは新しいバージョンの OpenBot で書き込まれたか、ファイルを読み取れません。変更するには OpenBot を更新してください。",
+    "保存されたカスタムエージェントは新しいバージョンの kongCowork で書き込まれたか、ファイルを読み取れません。変更するには kongCowork を更新してください。",
   "error.provider.customAgentNoSecureStorage":
     "このコンピューターには安全なストレージがないため、環境変数の値を保存できません。値を削除して、もう一度お試しください。",
   "error.provider.customAgentNotSaved":
@@ -391,17 +393,17 @@ export const messages = {
     "{reason}。「ワークスペースのみ」がこれをブロックしています。「フルアクセス」をお試しください。",
   "error.provider.customAgentTooMany": "保存できるカスタムエージェントは最大 {count} 個です。",
   "error.provider.customAgentEnvValueMissing": "{name} の値を入力してください。",
-  "error.provider.off": "{provider} は OpenBot でオフになっています。まずプロバイダーの設定でオンにしてください。",
+  "error.provider.off": "{provider} は kongCowork でオフになっています。まずプロバイダーの設定でオンにしてください。",
   "error.provider.inUse":
     "エージェントが {provider} を使用しています。このプロバイダーをオフにする前に、そのエージェントのモデルを変更してください。",
   "error.provider.useBusy": "プロバイダーの確認またはサインインが終わるまで待ってから、もう一度お試しください。",
   "error.provider.useSettingsReadOnly":
-    "保存されたプロバイダーの設定を読み取れません。変更する前に OpenBot を更新してください。",
-  "error.provider.useChangeFailed": "OpenBot はプロバイダーの設定を変更できませんでした。",
+    "保存されたプロバイダーの設定を読み取れません。変更する前に kongCowork を更新してください。",
+  "error.provider.useChangeFailed": "kongCowork はプロバイダーの設定を変更できませんでした。",
   "error.provider.accountsUnsupported": "{provider} で使えるアカウントは 1 つだけです。",
   "error.provider.accountNeedsConnection": "別のアカウントを追加する前に {provider} に接続してください。",
   "error.provider.usageResetUnsupported": "{provider} は使用量の上限をリセットできません。",
-  "error.provider.signOutUnsupported": "OpenBot は {provider} のサインインを切断できません。",
+  "error.provider.signOutUnsupported": "kongCowork は {provider} のサインインを切断できません。",
   "error.provider.usageResetNotConnected":
     "使用量をリセットする前に、この {provider} アカウントにもう一度サインインしてください。",
   "error.provider.accountLimit": "{provider} で使えるアカウントは最大 {limit} 個です。",
@@ -414,7 +416,7 @@ export const messages = {
   "error.provider.accountInUse":
     "このアカウントを使うエージェントが作業中です。エージェントが停止してからもう一度お試しください。",
   "error.provider.accountsReadOnly":
-    "保存されたプロバイダーのアカウントを読み取れません。変更する前に OpenBot を更新してください。",
+    "保存されたプロバイダーのアカウントを読み取れません。変更する前に kongCowork を更新してください。",
   "error.provider.accountSignedOut":
     "この {provider} アカウントはサインアウトしています。もう一度サインインしてください。",
   "error.provider.sessionSettingUnavailable": "この設定は現在のプロバイダーセッションでは利用できません。",
@@ -449,7 +451,7 @@ export const messages = {
   "error.provider.museConnectionFailed":
     "Muse への接続に失敗しました。保存された履歴を復元するには、会話を再開してください。",
   "error.provider.museUnknownSession": "不明な Muse セッションです。",
-  "error.provider.museInvalidToolResult": "OpenBot ツールの結果が無効です。",
+  "error.provider.museInvalidToolResult": "kongCowork ツールの結果が無効です。",
   "error.provider.museMcpRequired": "Muse はセッションの MCP サーバーに対応している必要があります。",
   "error.provider.museSessionMismatch": "Muse が別のセッションを返しました。",
   "error.provider.museCompactRejected": "Muse が圧縮を受け付けませんでした。",

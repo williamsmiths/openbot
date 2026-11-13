@@ -2,20 +2,20 @@ import type { PartialTranslation } from "../../../message";
 import type { messages as source } from "../../en/error/connector";
 
 export const messages = {
-  "error.connector.githubUnavailable": "Diese Version von OpenBot hat keine GitHub App.",
+  "error.connector.githubUnavailable": "Diese Version von kongCowork hat keine GitHub App.",
   "error.connector.githubDenied": "Die GitHub-Anmeldung wurde abgelehnt.",
   "error.connector.githubCodeExpired": "Der GitHub-Code ist abgelaufen. Verbinde GitHub erneut.",
   "error.connector.githubDeviceFlowDisabled": "Die GitHub App erlaubt keine Geräteanmeldung.",
   "error.connector.githubClientUnknown": "GitHub kennt die Client ID dieser GitHub App nicht.",
   "error.connector.githubUnexpected": "GitHub hat eine unerwartete Antwort gesendet: {detail}",
-  "error.connector.githubUnreachable": "OpenBot kann GitHub nicht erreichen: {detail}",
+  "error.connector.githubUnreachable": "kongCowork kann GitHub nicht erreichen: {detail}",
   "error.connector.githubExpired": "Die GitHub-Verbindung ist abgelaufen. Verbinde GitHub erneut.",
   "error.connector.githubFileUnreadable": "Die GitHub-Verbindungsdatei ist nicht lesbar.",
   "error.connector.githubFileTooLarge": "Die GitHub-Verbindungsdatei ist zu groß.",
   "error.connector.onePasswordCliMissing":
-    "OpenBot kann die 1Password CLI nicht finden. Installiere sie und aktiviere ihre Integration in der 1Password-App oder verwende ein Dienstkonto-Token.",
+    "kongCowork kann die 1Password CLI nicht finden. Installiere sie und aktiviere ihre Integration in der 1Password-App oder verwende ein Dienstkonto-Token.",
   "error.connector.onePasswordCliInstallFailed":
-    "OpenBot konnte die 1Password CLI nicht installieren. Prüfe die Internetverbindung und versuche es erneut.",
+    "kongCowork konnte die 1Password CLI nicht installieren. Prüfe die Internetverbindung und versuche es erneut.",
   "error.connector.onePasswordCliSignedOut":
     "Die 1Password CLI ist nicht angemeldet. Aktiviere ihre Integration in der 1Password-App und verbinde sie erneut.",
   "error.connector.onePasswordCliFailed": "Die 1Password CLI ist fehlgeschlagen: {detail}",
@@ -34,7 +34,7 @@ export const messages = {
   "error.connector.bitwardenCliInstallFailed":
     "Die Bitwarden CLI konnte auf diesem Server nicht installiert werden. Prüfe seine Netzwerkverbindung und verbinde dann erneut.",
   "error.connector.bitwardenFileUnreadable": "Die Bitwarden-Verbindungsdatei ist nicht lesbar.",
-  "error.connector.passwordManagerUnknown": "OpenBot kennt diesen Passwortmanager nicht.",
+  "error.connector.passwordManagerUnknown": "kongCowork kennt diesen Passwortmanager nicht.",
   "error.connector.passwordManagerMethod": "Dieser Passwortmanager kann sich so nicht verbinden.",
   "error.connector.passwordManagerNoSignIn": "Keine Anmeldeseite ist offen. Verbinde erneut.",
   "error.connector.protonPassFailed": "Proton Pass konnte nicht verbunden werden. Verbinde erneut.",

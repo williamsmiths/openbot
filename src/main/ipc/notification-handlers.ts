@@ -1,5 +1,6 @@
 // The desktop notification switch and the test notification Settings offers.
 
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import type { AppTranslate } from "@openbot/i18n";
 import { sourceText } from "@openbot/i18n/source";
 import { Notification } from "electron";
@@ -36,7 +37,7 @@ export function notificationIpcHandlers({
       // it is how they find out whether the operating system lets OpenBot show notifications at all.
       test: handler(() => {
         if (!Notification.isSupported()) throw new Error(sourceText("error.app.notificationsUnsupported"));
-        showRetainedNotification(new Notification({ title: "OpenBot", body: translate("notification.test") }));
+        showRetainedNotification(new Notification({ title: PRODUCT_NAME, body: translate("notification.test") }));
       }),
       openSettings: handler(async () => {
         const url = notificationSettingsUrl(process.platform);

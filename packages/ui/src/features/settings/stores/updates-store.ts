@@ -1,5 +1,6 @@
 import type { AppInfo, UpdateStatus } from "@openbot/contracts/ipc";
 import { isUpdateActivePhase } from "@openbot/contracts/ipc";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import type { AppTextKey } from "@openbot/i18n";
 import { createMemo, createSignal } from "solid-js";
 import { currentText } from "../../../text";
@@ -11,7 +12,7 @@ interface UpdatesStoreProps {
   onUpdateAction: () => Promise<void>;
   /** Removes a restart that a server admin asked for. */
   onCancelScheduledRestart?: () => Promise<void>;
-  /** Restarts OpenBot, or installs the downloaded update, when no work runs. Absent: no such action. */
+  /** Restarts the app, or installs the downloaded update, when no work runs. Absent: no such action. */
   onRestartWhenIdle?: () => Promise<void>;
   onCancelIdleRestart?: () => Promise<void>;
 }
@@ -28,7 +29,7 @@ export function createSettingsUpdatesStore(props: UpdatesStoreProps) {
     props.updateStatus.currentVersion || props.appInfo?.version || currentText().t("settings.updates.versionUnknown");
   const targetUpdate = () =>
     props.updateStatus.availableVersion
-      ? `OpenBot v${props.updateStatus.availableVersion}`
+      ? `${PRODUCT_NAME} v${props.updateStatus.availableVersion}`
       : currentText().t("settings.updates.target.latest");
   /**
    * Host phases arrive mapped onto the shared update phases, so the managed wording says what the
@@ -77,7 +78,7 @@ export function createSettingsUpdatesStore(props: UpdatesStoreProps) {
         return t("settings.updates.status.installing", { target: targetUpdate() });
       case "up-to-date":
         return props.updateStatus.stagedVersion
-          ? t("settings.updates.status.staged", { target: `OpenBot v${props.updateStatus.stagedVersion}` })
+          ? t("settings.updates.status.staged", { target: `${PRODUCT_NAME} v${props.updateStatus.stagedVersion}` })
           : t("settings.updates.status.upToDate");
       case "error":
         return errorMessage(props.updateStatus.message, t("settings.updates.status.checkFailed"));

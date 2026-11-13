@@ -42,6 +42,7 @@ import {
   isForeignProviderId,
   isKnownAgentProvider,
 } from "@openbot/contracts/ipc";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import type { AgentProfile } from "@openbot/ui/data";
 import type { AgentRuntimeSettings } from "@openbot/ui/features/conversation/AgentSettingsPanel";
 import type { MarketplacePluginDetail } from "@openbot/ui/features/settings/marketplace-plugins";
@@ -903,7 +904,7 @@ export const STORY_UPDATE_STATUS: UpdateStatus = {
 };
 
 export const STORY_APP_INFO = {
-  name: "OpenBot",
+  name: PRODUCT_NAME,
   version: "0.1.11",
   platform: "darwin" as const,
   variant: "production" as const,

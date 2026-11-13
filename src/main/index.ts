@@ -12,6 +12,7 @@ import {
   IPC_ENDPOINTS,
   type QuitGuard,
 } from "@openbot/contracts/ipc";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import { createFormat, localeDirection, resolveLocale, translateFor, withHourCycle } from "@openbot/i18n";
 import { localizeSourceText } from "@openbot/i18n/source";
 import { createOpenBotLogger, toLogValue } from "@openbot/logging";
@@ -1116,7 +1117,7 @@ function requestDesktopNotificationPermission(
       preference,
       showWelcome: () => {
         if (!Notification.isSupported()) return;
-        showRetainedNotification(new Notification({ title: "OpenBot", body: translate("notification.welcome") }));
+        showRetainedNotification(new Notification({ title: PRODUCT_NAME, body: translate("notification.welcome") }));
       },
     }),
   );

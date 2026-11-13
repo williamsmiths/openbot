@@ -19,7 +19,7 @@ export const messages = {
     "Agents kunnen alleen de repository’s gebruiken waarop de OpenBot GitHub App is geïnstalleerd.",
   "connector.github.chooseRepositories": "Kies repository’s",
   "connector.github.repositoriesLoading": "Repository’s van GitHub lezen",
-  "connector.github.repositoriesFailed": "OpenBot kan de repository’s van GitHub niet lezen.",
+  "connector.github.repositoriesFailed": "kongCowork kan de repository’s van GitHub niet lezen.",
   "connector.github.noRepositories": "De OpenBot GitHub App is nog op geen enkele repository geïnstalleerd.",
   "connector.github.moreRepositories": { one: "En nog {count} repository", other: "En nog {count} repository’s" },
   "connector.github.private": "Privé",
@@ -29,7 +29,7 @@ export const messages = {
   "connector.github.expiredTitle": "De GitHub-verbinding is verlopen",
   "connector.github.expiredDescription": "Verbind opnieuw als @{login} om agents weer GitHub te geven.",
   "connector.github.reconnect": "Opnieuw verbinden",
-  "connector.github.actionFailed": "OpenBot kan de GitHub-verbinding niet wijzigen.",
+  "connector.github.actionFailed": "kongCowork kan de GitHub-verbinding niet wijzigen.",
   "connector.github.statusConnected": "Verbonden",
   "connector.github.statusConnecting": "Verbinden",
   "connector.github.statusExpired": "Verlopen",
@@ -39,7 +39,7 @@ export const messages = {
   "connector.github.noMatch": "Geen repository komt overeen met “{query}”.",
   "connector.github.stepSignIn": "Inloggen",
   "connector.github.stepConnected": "Verbonden",
-  "connector.github.requestingCode": "OpenBot vraagt GitHub om een code.",
+  "connector.github.requestingCode": "kongCowork vraagt GitHub om een code.",
   "connector.github.codeLabel": "Code {code}",
   "connector.github.failedTitle": "GitHub is niet verbonden",
   "connector.github.cancelConnecting": "Verbinden met GitHub annuleren",
@@ -53,7 +53,7 @@ export const messages = {
   "connector.github.disconnectConfirmDescription":
     "Loskoppelen verwijdert de aanmelding van @{login} van deze computer.",
   "connector.github.disconnectEffectTools": "Elke agent verliest de GitHub-tools, gh en git.",
-  "connector.github.disconnectEffectRevoke": "Daarna opent GitHub, waar je OpenBot kunt intrekken.",
+  "connector.github.disconnectEffectRevoke": "Daarna opent GitHub, waar je kongCowork kunt intrekken.",
   "connector.github.disconnectEffectKept": "Chats, bestanden en het geheugen van agents blijven op deze computer.",
   "connector.github.descriptionHost":
     "Elke agent op {host} kan je GitHub-repository’s, issues en pull requests gebruiken, en gh en git.",
@@ -67,7 +67,7 @@ export const messages = {
   "connector.github.close": "Sluiten",
   "connector.dangerZone": "Gevarenzone",
   "connector.statusUnknown": "Onbekend",
-  "connector.readFailed": "OpenBot kan de status van deze verbinding niet lezen.",
+  "connector.readFailed": "kongCowork kan de status van deze verbinding niet lezen.",
 
   "connector.slack.title": "Slack",
   "connector.slack.description":
@@ -91,10 +91,10 @@ export const messages = {
   "connector.slack.disconnectAllSummary":
     "Elke werkruimte wordt losgekoppeld. Mensen kunnen je agents niet meer bereiken via @OpenBot.",
   "connector.slack.disconnectAllSummaryOrchestrator":
-    "Elke werkruimte wordt losgekoppeld. De Slack Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+    "Elke werkruimte wordt losgekoppeld. De Slack Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.slack.missingScopes":
-    "OpenBot heeft deze machtigingen in Slack niet: {scopes}. Koppel de werkruimte los en verbind hem daarna opnieuw.",
-  "connector.slack.retryAt": "Slack vroeg OpenBot te wachten. Het probeert het opnieuw om {time}.",
+    "kongCowork heeft deze machtigingen in Slack niet: {scopes}. Koppel de werkruimte los en verbind hem daarna opnieuw.",
+  "connector.slack.retryAt": "Slack vroeg kongCowork te wachten. Het probeert het opnieuw om {time}.",
   "connector.slack.reconnect": "Opnieuw verbinden",
   "connector.slack.pause": "Pauzeren",
   "connector.slack.resume": "Hervatten",
@@ -125,17 +125,17 @@ export const messages = {
   "connector.slack.orchestratorDoesDelegate": "Geeft elke taak aan de agent die het best past",
   "connector.slack.orchestratorDoesAnswer": "Plaatst het antwoord in de Slack-thread",
   "connector.slack.orchestratorModel": "Model",
-  "connector.slack.doneTitle": "OpenBot zit in {workspace}",
+  "connector.slack.doneTitle": "kongCowork zit in {workspace}",
   "connector.slack.doneDescription": "Noem @OpenBot in een openbaar kanaal, of stuur het een direct bericht.",
   "connector.slack.done": "Klaar",
   "connector.slack.disconnectTitle": "{workspace} loskoppelen?",
   "connector.slack.disconnectDescription":
-    "OpenBot antwoordt niet meer in {workspace} en verwijdert zijn Slack-token van deze computer.",
+    "kongCowork antwoordt niet meer in {workspace} en verwijdert zijn Slack-token van deze computer.",
   "connector.slack.disconnectDescriptionHost":
-    "OpenBot antwoordt niet meer in {workspace} en verwijdert zijn Slack-token van {host}.",
+    "kongCowork antwoordt niet meer in {workspace} en verwijdert zijn Slack-token van {host}.",
   "connector.slack.disconnectEffect": "Mensen in {workspace} kunnen je agents niet meer bereiken via @OpenBot.",
-  "connector.slack.removeEffectKept": "De gesprekken en de Slack Orchestrator blijven in OpenBot.",
-  "connector.slack.removeEffectDeleted": "De Slack Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+  "connector.slack.removeEffectKept": "De gesprekken en de Slack Orchestrator blijven in kongCowork.",
+  "connector.slack.removeEffectDeleted": "De Slack Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.slack.keep": "Verbonden houden",
   "connector.slack.close": "Sluiten",
   "connector.slack.addWorkspace": "Werkruimte toevoegen",
@@ -170,10 +170,10 @@ export const messages = {
   "connector.discord.disconnectAllSummary":
     "Elke Discord-server wordt losgekoppeld. Mensen kunnen je agents niet meer bereiken via @OpenBot.",
   "connector.discord.disconnectAllSummaryOrchestrator":
-    "Elke Discord-server wordt losgekoppeld. De Discord Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+    "Elke Discord-server wordt losgekoppeld. De Discord Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.discord.missingScopes":
-    "OpenBot heeft deze machtigingen in Discord niet: {scopes}. Koppel de Discord-server los en verbind hem daarna opnieuw.",
-  "connector.discord.retryAt": "Discord vroeg OpenBot te wachten. Het probeert het opnieuw om {time}.",
+    "kongCowork heeft deze machtigingen in Discord niet: {scopes}. Koppel de Discord-server los en verbind hem daarna opnieuw.",
+  "connector.discord.retryAt": "Discord vroeg kongCowork te wachten. Het probeert het opnieuw om {time}.",
   "connector.discord.reconnect": "Opnieuw verbinden",
   "connector.discord.pause": "Pauzeren",
   "connector.discord.resume": "Hervatten",
@@ -184,7 +184,7 @@ export const messages = {
   "connector.discord.orchestratorNone": "Nog geen agent antwoordt",
   "connector.discord.orchestratorNoneDescription":
     "Voeg de Discord Orchestrator toe, anders krijgt Discord geen antwoord.",
-  "connector.discord.channelsNote": "OpenBot ziet de kanalen die zijn rol kan bekijken.",
+  "connector.discord.channelsNote": "kongCowork ziet de kanalen die zijn rol kan bekijken.",
   "connector.discord.stepWorkspace": "Discord-server",
   "connector.discord.stepAgent": "Agent",
   "connector.discord.connectTitle": "Verbind een Discord-server",
@@ -203,17 +203,18 @@ export const messages = {
   "connector.discord.orchestratorDoesDelegate": "Geeft elke taak aan de agent die het best past",
   "connector.discord.orchestratorDoesAnswer": "Antwoordt in het Discord-kanaal",
   "connector.discord.orchestratorModel": "Model",
-  "connector.discord.doneTitle": "OpenBot zit in {workspace}",
+  "connector.discord.doneTitle": "kongCowork zit in {workspace}",
   "connector.discord.doneDescription": "Noem @OpenBot in een kanaal. Antwoord op OpenBot om verder te gaan.",
   "connector.discord.done": "Klaar",
   "connector.discord.disconnectTitle": "{workspace} loskoppelen?",
   "connector.discord.disconnectDescription":
-    "OpenBot antwoordt niet meer in {workspace} en verwijdert de Discord-verbinding van deze computer.",
+    "kongCowork antwoordt niet meer in {workspace} en verwijdert de Discord-verbinding van deze computer.",
   "connector.discord.disconnectDescriptionHost":
-    "OpenBot antwoordt niet meer in {workspace} en verwijdert de Discord-verbinding van {host}.",
+    "kongCowork antwoordt niet meer in {workspace} en verwijdert de Discord-verbinding van {host}.",
   "connector.discord.disconnectEffect": "Mensen in {workspace} kunnen je agents niet meer bereiken via @OpenBot.",
-  "connector.discord.removeEffectKept": "De gesprekken en de Discord Orchestrator blijven in OpenBot.",
-  "connector.discord.removeEffectDeleted": "De Discord Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+  "connector.discord.removeEffectKept": "De gesprekken en de Discord Orchestrator blijven in kongCowork.",
+  "connector.discord.removeEffectDeleted":
+    "De Discord Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.discord.keep": "Verbonden houden",
   "connector.discord.close": "Sluiten",
   "connector.discord.addWorkspace": "Discord-server toevoegen",
@@ -225,21 +226,22 @@ export const messages = {
     one: "{count} Discord-server · Discord Orchestrator antwoordt",
     other: "{count} Discord-servers · Discord Orchestrator antwoordt",
   },
-  "connector.discord.accessTitle": "Wie OpenBot kan gebruiken",
-  "connector.discord.accessDescription": "OpenBot antwoordt alleen deze mensen. Het negeert vermeldingen van anderen.",
+  "connector.discord.accessTitle": "Wie kongCowork kan gebruiken",
+  "connector.discord.accessDescription":
+    "kongCowork antwoordt alleen deze mensen. Het negeert vermeldingen van anderen.",
   "connector.discord.accessEveryone": "Iedereen op de server",
   "connector.discord.accessEveryoneDescription":
-    "Iedereen die kan posten in een kanaal dat OpenBot ziet, kan het noemen.",
+    "Iedereen die kan posten in een kanaal dat kongCowork ziet, kan het noemen.",
   "connector.discord.accessRoles": "Leden met {roles}",
   "connector.discord.accessChoose": "Kies rollen",
-  "connector.discord.accessDialogTitle": "Wie kan OpenBot gebruiken in {workspace}?",
-  "connector.discord.accessDialogDescription": "Als er geen rol is gekozen, kan iedereen OpenBot noemen.",
+  "connector.discord.accessDialogTitle": "Wie kan kongCowork gebruiken in {workspace}?",
+  "connector.discord.accessDialogDescription": "Als er geen rol is gekozen, kan iedereen kongCowork noemen.",
   "connector.discord.accessLoading": "Rollen laden…",
   "connector.discord.accessLoadFailed": "Discord-rollen zijn niet geladen",
   "connector.discord.accessNoRoles": "Deze Discord-server heeft geen rollen om te kiezen.",
   "connector.discord.accessRoleDeleted": "{role} (verwijderd)",
   "connector.discord.accessSave": "Opslaan",
-  "connector.discord.accessHostUpdate": "Werk OpenBot bij op {host} om rollen te kiezen.",
+  "connector.discord.accessHostUpdate": "Werk kongCowork bij op {host} om rollen te kiezen.",
 
   "connector.telegram.title": "Telegram",
   "connector.telegram.description":
@@ -268,11 +270,11 @@ export const messages = {
   "connector.telegram.helpRemoved":
     "De OpenBot-bot zit niet meer in deze chat. Koppel de chat los en voeg de bot daarna opnieuw toe.",
   "connector.telegram.helpRelayUnavailable":
-    "OpenBot kan op deze computer geen Telegram-berichten ontvangen. Log in, geef deze computer een naam in Serverinstellingen en houd OpenBot open.",
+    "kongCowork kan op deze computer geen Telegram-berichten ontvangen. Log in, geef deze computer een naam in Serverinstellingen en houd kongCowork open.",
   "connector.telegram.helpRelayUnavailableHost":
-    "OpenBot op {host} kan geen Telegram-berichten ontvangen. Log op {host} in, geef de server een naam in Serverinstellingen en houd OpenBot open.",
-  "connector.telegram.helpError": "OpenBot kan deze chat niet bereiken. Verbind opnieuw of koppel de chat los.",
-  "connector.telegram.retryAt": "Telegram vroeg OpenBot te wachten. Het probeert het opnieuw om {time}.",
+    "kongCowork op {host} kan geen Telegram-berichten ontvangen. Log op {host} in, geef de server een naam in Serverinstellingen en houd kongCowork open.",
+  "connector.telegram.helpError": "kongCowork kan deze chat niet bereiken. Verbind opnieuw of koppel de chat los.",
+  "connector.telegram.retryAt": "Telegram vroeg kongCowork te wachten. Het probeert het opnieuw om {time}.",
   "connector.telegram.pause": "Pauzeren",
   "connector.telegram.resume": "Hervatten",
   "connector.telegram.reconnect": "Opnieuw verbinden",
@@ -281,14 +283,14 @@ export const messages = {
   "connector.telegram.disconnectAllSummary":
     "Elke chat wordt losgekoppeld. Mensen kunnen je agents niet meer bereiken via de OpenBot-bot.",
   "connector.telegram.disconnectAllSummaryOrchestrator":
-    "Elke chat wordt losgekoppeld. De Telegram Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+    "Elke chat wordt losgekoppeld. De Telegram Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.telegram.rowAction": "{action}: {name}",
   "connector.telegram.linkChat": "Koppel een chat",
   "connector.telegram.addToGroup": "Toevoegen aan een groep",
   "connector.telegram.openDirectChat": "Open een directe chat",
   "connector.telegram.orchestratorTitle": "Telegram Orchestrator",
   "connector.telegram.orchestratorDescription":
-    "Deze agent ontvangt de berichten voor OpenBot uit al je Telegram-chats. Korte berichten beantwoordt hij zelf, ander werk geeft hij aan de juiste agent, en hij plaatst het antwoord in de chat.",
+    "Deze agent ontvangt de berichten voor kongCowork uit al je Telegram-chats. Korte berichten beantwoordt hij zelf, ander werk geeft hij aan de juiste agent, en hij plaatst het antwoord in de chat.",
   "connector.telegram.orchestratorNone": "Nog geen agent antwoordt",
   "connector.telegram.orchestratorNoneDescription":
     "Voeg de Telegram Orchestrator toe, anders krijgt Telegram geen antwoord.",
@@ -305,21 +307,21 @@ export const messages = {
   "connector.telegram.connectWaiting": "Wachten op Telegram. Kies de chat in Telegram.",
   "connector.telegram.agentStepTitle": "Voeg de Telegram Orchestrator toe",
   "connector.telegram.agentStepDescription":
-    "Deze nieuwe agent beantwoordt de berichten voor OpenBot in {chat} en in elke chat die je later koppelt.",
+    "Deze nieuwe agent beantwoordt de berichten voor kongCowork in {chat} en in elke chat die je later koppelt.",
   "connector.telegram.orchestratorName": "Telegram Orchestrator",
   "connector.telegram.orchestratorRole": "Antwoordt in Telegram en vraagt het team",
-  "connector.telegram.orchestratorDoesReceive": "Ontvangt elk Telegram-bericht voor OpenBot als eerste",
+  "connector.telegram.orchestratorDoesReceive": "Ontvangt elk Telegram-bericht voor kongCowork als eerste",
   "connector.telegram.orchestratorDoesDelegate": "Geeft elke taak aan de agent die het best past",
   "connector.telegram.orchestratorDoesAnswer": "Plaatst het antwoord in de Telegram-chat",
   "connector.telegram.orchestratorModel": "Model",
-  "connector.telegram.doneTitle": "OpenBot zit in {chat}",
+  "connector.telegram.doneTitle": "kongCowork zit in {chat}",
   "connector.telegram.done": "Klaar",
   "connector.telegram.disconnectTitle": "{chat} loskoppelen?",
   "connector.telegram.leaveDescription": "De OpenBot-bot verlaat {chat}, en OpenBot antwoordt daar niet meer.",
   "connector.telegram.disconnectEffect": "Mensen in {chat} kunnen je agents niet meer bereiken via de OpenBot-bot.",
-  "connector.telegram.removeEffectKept": "De gesprekken en de Telegram Orchestrator blijven in OpenBot.",
+  "connector.telegram.removeEffectKept": "De gesprekken en de Telegram Orchestrator blijven in kongCowork.",
   "connector.telegram.removeEffectDeleted":
-    "Dit is de laatste chat, dus de Telegram Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+    "Dit is de laatste chat, dus de Telegram Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.telegram.keep": "Verbonden houden",
   "connector.telegram.close": "Sluiten",
   "connector.whatsapp.title": "WhatsApp",
@@ -347,16 +349,16 @@ export const messages = {
   "connector.whatsapp.actionFailed": "WhatsApp heeft de wijziging niet geaccepteerd",
   "connector.whatsapp.numbersTitle": "Nummers",
   "connector.whatsapp.linkNumber": "Koppel een nummer",
-  "connector.whatsapp.ownNumberNote": "Je chat “Bericht aan jezelf” en de mensen die je toestaat bereiken OpenBot.",
+  "connector.whatsapp.ownNumberNote": "Je chat “Bericht aan jezelf” en de mensen die je toestaat bereiken kongCowork.",
   "connector.whatsapp.dedicatedNote":
-    "De mensen die je toestaat bereiken OpenBot. Anderen krijgen een code om aan jou te geven.",
+    "De mensen die je toestaat bereiken kongCowork. Anderen krijgen een code om aan jou te geven.",
   "connector.whatsapp.helpLoggedOut":
     "WhatsApp heeft deze computer uit de gekoppelde apparaten verwijderd. Koppel het nummer opnieuw.",
   "connector.whatsapp.helpLoggedOutHost":
     "WhatsApp heeft deze server uit de gekoppelde apparaten verwijderd. Koppel het nummer opnieuw.",
   "connector.whatsapp.helpError":
-    "OpenBot kan WhatsApp op dit nummer niet bereiken. Verbind opnieuw of koppel het nummer los.",
-  "connector.whatsapp.retryAt": "WhatsApp vroeg OpenBot te wachten. Het probeert het opnieuw om {time}.",
+    "kongCowork kan WhatsApp op dit nummer niet bereiken. Verbind opnieuw of koppel het nummer los.",
+  "connector.whatsapp.retryAt": "WhatsApp vroeg kongCowork te wachten. Het probeert het opnieuw om {time}.",
   "connector.whatsapp.pause": "Pauzeren",
   "connector.whatsapp.resume": "Hervatten",
   "connector.whatsapp.reconnect": "Opnieuw verbinden",
@@ -366,17 +368,17 @@ export const messages = {
   "connector.whatsapp.disconnectAllSummary":
     "Elk nummer wordt losgekoppeld. Mensen kunnen je agents niet meer bereiken via WhatsApp.",
   "connector.whatsapp.disconnectAllSummaryOrchestrator":
-    "Elk nummer wordt losgekoppeld. De WhatsApp Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+    "Elk nummer wordt losgekoppeld. De WhatsApp Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.whatsapp.rowAction": "{action}: {name}",
   "connector.whatsapp.ownNumber": "Persoonlijk nummer",
   "connector.whatsapp.ownNumberDescription":
-    "Alleen je chat “Bericht aan jezelf” en de mensen die je toestaat kunnen schrijven. Zet dit uit voor een nummer alleen voor OpenBot.",
+    "Alleen je chat “Bericht aan jezelf” en de mensen die je toestaat kunnen schrijven. Zet dit uit voor een nummer alleen voor kongCowork.",
   "connector.whatsapp.workingMessage": "Bericht “Mee bezig…”",
   "connector.whatsapp.workingMessageDescription":
-    "OpenBot stuurt het terwijl de agent werkt en vervangt het daarna door het antwoord. Zet dit uit om alleen het antwoord te sturen.",
+    "kongCowork stuurt het terwijl de agent werkt en vervangt het daarna door het antwoord. Zet dit uit om alleen het antwoord te sturen.",
   "connector.whatsapp.orchestratorTitle": "WhatsApp Orchestrator",
   "connector.whatsapp.orchestratorDescription":
-    "Deze agent ontvangt de berichten voor OpenBot van al je gekoppelde nummers. Korte berichten beantwoordt hij zelf, ander werk geeft hij aan de juiste agent, en hij antwoordt in WhatsApp.",
+    "Deze agent ontvangt de berichten voor kongCowork van al je gekoppelde nummers. Korte berichten beantwoordt hij zelf, ander werk geeft hij aan de juiste agent, en hij antwoordt in WhatsApp.",
   "connector.whatsapp.orchestratorNone": "Nog geen agent antwoordt",
   "connector.whatsapp.orchestratorNoneDescription":
     "Voeg de WhatsApp Orchestrator toe, anders krijgt WhatsApp geen antwoord.",
@@ -392,8 +394,8 @@ export const messages = {
   "connector.whatsapp.kindLabel": "Nummer",
   "connector.whatsapp.kindPersonal": "Mijn persoonlijke nummer",
   "connector.whatsapp.kindPersonalDescription":
-    "OpenBot antwoordt alleen in je chat “Bericht aan jezelf” en aan de mensen die je toestaat.",
-  "connector.whatsapp.kindDedicated": "Een nummer alleen voor OpenBot",
+    "kongCowork antwoordt alleen in je chat “Bericht aan jezelf” en aan de mensen die je toestaat.",
+  "connector.whatsapp.kindDedicated": "Een nummer alleen voor kongCowork",
   "connector.whatsapp.kindDedicatedDescription":
     "Onbekende mensen krijgen een code om aan jou te geven. Je keurt ze hier goed.",
   "connector.whatsapp.methodLabel": "Koppelmethode",
@@ -422,26 +424,26 @@ export const messages = {
     "WhatsApp weigerde de koppeling. Wacht een paar minuten en probeer het dan opnieuw.",
   "connector.whatsapp.failedBusy":
     "Er loopt al een andere koppeling. Wacht tot die klaar is en probeer het dan opnieuw.",
-  "connector.whatsapp.failedUnavailable": "OpenBot kan WhatsApp niet bereiken. Controleer de internetverbinding.",
+  "connector.whatsapp.failedUnavailable": "kongCowork kan WhatsApp niet bereiken. Controleer de internetverbinding.",
   "connector.whatsapp.tryAgain": "Probeer opnieuw",
   "connector.whatsapp.agentStepTitle": "Voeg de WhatsApp Orchestrator toe",
   "connector.whatsapp.agentStepDescription":
-    "Deze nieuwe agent beantwoordt de berichten voor OpenBot op {number} en op elk nummer dat je later koppelt.",
+    "Deze nieuwe agent beantwoordt de berichten voor kongCowork op {number} en op elk nummer dat je later koppelt.",
   "connector.whatsapp.orchestratorName": "WhatsApp Orchestrator",
   "connector.whatsapp.orchestratorRole": "Antwoordt in WhatsApp en vraagt het team",
-  "connector.whatsapp.orchestratorDoesReceive": "Ontvangt elk WhatsApp-bericht voor OpenBot als eerste",
+  "connector.whatsapp.orchestratorDoesReceive": "Ontvangt elk WhatsApp-bericht voor kongCowork als eerste",
   "connector.whatsapp.orchestratorDoesDelegate": "Geeft elke taak aan de agent die het best past",
   "connector.whatsapp.orchestratorDoesAnswer": "Antwoordt in de WhatsApp-chat",
   "connector.whatsapp.orchestratorModel": "Model",
-  "connector.whatsapp.doneTitle": "OpenBot is gekoppeld aan {number}",
+  "connector.whatsapp.doneTitle": "kongCowork is gekoppeld aan {number}",
   "connector.whatsapp.done": "Klaar",
   "connector.whatsapp.disconnectTitle": "{number} loskoppelen?",
   "connector.whatsapp.disconnectDescription":
-    "OpenBot logt uit bij WhatsApp op {number}. Als OpenBot uit stond, verwijder het apparaat dan ook in WhatsApp > Gekoppelde apparaten.",
+    "kongCowork logt uit bij WhatsApp op {number}. Als kongCowork uit stond, verwijder het apparaat dan ook in WhatsApp > Gekoppelde apparaten.",
   "connector.whatsapp.disconnectEffect": "Mensen kunnen je agents niet meer bereiken via {number}.",
-  "connector.whatsapp.removeEffectKept": "De gesprekken en de WhatsApp Orchestrator blijven in OpenBot.",
+  "connector.whatsapp.removeEffectKept": "De gesprekken en de WhatsApp Orchestrator blijven in kongCowork.",
   "connector.whatsapp.removeEffectDeleted":
-    "Dit is het laatste nummer, dus de WhatsApp Orchestrator en zijn gesprekken worden uit OpenBot verwijderd.",
+    "Dit is het laatste nummer, dus de WhatsApp Orchestrator en zijn gesprekken worden uit kongCowork verwijderd.",
   "connector.whatsapp.keep": "Gekoppeld houden",
   "connector.whatsapp.close": "Sluiten",
   "connector.whatsapp.sendersTitle": "Wie naar {number} kan schrijven",
@@ -461,7 +463,7 @@ export const messages = {
   "connector.whatsapp.groupDescription": "Mensen in deze groep kunnen werk geven aan je agents.",
   "connector.whatsapp.groupSearch": "Zoek groepen",
   "connector.whatsapp.groupsLoading": "Groepen lezen…",
-  "connector.whatsapp.groupsLoadFailed": "OpenBot kon de groepen niet lezen",
+  "connector.whatsapp.groupsLoadFailed": "kongCowork kon de groepen niet lezen",
   "connector.whatsapp.groupsEmpty": "Dit nummer zit in geen enkele groep.",
   "connector.whatsapp.groupsNoMatch": "Geen groep heeft deze naam.",
   "connector.whatsapp.groupAdded": "Toegevoegd",
@@ -474,9 +476,9 @@ export const messages = {
   "connector.whatsapp.deny": "Weigeren",
   "connector.onePassword.title": "1Password",
   "connector.onePassword.description":
-    "Deel een aparte 1Password-kluis met OpenBot via een serviceaccount, zodat agents kunnen inloggen op sites in de OpenBot-browser.",
+    "Deel een aparte 1Password-kluis met kongCowork via een serviceaccount, zodat agents kunnen inloggen op sites in de kongCowork-browser.",
   "connector.onePassword.howItWorks":
-    "Bij het verbinden worden in je 1Password-account een kluis “Shared with OpenBot” en een serviceaccount gemaakt dat alleen die kluis kan lezen. OpenBot vult opgeslagen logins in zijn browser op deze computer in, dus alleen de items die je naar die kluis verplaatst, worden ooit gedeeld. Agents zien nooit een wachtwoord.",
+    "Bij het verbinden worden in je 1Password-account een kluis “Shared with OpenBot” en een serviceaccount gemaakt dat alleen die kluis kan lezen. kongCowork vult opgeslagen logins in zijn browser op deze computer in, dus alleen de items die je naar die kluis verplaatst, worden ooit gedeeld. Agents zien nooit een wachtwoord.",
   "connector.onePassword.connect": "Verbind 1Password",
   "connector.onePassword.setupTitle": "Instellen",
   "connector.onePassword.stepCliTitle": "Installeer de 1Password CLI",
@@ -484,20 +486,20 @@ export const messages = {
   "connector.onePassword.stepCliInstalling": "De 1Password CLI downloaden van 1Password",
   "connector.onePassword.stepCliReady": "Versie {version} is geïnstalleerd.",
   "connector.onePassword.stepCliMissing":
-    "OpenBot downloadt hem van 1Password naar een eigen map. Er is geen beheerderswachtwoord nodig.",
+    "kongCowork downloadt hem van 1Password naar een eigen map. Er is geen beheerderswachtwoord nodig.",
   "connector.onePassword.stepCliManual":
-    "OpenBot kan hem niet op deze computer installeren. Installeer hem via 1Password en kom dan terug naar deze pagina.",
+    "kongCowork kan hem niet op deze computer installeren. Installeer hem via 1Password en kom dan terug naar deze pagina.",
   "connector.onePassword.installCli": "Installeren",
   "connector.onePassword.stepAppTitle": "Zet de CLI-integratie aan",
   "connector.onePassword.stepAppDescription":
     "Open in de 1Password-app Instellingen > Ontwikkelaar en zet “Integreren met 1Password CLI” aan.",
   "connector.onePassword.stepAppReady": "De 1Password-app laat de CLI de gedeelde kluis maken.",
   "connector.onePassword.openApp": "Open 1Password",
-  "connector.onePassword.openAppFailed": "OpenBot kan 1Password niet openen.",
+  "connector.onePassword.openAppFailed": "kongCowork kan 1Password niet openen.",
   "connector.onePassword.checkAgain": "Opnieuw controleren",
   "connector.onePassword.stepVaultTitle": "Maak de gedeelde kluis",
   "connector.onePassword.stepVaultDescription":
-    "OpenBot maakt de kluis “Shared with OpenBot” en een serviceaccount dat hem alleen kan lezen. 1Password vraagt je om goedkeuring.",
+    "kongCowork maakt de kluis “Shared with OpenBot” en een serviceaccount dat hem alleen kan lezen. 1Password vraagt je om goedkeuring.",
   "connector.onePassword.useTokenDescription":
     "Plak in plaats van deze stappen een serviceaccounttoken van 1Password.com.",
   "connector.onePassword.useTokenAction": "Gebruik token",
@@ -507,7 +509,7 @@ export const messages = {
   "connector.onePassword.approveInApp": "Keur het verzoek goed in de 1Password-app",
   "connector.onePassword.cancel": "Annuleren",
   "connector.onePassword.chooseAccountTitle": "Kies een account",
-  "connector.onePassword.chooseAccountDescription": "OpenBot maakt de gedeelde kluis in het account dat je kiest.",
+  "connector.onePassword.chooseAccountDescription": "kongCowork maakt de gedeelde kluis in het account dat je kiest.",
   "connector.onePassword.useAccount": "Gebruik dit account",
   "connector.onePassword.vaultTitle": "Gedeelde kluis",
   "connector.onePassword.vaultDescription":
@@ -517,14 +519,14 @@ export const messages = {
   "connector.onePassword.disconnect": "Verbreken",
   "connector.onePassword.disconnectTitle": "1Password loskoppelen",
   "connector.onePassword.disconnectSummary":
-    "OpenBot vergeet het token. De kluis en het serviceaccount blijven in 1Password; verwijder ze daar als je ze niet meer nodig hebt.",
-  "connector.onePassword.actionFailed": "OpenBot kan de 1Password-verbinding niet wijzigen.",
+    "kongCowork vergeet het token. De kluis en het serviceaccount blijven in 1Password; verwijder ze daar als je ze niet meer nodig hebt.",
+  "connector.onePassword.actionFailed": "kongCowork kan de 1Password-verbinding niet wijzigen.",
   "connector.onePassword.statusConnected": "Verbonden",
   "connector.onePassword.statusConnecting": "Verbinden",
   "connector.onePassword.descriptionHost":
-    "Deel een aparte 1Password-kluis met OpenBot op {host} via een serviceaccount, zodat agents op {host} kunnen inloggen op sites in de browser ervan.",
+    "Deel een aparte 1Password-kluis met kongCowork op {host} via een serviceaccount, zodat agents op {host} kunnen inloggen op sites in de browser ervan.",
   "connector.onePassword.howItWorksHost":
-    "{host} verbindt met een serviceaccounttoken. Maak op 1Password.com een serviceaccount dat alleen de kluis kan lezen die je met OpenBot deelt, en plak het token ervan hier. {host} controleert het token en bewaart het; deze computer niet. Agents zien nooit een wachtwoord.",
+    "{host} verbindt met een serviceaccounttoken. Maak op 1Password.com een serviceaccount dat alleen de kluis kan lezen die je met kongCowork deelt, en plak het token ervan hier. {host} controleert het token en bewaart het; deze computer niet. Agents zien nooit een wachtwoord.",
   "connector.onePassword.disconnectSummaryHost":
     "{host} vergeet het token. De kluis en het serviceaccount blijven in 1Password; verwijder ze daar als je ze niet meer nodig hebt.",
   "connector.bitwarden.title": "Bitwarden",
@@ -532,24 +534,24 @@ export const messages = {
   "connector.bitwarden.setup":
     "Installeer de Bitwarden CLI en log in met bw login. Maak een map met de naam Shared with OpenBot en zet daar alleen de logins in die agents mogen gebruiken. Voer bw unlock --raw uit en plak de sessiesleutel hieronder. Plak niet je hoofdwachtwoord.",
   "connector.bitwarden.scope":
-    "Alle agents op deze computer kunnen passende logins in Shared with OpenBot gebruiken. OpenBot gebruikt exacte HTTPS-origins. Het gebruikt geen items die om het hoofdwachtwoord vragen of een aangepaste URI-matchregel hebben.",
+    "Alle agents op deze computer kunnen passende logins in Shared with OpenBot gebruiken. kongCowork gebruikt exacte HTTPS-origins. Het gebruikt geen items die om het hoofdwachtwoord vragen of een aangepaste URI-matchregel hebben.",
   "connector.bitwarden.session":
-    "De sessiesleutel blijft in het geheugen. Verbind opnieuw na 8 uur zonder kluisgebruik of nadat OpenBot is afgesloten. Loskoppelen stopt de toegang van OpenBot; andere Bitwarden-clients worden niet vergrendeld.",
+    "De sessiesleutel blijft in het geheugen. Verbind opnieuw na 8 uur zonder kluisgebruik of nadat kongCowork is afgesloten. Loskoppelen stopt de toegang van kongCowork; andere Bitwarden-clients worden niet vergrendeld.",
   "connector.bitwarden.sessionKey": "Bitwarden-sessiesleutel",
   "connector.bitwarden.connect": "Verbind Bitwarden",
   "connector.bitwarden.disconnect": "Bitwarden loskoppelen",
   "connector.bitwarden.disconnectAction": "Verbreken",
   "connector.bitwarden.disconnectSummary":
-    "OpenBot vergeet de sessiesleutel. Agents kunnen geen logins uit Bitwarden meer invullen. Andere Bitwarden-clients blijven ontgrendeld.",
+    "kongCowork vergeet de sessiesleutel. Agents kunnen geen logins uit Bitwarden meer invullen. Andere Bitwarden-clients blijven ontgrendeld.",
   "connector.bitwarden.disconnectSummaryHost":
     "{host} verwijdert de API-sleutel en het hoofdwachtwoord. Agents op {host} kunnen geen logins uit Bitwarden meer invullen.",
   "connector.bitwarden.connected": "Verbonden",
-  "connector.bitwarden.actionFailed": "OpenBot kan de Bitwarden-verbinding niet wijzigen.",
+  "connector.bitwarden.actionFailed": "kongCowork kan de Bitwarden-verbinding niet wijzigen.",
   "connector.bitwarden.descriptionHost": "Vul browserlogins op {host} in vanuit Bitwarden of Vaultwarden.",
   "connector.bitwarden.setupHost":
     "{host} logt in met een eigen Bitwarden CLI. Maak in je kluis een map met de naam Shared with OpenBot en zet daar alleen de logins in die agents mogen gebruiken. Open in de webkluis Instellingen › Beveiliging › Sleutels en bekijk je API-sleutel. Voer hieronder het serveradres, client_id, client_secret en je hoofdwachtwoord in.",
   "connector.bitwarden.scopeHost":
-    "Alle agents op {host} kunnen passende logins in Shared with OpenBot gebruiken. OpenBot gebruikt exacte HTTPS-origins. Het gebruikt geen items die om het hoofdwachtwoord vragen of een aangepaste URI-matchregel hebben.",
+    "Alle agents op {host} kunnen passende logins in Shared with OpenBot gebruiken. kongCowork gebruikt exacte HTTPS-origins. Het gebruikt geen items die om het hoofdwachtwoord vragen of een aangepaste URI-matchregel hebben.",
   "connector.bitwarden.sessionHost":
     "{host} bewaart de API-sleutel en het hoofdwachtwoord versleuteld, zodat hij na een herstart weer kan ontgrendelen. Deze computer bewaart ze niet. Loskoppelen verwijdert ze van {host}. {host} moet het serveradres via HTTPS kunnen bereiken.",
   "connector.bitwarden.serverUrl": "Serveradres",
@@ -573,19 +575,19 @@ export const messages = {
   "connector.protonPass.keyPlaceholder": "pst_…",
   "connector.protonPass.setupTitle": "Instellen",
   "connector.protonPass.setupDescription":
-    "Verbinden opent de Proton-aanmelding in je browser. Daarna maakt OpenBot de gedeelde kluis en bewaart het alleen een sleutel met leestoegang.",
+    "Verbinden opent de Proton-aanmelding in je browser. Daarna maakt kongCowork de gedeelde kluis en bewaart het alleen een sleutel met leestoegang.",
   "connector.protonPass.setupDescriptionHost":
     "Verbinden opent de Proton-aanmelding in je browser. Daarna maakt {host} de gedeelde kluis en bewaart het alleen een sleutel met leestoegang.",
   "connector.protonPass.vaultName": "Shared with OpenBot",
   "connector.protonPass.vaultSetup":
-    "OpenBot maakt deze kluis wanneer je verbindt. Verplaats logins erheen om ze te delen.",
+    "kongCowork maakt deze kluis wanneer je verbindt. Verplaats logins erheen om ze te delen.",
   "connector.protonPass.showSteps": "Stappen tonen",
   "connector.protonPass.stepsLabel": "Verbindingsstappen",
   "connector.protonPass.stepSignIn": "Aanmelden",
   "connector.protonPass.stepVault": "Gedeelde kluis maken",
   "connector.protonPass.stepDone": "Klaar",
   "connector.protonPass.signInTitle": "Aanmelden bij Proton",
-  "connector.protonPass.signInStarting": "OpenBot start de aanmelding. De Proton-pagina opent in je browser.",
+  "connector.protonPass.signInStarting": "kongCowork start de aanmelding. De Proton-pagina opent in je browser.",
   "connector.protonPass.signInDescription":
     "De aanmelding is open in je browser. Proton vraagt om je wachtwoord en je tweede factor.",
   "connector.protonPass.signInDescriptionHost":
@@ -596,7 +598,7 @@ export const messages = {
   "connector.protonPass.continue": "Doorgaan",
   "connector.protonPass.setupStepTitle": "Gedeelde kluis maken",
   "connector.protonPass.setupStepDescription":
-    "OpenBot maakt de kluis ‘{vault}’ en een sleutel met leestoegang. Daarna meldt het je Proton-sessie af.",
+    "kongCowork maakt de kluis ‘{vault}’ en een sleutel met leestoegang. Daarna meldt het je Proton-sessie af.",
   "connector.protonPass.doneTitle": "Proton Pass is verbonden",
   "connector.protonPass.doneDescription": "Verplaats logins naar ‘{vault}’ zodat agents ermee kunnen inloggen.",
   "connector.protonPass.failedTitle": "Proton Pass is niet verbonden",
@@ -625,9 +627,9 @@ export const messages = {
   "connector.protonPass.keyNoExpiry": "Alleen lezen. Verloopt niet.",
   "connector.protonPass.disconnectTitle": "Proton Pass loskoppelen",
   "connector.protonPass.disconnectSummary":
-    "OpenBot verwijdert zijn toegangssleutel op deze computer. De kluis en de logins erin blijven in je Proton-account.",
+    "kongCowork verwijdert zijn toegangssleutel op deze computer. De kluis en de logins erin blijven in je Proton-account.",
   "connector.protonPass.disconnectSummaryHost":
-    "OpenBot verwijdert zijn toegangssleutel op {host}. De kluis en de logins erin blijven in je Proton-account.",
+    "kongCowork verwijdert zijn toegangssleutel op {host}. De kluis en de logins erin blijven in je Proton-account.",
   "connector.protonPass.disconnect": "Loskoppelen",
-  "connector.protonPass.actionFailed": "OpenBot kon de Proton Pass-verbinding niet wijzigen.",
+  "connector.protonPass.actionFailed": "kongCowork kon de Proton Pass-verbinding niet wijzigen.",
 } as const satisfies PartialTranslation<typeof source>;

@@ -28,6 +28,7 @@
     "./chat-math": "./src/chat-math.ts",
     "./chat-preview": "./src/chat-preview.ts",
     "./chat-visual": "./src/chat-visual.ts",
+    "./product-name": "./src/product-name.ts",
     "./chat-tag-references": "./src/chat-tag-references.ts",
     "./conversation-narration": "./src/conversation-narration.ts",
     "./conversation-order": "./src/conversation-order.ts",

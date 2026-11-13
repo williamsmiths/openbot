@@ -9,11 +9,12 @@ export const messages = defineMessages("error.workflow", {
   "error.workflow.branch": "Only a condition can have yes and no connections.",
   "error.workflow.conditionBranch": "Each connection from a condition must be yes or no.",
   "error.workflow.duplicateEdge": "These two steps already have this connection.",
-  "error.workflow.serverTooOld": "This server does not support workflows. Update OpenBot on the computer that runs it.",
-  "error.workflow.nodeUnsupported": "This version of OpenBot cannot run image, file and message steps yet.",
-  "error.workflow.interrupted": "OpenBot stopped while this step ran. Run it again.",
+  "error.workflow.serverTooOld":
+    "This server does not support workflows. Update kongCowork on the computer that runs it.",
+  "error.workflow.nodeUnsupported": "This version of kongCowork cannot run image, file and message steps yet.",
+  "error.workflow.interrupted": "kongCowork stopped while this step ran. Run it again.",
   "error.workflow.agentMissing": "Choose an agent for this step.",
-  "error.workflow.handoffFailed": "OpenBot could not send this step to its agent.",
+  "error.workflow.handoffFailed": "kongCowork could not send this step to its agent.",
   "error.workflow.agentStepEnded": "The agent's message for this step was removed before it answered.",
   "error.workflow.conditionUnclear": "The model did not answer yes or no.",
   "error.workflow.modelFailed": "The model could not answer. Run the step again.",
@@ -25,7 +26,7 @@ export const messages = defineMessages("error.workflow", {
   "error.workflow.noDecision": "This step does not wait for a decision.",
   "error.workflow.outputPlaceMissing": "Choose a messaging place for this output.",
   "error.workflow.outputChannelMissing": "Choose a channel for this output.",
-  "error.workflow.outputChannelFailed": "OpenBot could not post the result in the channel. Run the step again.",
+  "error.workflow.outputChannelFailed": "kongCowork could not post the result in the channel. Run the step again.",
   "error.workflow.discordNoMessage":
     "This output acts on the Discord message that started the run. Start the run from a Discord mention, or choose Post in channel.",
   "error.workflow.slackNoMessage":
@@ -35,7 +36,7 @@ export const messages = defineMessages("error.workflow", {
   "error.workflow.outputConnectionOff":
     "The messaging connection of this output is off or removed. Choose a place again.",
   "error.workflow.outputNotRunning": "The messaging connection does not run now. Try again when it runs.",
-  "error.workflow.outputRefused": "The place refused the post. Make sure that OpenBot can post there.",
+  "error.workflow.outputRefused": "The place refused the post. Make sure that kongCowork can post there.",
   "error.workflow.outputUncertain":
     "The post stopped on its way. Part of it can be in the place. Look there before you try again.",
   "error.workflow.tooLarge": "This workflow is too large to save. Remove some drawings or long texts, then try again.",
@@ -59,7 +60,7 @@ export const messages = defineMessages("error.workflow", {
     "The OpenBot GitHub App cannot change this repository. Open GitHub and give it access.",
   "error.workflow.githubLocked": "This conversation is locked on GitHub.",
   "error.workflow.githubRefused": "GitHub refused the change: {detail}",
-  "error.workflow.githubUnreachable": "OpenBot could not reach GitHub. Run the step again.",
+  "error.workflow.githubUnreachable": "kongCowork could not reach GitHub. Run the step again.",
   "error.workflow.githubUncertain":
     "The change stopped on its way. It can be on GitHub. Look there before you run the step again.",
   "error.workflow.githubNoEvent": "GitHub has no issue or pull request that this trigger starts on.",

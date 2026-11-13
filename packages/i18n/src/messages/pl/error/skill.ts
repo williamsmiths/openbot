@@ -46,7 +46,7 @@ export const messages = {
   "error.skill.tooManySkills": "Agent może mieć maksymalnie {limit} umiejętności.",
   "error.skill.unmanagedExists": "Niezarządzana umiejętność już istnieje w {path}.",
   "error.skill.managedSlug":
-    "OpenBot daje każdemu agentowi własną umiejętność {slug}. Nadaj tej umiejętności inną nazwę.",
+    "kongCowork daje każdemu agentowi własną umiejętność {slug}. Nadaj tej umiejętności inną nazwę.",
   "error.skill.templateMarkdownTooLarge": "{name}: SKILL.md jest większy niż 64 KB. Skróć go przed publikacją.",
   "error.skill.localNoRevisions": "Lokalna umiejętność nie ma opublikowanych wersji.",
   "error.skill.localNotFound": "Ta lokalna umiejętność nie istnieje. Sprawdź jej ID na liście lokalnych umiejętności.",

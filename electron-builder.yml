@@ -142,13 +142,17 @@ mac:
   darkModeSupport: true
   extendInfo:
     CFBundleIconName: Icon
+    # The name that Finder and the Dock show. `CFBundleName` and `productName` stay OpenBot: Electron
+    # finds its helper apps as "<CFBundleName> Helper.app" (the app stops at launch otherwise), and it
+    # derives the user data folder and the keychain item of the encrypted sign-in from the app name.
+    CFBundleDisplayName: kongCowork
     ElectronTeamID: ZTRDTUL87R
-    NSMicrophoneUsageDescription: OpenBot uses the microphone to transcribe voice prompts locally on this Mac.
-    # Computer Use runs the driver as a child process, so macOS asks for both grants in OpenBot's
+    NSMicrophoneUsageDescription: kongCowork uses the microphone to transcribe voice prompts locally on this Mac.
+    # Computer Use runs the driver as a child process, so macOS asks for both grants in the app's
     # name and shows these sentences. Under the hardened runtime, macOS shows the Automation prompt
     # only when the app has `com.apple.security.automation.apple-events` in its entitlements.
-    NSScreenCaptureUsageDescription: OpenBot captures the screen so an agent can see the app windows you ask it to control.
-    NSAppleEventsUsageDescription: OpenBot sends Automation events so an agent can control the apps you ask it to control.
+    NSScreenCaptureUsageDescription: kongCowork captures the screen so an agent can see the app windows you ask it to control.
+    NSAppleEventsUsageDescription: kongCowork sends Automation events so an agent can control the apps you ask it to control.
     NSUserActivityTypes:
       - NSUserActivityTypeBrowsingWeb
   # No `arch` here: a target's own `arch` list replaces the one given on the command line, so

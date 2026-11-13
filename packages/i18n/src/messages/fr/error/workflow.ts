@@ -10,12 +10,12 @@ export const messages = {
   "error.workflow.conditionBranch": "Chaque connexion d’une condition doit être oui ou non.",
   "error.workflow.duplicateEdge": "Ces deux étapes ont déjà cette connexion.",
   "error.workflow.serverTooOld":
-    "Ce serveur ne prend pas en charge les workflows. Mettez à jour OpenBot sur l’ordinateur qui l’exécute.",
+    "Ce serveur ne prend pas en charge les workflows. Mettez à jour kongCowork sur l’ordinateur qui l’exécute.",
   "error.workflow.nodeUnsupported":
-    "Cette version d’OpenBot ne peut pas encore exécuter les étapes d’image, de fichier et de message.",
-  "error.workflow.interrupted": "OpenBot s’est arrêté pendant cette étape. Relancez-la.",
+    "Cette version de kongCowork ne peut pas encore exécuter les étapes d’image, de fichier et de message.",
+  "error.workflow.interrupted": "kongCowork s’est arrêté pendant cette étape. Relancez-la.",
   "error.workflow.agentMissing": "Choisissez un agent pour cette étape.",
-  "error.workflow.handoffFailed": "OpenBot n’a pas pu envoyer cette étape à son agent.",
+  "error.workflow.handoffFailed": "kongCowork n’a pas pu envoyer cette étape à son agent.",
   "error.workflow.agentStepEnded": "Le message à l’agent a été supprimé avant sa réponse.",
   "error.workflow.conditionUnclear": "Le modèle n’a pas répondu oui ou non.",
   "error.workflow.modelFailed": "Le modèle n’a pas pu répondre. Relancez l’étape.",
@@ -27,7 +27,7 @@ export const messages = {
   "error.workflow.noDecision": "Cette étape n’attend pas de décision.",
   "error.workflow.outputPlaceMissing": "Choisissez un lieu de messagerie pour cette sortie.",
   "error.workflow.outputChannelMissing": "Choisissez un canal pour cette sortie.",
-  "error.workflow.outputChannelFailed": "OpenBot n’a pas pu publier le résultat dans le canal. Relancez l’étape.",
+  "error.workflow.outputChannelFailed": "kongCowork n’a pas pu publier le résultat dans le canal. Relancez l’étape.",
   "error.workflow.discordNoMessage":
     "Cette sortie agit sur le message Discord qui a lancé l’exécution. Lancez l’exécution depuis une mention Discord ou choisissez Publier dans un salon.",
   "error.workflow.slackNoMessage":
@@ -38,7 +38,7 @@ export const messages = {
     "La connexion de messagerie de cette sortie est désactivée ou supprimée. Choisissez à nouveau un lieu.",
   "error.workflow.outputNotRunning":
     "La connexion de messagerie ne fonctionne pas pour le moment. Réessayez quand elle fonctionne.",
-  "error.workflow.outputRefused": "Le lieu a refusé la publication. Vérifiez qu’OpenBot peut y publier.",
+  "error.workflow.outputRefused": "Le lieu a refusé la publication. Vérifiez que kongCowork peut y publier.",
   "error.workflow.outputUncertain":
     "La publication s’est arrêtée en chemin. Une partie peut déjà être dans le lieu. Vérifiez avant de réessayer.",
   "error.workflow.tooLarge":
@@ -64,7 +64,7 @@ export const messages = {
     "L’application GitHub d’OpenBot ne peut pas modifier ce dépôt. Ouvrez GitHub et donnez-lui l’accès.",
   "error.workflow.githubLocked": "Cette conversation est verrouillée sur GitHub.",
   "error.workflow.githubRefused": "GitHub a refusé la modification : {detail}",
-  "error.workflow.githubUnreachable": "OpenBot n’a pas pu joindre GitHub. Relancez l’étape.",
+  "error.workflow.githubUnreachable": "kongCowork n’a pas pu joindre GitHub. Relancez l’étape.",
   "error.workflow.githubUncertain":
     "La modification s’est arrêtée en chemin. Elle peut déjà être sur GitHub. Vérifiez avant de relancer l’étape.",
   "error.workflow.githubNoEvent": "GitHub n’a aucune issue ni pull request sur laquelle ce déclencheur démarre.",

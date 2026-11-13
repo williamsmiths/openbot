@@ -190,6 +190,7 @@ import { queuedDeliveriesInOrder } from "../../queue-reconciliation";
 import "katex/contrib/copy-tex";
 // Copying a selection gives clean HTML, as on desktop.
 import "../../selection-copy";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import { actionToast } from "../../action-toast";
 import { desktopAnalytics } from "../../analytics";
 import { formatMessageTime, toAgentMessage } from "../../app-message-projection";
@@ -294,7 +295,6 @@ import { createSidebarAlertCards, SidebarAlertCards } from "../sidebar/SidebarAl
 import { isReaderAuthor } from "../team/reader-identity";
 import type { ServerVaultOptions } from "../vault/ServerVaultPanel";
 import { createVaultStore } from "../vault/stores/vault-store";
-import { RailHelpMenu } from "../window/RailHelpMenu";
 import {
   openFirstSettingsSection,
   PersonalSettingsLink,
@@ -357,7 +357,7 @@ const CONNECTING_STATUS: AgentStatus = {
  * What the web client reports as its build. The browser has no main process to ask, and the web frame
  * uses the macOS geometry.
  */
-const WEB_APP_INFO: AppInfo = { name: "OpenBot", version: "web", platform: "darwin", variant: "production" };
+const WEB_APP_INFO: AppInfo = { name: PRODUCT_NAME, version: "web", platform: "darwin", variant: "production" };
 /** Below this width the web shows one pane at a time; see `web-client.css`. */
 const PHONE_QUERY = "(max-width: 720px)";
 /** The account whose queue edit the browser may hold under `QUEUE_EDIT_STORAGE_KEY`. */
@@ -2824,13 +2824,6 @@ function WebWorkspaceFrame(props: WebWorkspaceProps) {
                   onAdd={() => hostedServers.openAddServer("server_rail")}
                   addCreatesServer={hostedServers.available()}
                   {...serverActionCallbacks}
-                />
-              }
-              help={
-                <RailHelpMenu
-                  version={null}
-                  onOpenWhatsNew={() => void openWebDestination("changelog")}
-                  onOpenLink={(destination) => void openWebDestination(destination)}
                 />
               }
             />

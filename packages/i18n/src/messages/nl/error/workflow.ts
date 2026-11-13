@@ -10,12 +10,12 @@ export const messages = {
   "error.workflow.conditionBranch": "Elke verbinding vanuit een voorwaarde moet ja of nee zijn.",
   "error.workflow.duplicateEdge": "Deze twee stappen hebben deze verbinding al.",
   "error.workflow.serverTooOld":
-    "Deze server ondersteunt geen workflows. Werk OpenBot bij op de computer waarop de server draait.",
+    "Deze server ondersteunt geen workflows. Werk kongCowork bij op de computer waarop de server draait.",
   "error.workflow.nodeUnsupported":
-    "Deze versie van OpenBot kan nog geen stappen voor afbeeldingen, bestanden en berichten uitvoeren.",
-  "error.workflow.interrupted": "OpenBot is gestopt terwijl deze stap liep. Voer hem opnieuw uit.",
+    "Deze versie van kongCowork kan nog geen stappen voor afbeeldingen, bestanden en berichten uitvoeren.",
+  "error.workflow.interrupted": "kongCowork is gestopt terwijl deze stap liep. Voer hem opnieuw uit.",
   "error.workflow.agentMissing": "Kies een agent voor deze stap.",
-  "error.workflow.handoffFailed": "OpenBot kon deze stap niet naar de agent sturen.",
+  "error.workflow.handoffFailed": "kongCowork kon deze stap niet naar de agent sturen.",
   "error.workflow.agentStepEnded": "Het bericht van de agent voor deze stap is verwijderd voordat de agent antwoordde.",
   "error.workflow.conditionUnclear": "Het model antwoordde niet met ja of nee.",
   "error.workflow.modelFailed": "Het model kon niet antwoorden. Voer de stap opnieuw uit.",
@@ -28,7 +28,7 @@ export const messages = {
   "error.workflow.outputPlaceMissing": "Kies een berichtenplek voor deze uitvoer.",
   "error.workflow.outputChannelMissing": "Kies een kanaal voor deze uitvoer.",
   "error.workflow.outputChannelFailed":
-    "OpenBot kon het resultaat niet in het kanaal plaatsen. Voer de stap opnieuw uit.",
+    "kongCowork kon het resultaat niet in het kanaal plaatsen. Voer de stap opnieuw uit.",
   "error.workflow.discordNoMessage":
     "Deze uitvoer werkt op het Discord-bericht dat de run startte. Start de run vanuit een vermelding in Discord, of kies Posten in kanaal.",
   "error.workflow.slackNoMessage":
@@ -38,7 +38,7 @@ export const messages = {
   "error.workflow.outputConnectionOff":
     "De berichtenverbinding van deze uitvoer staat uit of is verwijderd. Kies opnieuw een plek.",
   "error.workflow.outputNotRunning": "De berichtenverbinding draait nu niet. Probeer het opnieuw als hij draait.",
-  "error.workflow.outputRefused": "De plek heeft het bericht geweigerd. Zorg dat OpenBot daar mag posten.",
+  "error.workflow.outputRefused": "De plek heeft het bericht geweigerd. Zorg dat kongCowork daar mag posten.",
   "error.workflow.outputUncertain":
     "Het bericht is onderweg gestopt. Een deel ervan kan op de plek staan. Kijk daar voordat je het opnieuw probeert.",
   "error.workflow.tooLarge":
@@ -64,7 +64,7 @@ export const messages = {
     "De OpenBot GitHub App kan deze repository niet wijzigen. Open GitHub en geef de app toegang.",
   "error.workflow.githubLocked": "Dit gesprek is vergrendeld op GitHub.",
   "error.workflow.githubRefused": "GitHub heeft de wijziging geweigerd: {detail}",
-  "error.workflow.githubUnreachable": "OpenBot kon GitHub niet bereiken. Voer de stap opnieuw uit.",
+  "error.workflow.githubUnreachable": "kongCowork kon GitHub niet bereiken. Voer de stap opnieuw uit.",
   "error.workflow.githubUncertain":
     "De wijziging is onderweg gestopt. Hij kan al op GitHub staan. Kijk daar voordat je de stap opnieuw uitvoert.",
   "error.workflow.githubNoEvent": "GitHub heeft geen issue of pull request waarop deze trigger start.",

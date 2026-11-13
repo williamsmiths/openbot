@@ -1,6 +1,7 @@
 import { AppLogo } from "@openbot/brand";
 import { INPUT_LIMITS } from "@openbot/contracts/input-limits";
 import type { AppVariant, CentralAuthIssue, CentralAuthState } from "@openbot/contracts/ipc";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import { normalizeEmailAddress, normalizeOneTimeCode } from "@openbot/contracts/validation";
 import type { TranslatedLocale } from "@openbot/i18n";
 import { appLanguageOption } from "@openbot/i18n/languages";
@@ -47,7 +48,6 @@ const UNCERTAIN_EMAIL_DELIVERY_ISSUES = new Set([
   "email_delivery_unknown",
 ]);
 
-const PRODUCT_NAME = "OpenBot";
 const EMAIL_PLACEHOLDER = "you@example.com";
 const EMAIL_MARKER = "\u0000";
 

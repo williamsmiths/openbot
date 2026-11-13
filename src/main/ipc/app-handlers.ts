@@ -16,6 +16,7 @@ import {
   externalLinkAppName,
   GROK_BOT_EXPORT_URL,
 } from "@openbot/contracts/ipc";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import type { AppTranslate } from "@openbot/i18n";
 import { analyticsOnByDefault } from "@openbot/telemetry";
 import { app, type BrowserWindow, dialog, type OpenDialogOptions, type WebContents } from "electron";
@@ -217,7 +218,7 @@ export function appIpcHandlers({
         const hourCycle = systemHourCycle();
         const aboveAppsSupport = aboveAppsScreenSupport();
         return {
-          name: app.getName(),
+          name: PRODUCT_NAME,
           version,
           platform,
           variant: appVariant,

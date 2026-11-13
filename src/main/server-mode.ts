@@ -23,6 +23,7 @@ import { dirname, isAbsolute, join } from "node:path";
 import { parseHostedServerName } from "@openbot/contracts/hosted-servers";
 import { INPUT_LIMITS } from "@openbot/contracts/input-limits";
 import type { CentralAuthState } from "@openbot/contracts/ipc";
+import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import { sourceText } from "@openbot/i18n/source";
 import { Deferred, Effect } from "effect";
 import QRCode from "qrcode";
@@ -38,7 +39,7 @@ const CONTROL_SOCKET_FILE = "control.sock";
 const MAX_BODY_BYTES = 4096;
 const MAX_EMAIL_LENGTH = 254;
 /** The name of a server whose owner signed in without one. The same default as a mobile connect. */
-const DEFAULT_SERVER_NAME = "OpenBot";
+const DEFAULT_SERVER_NAME = PRODUCT_NAME;
 
 export interface ServerModeEnvironment {
   controlSocketPath: string;
