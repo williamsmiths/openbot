@@ -1,4 +1,4 @@
-import { attachmentMimeTypeForName } from "@openbot/contracts/attachment-files";
+import { filePreviewMimeTypeForName } from "@openbot/contracts/ipc";
 import { createContext, useCallback, useContext, useRef, useState } from "react";
 import { showFailureAlert } from "@/features/analytics/failure-reports";
 import { useMobileWorkspaceActions } from "@/features/workspace/context/mobile-workspace-context";
@@ -58,8 +58,9 @@ export function useMessageFileOpener(serverId: string) {
             return [written, await downloadMessageFile(serverId, written)] as const;
           },
         );
-        // The host sends every workspace file as `application/octet-stream`.
-        const mimeType = attachmentMimeTypeForName(data.name);
+        // The host sends every workspace file as `application/octet-stream`. An HTML file gets
+        // `text/html`, so the preview shows its page, as on the desktop and the web.
+        const mimeType = filePreviewMimeTypeForName(data.name);
         const copy = messageFileCopy(serverId, JSON.stringify(source), data.name);
         copy.parentDirectory.create({ intermediates: true, idempotent: true });
         copy.writeSync(data.base64, { encoding: "base64" });

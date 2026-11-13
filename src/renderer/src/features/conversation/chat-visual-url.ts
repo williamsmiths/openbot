@@ -21,14 +21,16 @@ export function htmlAttachmentPageUrl(
 }
 
 /**
- * The page of an HTML attachment whose bytes the file preview already read, for a client that has
- * no page URL. The file preview shows it with its scripts in a sandboxed `srcdoc` frame.
+ * The page of an HTML file whose bytes the file preview already read, for a client that has no page
+ * URL. The file is an attachment, or a shared or workspace file of the host (`attachment` is then
+ * absent). The file preview shows it with its scripts in a sandboxed `srcdoc` frame.
  */
-export function htmlAttachmentPageHtml(
+export function htmlFilePageHtml(
   attachment: { mimeType: string } | null | undefined,
   preview: { mimeType: string; bytes: Uint8Array | null } | null | undefined,
 ): string | undefined {
-  if (!attachment || !preview?.bytes || preview.bytes.byteLength > CHAT_VISUAL_PAGE_LIMIT) return undefined;
-  if (!isChatVisualMimeType(attachment.mimeType) || !isChatVisualMimeType(preview.mimeType)) return undefined;
+  if (!preview?.bytes || preview.bytes.byteLength > CHAT_VISUAL_PAGE_LIMIT) return undefined;
+  if (attachment && !isChatVisualMimeType(attachment.mimeType)) return undefined;
+  if (!isChatVisualMimeType(preview.mimeType)) return undefined;
   return new TextDecoder().decode(preview.bytes);
 }

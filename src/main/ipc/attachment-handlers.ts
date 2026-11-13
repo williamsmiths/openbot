@@ -293,10 +293,11 @@ export function attachmentIpcHandlers({
           );
         },
         remote: async (parsed, serverId) => {
+          const generation = filePreviewPages.generation;
           const downloaded = await runCauseEffect(
             remoteServers.downloadSharedFile(parsed.path, serverId, parsed.maxBytes),
           );
-          return filePreviewFromBytes(downloaded.name, downloaded.bytes);
+          return filePreviewFromBytes(downloaded.name, downloaded.bytes, generation);
         },
       }),
       previewWorkspaceFile: scopedHandler(parsePreviewWorkspaceFile, {
@@ -310,10 +311,11 @@ export function attachmentIpcHandlers({
           );
         },
         remote: async (parsed, serverId) => {
+          const generation = filePreviewPages.generation;
           const downloaded = await runCauseEffect(
             remoteServers.downloadWorkspaceFile(parsed.agentId, parsed.path, serverId, parsed.maxBytes),
           );
-          return filePreviewFromBytes(downloaded.name, downloaded.bytes);
+          return filePreviewFromBytes(downloaded.name, downloaded.bytes, generation);
         },
       }),
     },

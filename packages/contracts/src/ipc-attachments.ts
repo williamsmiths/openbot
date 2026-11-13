@@ -1,4 +1,9 @@
-import { isXlsxMimeType, playableMediaKind } from "./attachment-files";
+import {
+  attachmentFileExtension,
+  attachmentMimeTypeForName,
+  isXlsxMimeType,
+  playableMediaKind,
+} from "./attachment-files";
 import { INPUT_LIMITS } from "./input-limits";
 import { isBoundedString, isIdentifier, isNullableBoundedString } from "./ipc-bounded-values";
 import { guardedDecoder } from "./ipc-decoding";
@@ -222,6 +227,16 @@ export function isFilePreviewPageUrl(value: unknown): value is string {
     typeof value === "string" &&
     /^openbot-visual:\/\/preview\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/u.test(value)
   );
+}
+
+/**
+ * The MIME type of a file that the file panel previews by its name. An attachment keeps `text/plain`
+ * for HTML, but a previewed `.html` or `.htm` file is `text/html`, so the panel can show it as a
+ * sandboxed page. The desktop reads it for local and joined-server files, and the web client too.
+ */
+export function filePreviewMimeTypeForName(name: string) {
+  const extension = attachmentFileExtension(name);
+  return extension === "html" || extension === "htm" ? "text/html" : attachmentMimeTypeForName(name);
 }
 
 /**

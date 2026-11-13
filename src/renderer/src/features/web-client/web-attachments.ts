@@ -1,6 +1,10 @@
-import { attachmentMimeTypeForName } from "@openbot/contracts/attachment-files";
 import { CHAT_VISUAL_PAGE_LIMIT, isChatVisualMimeType } from "@openbot/contracts/chat-visual";
-import { type AttachmentSummary, type FilePreview, filePreviewKindForFile } from "@openbot/contracts/ipc";
+import {
+  type AttachmentSummary,
+  type FilePreview,
+  filePreviewKindForFile,
+  filePreviewMimeTypeForName,
+} from "@openbot/contracts/ipc";
 import { base64ToBytes } from "@openbot/team-client/base64";
 import { currentText } from "@openbot/ui/text";
 import { createWebFileSaver } from "./web-file-download";
@@ -53,11 +57,11 @@ export function createWebAttachmentFiles(
     // The host sends a shared or workspace file as `application/octet-stream`, so its name gives the type.
     async previewShared(path: string): Promise<FilePreview> {
       const file = await remote.sharedFile(path);
-      return filePreview({ ...file, mimeType: attachmentMimeTypeForName(file.name) });
+      return filePreview({ ...file, mimeType: filePreviewMimeTypeForName(file.name) });
     },
     async previewWorkspace(agentId: string, path: string): Promise<FilePreview> {
       const file = await remote.workspaceFile(agentId, path);
-      return filePreview({ ...file, mimeType: attachmentMimeTypeForName(file.name) });
+      return filePreview({ ...file, mimeType: filePreviewMimeTypeForName(file.name) });
     },
   };
 }
