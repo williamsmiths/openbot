@@ -12,6 +12,14 @@ text = open(project).read()
 text, count = re.subn(r"IPHONEOS_DEPLOYMENT_TARGET = [0-9.]+;", "IPHONEOS_DEPLOYMENT_TARGET = 15.1;", text)
 open(project, "w").write(text)
 print("pbxproj targets:", count)
+# A free (personal) Apple team cannot sign push notifications: leave the app entitlements empty.
+for entitlements in glob.glob(os.path.join(root, "apps/mobile/ios/*/*.entitlements")):
+    open(entitlements, "w").write(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n'
+        '<plist version="1.0">\n  <dict/>\n</plist>\n'
+    )
+    print("entitlements emptied:", os.path.basename(entitlements))
 patterns = [
     re.compile(r"""(:ios\s*=>\s*['"])1[6-9](?:\.[0-9]+)*(['"])"""),
     re.compile(r"""(\.ios\.deployment_target\s*=\s*['"])1[6-9](?:\.[0-9]+)*(['"])"""),

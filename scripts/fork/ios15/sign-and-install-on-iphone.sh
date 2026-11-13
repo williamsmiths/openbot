@@ -7,10 +7,14 @@ export DEVELOPER_DIR=/Applications/Xcode-26.6.0.app/Contents/Developer PATH=/opt
 export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 KONG_IOS_LOCAL=1 EXPO_PUBLIC_OPENBOT_API_URL=https://lab.codanang.com NODE_BINARY=/opt/homebrew/bin/node
 DEVICE=6b8313361f1897bf564d797f82c8471945f54cd1
 APP="build/dd/Build/Products/Release-iphoneos/kongCowork.app"
-echo "Signing for team 3QYK7RF6PB ..."
+# The Team ID is the OU of the "Apple Development" certificate (MAM2NH6X27), not the code in its name.
+TEAM="${KONG_TEAM_ID:-MAM2NH6X27}"
+# Another xcodebuild on the same derived data locks build.db: wait for it.
+while pgrep -f "xcodebuild -workspace kongCowork" >/dev/null; do echo "Waiting for another build ..."; sleep 10; done
+echo "Signing for team $TEAM ..."
 xcodebuild -workspace kongCowork.xcworkspace -scheme kongCowork -configuration Release \
   -destination "id=$DEVICE" -derivedDataPath build/dd -allowProvisioningUpdates \
-  DEVELOPMENT_TEAM=3QYK7RF6PB CODE_SIGN_STYLE=Automatic -quiet
+  DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic -quiet
 codesign -dv "$APP" 2>&1 | grep -E "Authority=Apple Development|TeamIdentifier" || true
 echo "Installing on the iPhone (keep it unlocked) ..."
 ios-deploy --id "$DEVICE" --bundle "$APP" --no-wifi
