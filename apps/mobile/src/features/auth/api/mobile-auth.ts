@@ -122,10 +122,15 @@ async function redeemMobileConnectSession(value: string): Promise<MobileSession>
   return session;
 }
 
-/** The account service for email sign-in. A development build can name a local one. */
+/**
+ * The account service for email sign-in. A build can name its own with `EXPO_PUBLIC_OPENBOT_API_URL`,
+ * which Expo writes into the bundle at build time: a development build a local one, and a release
+ * build of a self-hosted account service (the kongCowork fork names https://lab.codanang.com).
+ * A build without the variable uses the OpenBot account service.
+ */
 function mobileAccountApiUrl(): string {
   const override = process.env.EXPO_PUBLIC_OPENBOT_API_URL;
-  return (override && __DEV__ && normalizeAccountApiUrl(override)) || OPENBOT_CONTROL_PLANE_ORIGIN;
+  return (override && normalizeAccountApiUrl(override)) || OPENBOT_CONTROL_PLANE_ORIGIN;
 }
 
 export interface MobileEmailChallenge {
