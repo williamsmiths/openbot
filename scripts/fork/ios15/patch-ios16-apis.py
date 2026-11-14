@@ -460,3 +460,18 @@ text = open(path).read()
 if "func kcIsJavaScriptIdentifier" not in text:
     open(path, "w").write(text.rstrip("\n") + "\n" + kc_ident)
     print("patched: jsi identifier helper")
+
+# ExpoModulesJSI is built with -disable-availability-checking, so `#available(iOS 26)` is assumed true
+# and `Task.immediate` (iOS 26) is called on iOS 15: EXC_BAD_ACCESS at 0x0 on the JS thread at
+# startup. Always take the old-OS path, without `name:` (also iOS 26).
+patch("expo-modules-jsi/apple/Sources/ExpoModulesJSI/Extensions/Task+immediate.swift",
+      "    if #available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *) {\n"
+      "      return Task.immediate(name: name, priority: priority, operation: operation)\n"
+      "    } else {\n"
+      "      // In the polyfill always use the highest priority and hope it executes earlier.\n"
+      "      return Task(name: name, priority: .high, operation: operation)\n"
+      "    }\n",
+      "    // kongCowork iOS 15 build: the availability check is compiled out here, so never call the\n"
+      "    // iOS 26 Task.immediate or Task(name:) on this runtime.\n"
+      "    return Task(priority: .high, operation: operation)\n",
+      "jsi Task.immediate polyfill")

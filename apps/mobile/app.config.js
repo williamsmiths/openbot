@@ -30,6 +30,9 @@ function localIosConfig(config) {
   return {
     ...config,
     name: "kongCowork",
+    // OpenBot's over-the-air updates carry OpenBot's JavaScript for OpenBot's native build: never
+    // load them into this build.
+    updates: { ...config.updates, enabled: false, checkAutomatically: "NEVER" },
     plugins,
     ios: {
       ...ios,
