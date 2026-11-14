@@ -475,3 +475,17 @@ patch("expo-modules-jsi/apple/Sources/ExpoModulesJSI/Extensions/Task+immediate.s
       "    // iOS 26 Task.immediate or Task(name:) on this runtime.\n"
       "    return Task(priority: .high, operation: operation)\n",
       "jsi Task.immediate polyfill")
+
+# Reanimated ends the app (uncaught JSError, SIGABRT) when an animated style has a color it cannot
+# parse. Log the property and skip it, so one bad value does not close kongCowork.
+patch("react-native-reanimated/src/common/style/createPropsBuilder.ts",
+      "        const processedValue = processStyleValue(configValue, value, context);\n",
+      "        // kongCowork: an invalid style value is logged and skipped; it must not end the app.\n"
+      "        let processedValue;\n"
+      "        try {\n"
+      "          processedValue = processStyleValue(configValue, value, context);\n"
+      "        } catch (error) {\n"
+      "          console.error(`[kongCowork] bad style ${property}=${JSON.stringify(value)} in ${JSON.stringify(props)}: ${String(error)}`);\n"
+      "          continue;\n"
+      "        }\n",
+      "reanimated invalid style value")
