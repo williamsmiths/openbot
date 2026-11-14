@@ -76,6 +76,7 @@ import { useDrawerMemberCount, useDrawerServerValues } from "./use-drawer-server
 
 const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);
 const SERVER_LIST_MOTION = { duration: 240, easing: EASE_OUT };
+const KEEP_SERVER_LIST_OPEN = Boolean(process.env.EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME);
 const SERVER_AVATAR_SIZE = 40;
 const HEADER_AVATAR_SIZE = 48;
 // The blur is full behind the header text and fades out slowly: it starts this far above the
@@ -189,7 +190,9 @@ export const ServerDrawerContent = memo(function ServerDrawerContent({
   const serverIds = servers.map((server) => server.id);
   const canReorder = serverIds.length > 1;
   // Without an open server the list is the only content, so it stays open.
-  const showsList = listOpen || editing || !activeServer;
+  // kongCowork fork: a build that names its default server (the iOS 15 build) keeps the list open, so
+  // every server can be picked without the collapse, which does not open on iOS 15.
+  const showsList = KEEP_SERVER_LIST_OPEN || listOpen || editing || !activeServer;
   const memberCount = useDrawerMemberCount(activeServer?.id ?? "");
   const hostedServerIds = useHostedServerAvailability((state) =>
     state.userId === session.user.id ? state.serverIds : null,
