@@ -489,3 +489,11 @@ patch("react-native-reanimated/src/common/style/createPropsBuilder.ts",
       "          continue;\n"
       "        }\n",
       "reanimated invalid style value")
+
+# A screen with a hidden header still got its route name as the navigation item title ("(app)",
+# "index", "scan"), and iOS 15 shows that text over the screen. A hidden header needs no title.
+patch("react-native-screens/ios/RNSScreenStackHeaderConfig.mm",
+      "  if (shouldHide) {\n    navitem.title = config.title;\n",
+      "  if (shouldHide) {\n    // kongCowork iOS 15 build: iOS 15 shows this title (the route name) over the screen.\n"
+      "    navitem.title = nil;\n",
+      "screens hidden header title")
