@@ -1676,8 +1676,15 @@ export function createRemoteTeamPeer(
         .catch((error) => failPeer(state, error, actions));
     };
     // A channel of a connection that was made before `ready` and then discarded is no longer this peer's.
-    channel.onerror = () => {
+    channel.onerror = (event) => {
       if (state.channels[kind] !== channel) return;
+      // The RTCError says why the transport failed. Old WebKit (iOS 15) gives no other trace of it.
+      const error: RTCError | undefined = event.error;
+      diagnose(
+        state,
+        "failed",
+        `${kind} channel error: ${error?.errorDetail ?? "unknown"} sctp=${error?.sctpCauseCode ?? "none"} ${error?.message ?? ""}`,
+      );
       failPeer(
         state,
         referenced(sourceText("error.remote.dataChannelFailed", { kind }), referenceFrom("webrtc", "channel", kind)),

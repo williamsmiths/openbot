@@ -37,3 +37,15 @@ Gmail SMTP for sign-in codes, VPS changes allowed.
   (verified 429 after burst). Also F6 warn, F7 script fixes, F8 dev-code guard. Open (accepted): F3 email
   enumeration via 503 (single-user), F4 lockout by request spam (sessions + QR still work), F5 unsalted hash.
 - `bun run typecheck` (apps/auth-api) exit 0; biome clean.
+
+## 2026-11-14 fixes (iPhone could not reach kong-lab)
+
+- coturn on the VPS ignored its config: `/etc/kongcowork-turn/turnserver.conf` was 600 root, the container
+  runs as uid 65534 ("Cannot find config file"). Relay ports, realm, auth secret and `denied-peer-ip` did
+  not apply. Fix: `chown root:65534`, `chmod 640` the file, `chmod 750` + group 65534 on the folder,
+  `docker restart kongcowork-turn`. Checked: relay ports now 49160-49200, relay-to-relay works.
+- The server process on kong-lab could not resolve `lab.codanang.com` in WebRTC (error -105), so its
+  TURN failed. `run-account-stack.sh` now sets `TURN_HOST=103.116.38.43` (override `OPENBOT_TURN_HOST`).
+- Desktop `OPENBOT_REMOTE_SIGNAL_URL` only feeds the CSP; tickets name `wss://lab.codanang.com/v1/signal`.
+  The Mac app (LSEnvironment) and `run-server.sh` now use that URL (the server picks it up at next restart).
+- Rollback: `chmod 600` the conf restores the old (broken) state; `TURN_HOST=$PUBLIC_HOST` in the script.
