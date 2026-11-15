@@ -898,8 +898,14 @@ export const ChatComposer = memo(function ChatComposer({
   function requestSend(): void {
     if (disabled || preparing) return;
     const action = sendGate.request();
-    if (action === "blur") inputRef.current?.blur();
-    else if (action === "send") onSend(latestTextRef.current);
+    if (action === "blur") {
+      inputRef.current?.blur();
+      // iOS 15 can end editing without `onEndEditing`, which left the send waiting for good. The gate
+      // commits once, so a late `onEndEditing` does not send twice.
+      setTimeout(() => {
+        if (sendGate.commit() && !disabled) onSend(latestTextRef.current);
+      }, 250);
+    } else if (action === "send") onSend(latestTextRef.current);
   }
 
   function pressControl(): void {

@@ -95,6 +95,12 @@ import { useComposerDictation } from "./use-composer-dictation";
 import { useGptLiveConversation } from "./use-gpt-live-conversation";
 import { type LiveChannel, useLiveConversation } from "./use-live-conversation";
 
+/**
+ * kongCowork fork: the light build for old iPhones (`EXPO_PUBLIC_KONG_LITE=1`) has no voice mode and
+ * no dictation. On iOS 15 they do not start, and an open voice mode locks the field.
+ */
+const KONG_LITE = process.env.EXPO_PUBLIC_KONG_LITE === "1";
+
 export interface ChatViewProps {
   target: ChatTarget;
   queue?: ChatQueueController;
@@ -645,7 +651,7 @@ export function ChatView({
   // The mic beside the main control dictates into the draft, and only Send makes it a message.
   // Leaving the chat or losing the server stops listening and keeps the words.
   const dictation = useComposerDictation({
-    enabled: isFocused && serverOnline && canSend && !readOnly && !notice,
+    enabled: !KONG_LITE && isFocused && serverOnline && canSend && !readOnly && !notice,
     focused: isFocused,
     draft,
     onDraft: setDraft,
@@ -1347,8 +1353,8 @@ export function ChatView({
                   menuOpen={attachments.menuOpen}
                   menuProgress={menuProgress}
                   stopping={stopping}
-                  voice={composerVoice}
-                  dictation={dictation}
+                  voice={KONG_LITE ? undefined : composerVoice}
+                  dictation={KONG_LITE ? undefined : dictation}
                   // An agent's own colour; a channel keeps the default controls.
                   voiceAccent={target.kind === "agent" ? accent : undefined}
                   voicePalette={palette}

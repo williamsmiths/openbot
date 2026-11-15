@@ -643,6 +643,7 @@ async function handleSignal(state: PeerState, message: SignalServerMessage): Pro
       type: "offer",
       sdp: state.privateNetwork ? privateNetworkSdp(message.sdp) : message.sdp,
     });
+    await addEarlyCandidates(state, connection);
     const answer = await connection.createAnswer();
     await connection.setLocalDescription(answer);
     sendSignal(state, {
@@ -662,17 +663,19 @@ async function handleSignal(state: PeerState, message: SignalServerMessage): Pro
       return;
     }
     await state.peerConnection?.setRemoteDescription({ type: "answer", sdp: message.sdp });
+    if (state.peerConnection) await addEarlyCandidates(state, state.peerConnection);
   } else if (message.type === "ice-candidate") {
     if (state.privateNetwork && !isPrivateNetworkCandidate(message.candidate)) return;
+    const candidate = { candidate: message.candidate, sdpMid: message.sdpMid, sdpMLineIndex: message.sdpMLineIndex };
+    // A candidate can come before its description is set: the offer is still being applied. It
+    // waits for the description; added now it would fail and the path would lose it.
+    if (!state.peerConnection?.remoteDescription) {
+      earlyCandidates.set(state, [...(earlyCandidates.get(state) ?? []), candidate]);
+      return;
+    }
     // One candidate that this connection cannot use, such as a late or early one from WebKit on
     // iOS 15, must not end the connection: the other candidates can still make the path.
-    await state.peerConnection
-      ?.addIceCandidate({
-        candidate: message.candidate,
-        sdpMid: message.sdpMid,
-        sdpMLineIndex: message.sdpMLineIndex,
-      })
-      .catch(() => undefined);
+    await state.peerConnection.addIceCandidate(candidate).catch(() => undefined);
   } else {
     await restartIce(state);
   }
@@ -1206,4 +1209,14 @@ function post(message: MainBridgeMessage): void {
 /** An egress frame: a control string or a binary data frame. Anything else is not one. */
 function egressFrame(data: unknown): string | ArrayBuffer | null {
   return isString(data) || data instanceof ArrayBuffer ? data : null;
+}
+
+/** The candidates of a peer that came before its remote description. */
+const earlyCandidates = new WeakMap<PeerState, RTCIceCandidateInit[]>();
+
+/** Adds the candidates that waited for the remote description of `connection`. */
+async function addEarlyCandidates(state: PeerState, connection: RTCPeerConnection): Promise<void> {
+  const waiting = earlyCandidates.get(state) ?? [];
+  earlyCandidates.delete(state);
+  for (const candidate of waiting) await connection.addIceCandidate(candidate).catch(() => undefined);
 }
