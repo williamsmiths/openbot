@@ -497,3 +497,18 @@ patch("react-native-screens/ios/RNSScreenStackHeaderConfig.mm",
       "  if (shouldHide) {\n    // kongCowork iOS 15 build: iOS 15 shows this title (the route name) over the screen.\n"
       "    navitem.title = nil;\n",
       "screens hidden header title")
+
+# iOS 15 kept the bar of the outer stack visible for a screen with a hidden header (the empty band
+# above the home bar, where the route name used to show). Force the bar hidden at each layout.
+patch("react-native-screens/ios/RNSScreenStack.mm",
+      "- (void)viewDidLayoutSubviews\n{\n  [super viewDidLayoutSubviews];\n\n",
+      "- (void)viewDidLayoutSubviews\n{\n  [super viewDidLayoutSubviews];\n\n"
+      "  // kongCowork iOS 15 build: a screen with a hidden header keeps the bar hidden.\n"
+      "  if (@available(iOS 16.0, *)) {\n"
+      "  } else if ([self.topViewController isKindOfClass:[RNSScreen class]]) {\n"
+      "    auto kcConfig = ((RNSScreen *)self.topViewController).screenView.findHeaderConfig;\n"
+      "    if ((kcConfig == nil || !kcConfig.shouldHeaderBeVisible) && !self.navigationBarHidden) {\n"
+      "      [self setNavigationBarHidden:YES animated:NO];\n"
+      "    }\n"
+      "  }\n\n",
+      "screens hide the bar of a headerless screen on iOS 15")
