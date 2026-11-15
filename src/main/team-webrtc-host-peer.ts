@@ -194,6 +194,12 @@ export class TeamWebRtcHostPeer {
   #sessionPreparation: Deferred.Deferred<void, RemoteWorkflowError> | null = null;
   #pendingConnection: IncomingConnection | null = null;
   #peerBinding: { localFingerprint: string; remoteFingerprint: string } | null = null;
+  /**
+   * An `auth-init` that came before `peer-connected`. The client's channels can open before the
+   * host's (a relayed path from WebKit on iOS 15 does), so its first frame can come before the DTLS
+   * binding. It waits for the binding instead of failing the connection.
+   */
+  #earlyAuthFrame: { peerId: string; frame: Extract<TeamProtocolV2AuthFrame, { type: "auth-init" }> } | null = null;
   #sessionBinding: { localFingerprint: string; remoteFingerprint: string } | null = null;
   #authenticationCompletion: {
     claims: VerifiedRemoteSessionTicket;
@@ -284,6 +290,7 @@ export class TeamWebRtcHostPeer {
     this.#peerId = null;
     this.#pendingConnection = null;
     this.#peerBinding = null;
+    this.#earlyAuthFrame = null;
     const disposal = yield* Effect.forkDetach(
       Effect.gen({ self: this }, function* () {
         yield* this.#files.stop().pipe(Effect.catch(() => Effect.void));
@@ -312,6 +319,13 @@ export class TeamWebRtcHostPeer {
   readonly #onConnected = (peerId: string, binding?: { localFingerprint: string; remoteFingerprint: string }): void => {
     if (peerId !== this.#peerId) return;
     this.#peerBinding = binding ?? null;
+    const early = this.#earlyAuthFrame;
+    this.#earlyAuthFrame = null;
+    if (early?.peerId === peerId && this.#peerBinding) {
+      this.#dispatch(
+        this.#handleAuthentication(peerId, early.frame).pipe(Effect.catchCause(() => this.#failProtocol(peerId))),
+      );
+    }
     if (
       !this.#pendingConnection ||
       this.#pendingConnection.sessionId !== this.#localSessionId ||
@@ -377,6 +391,10 @@ export class TeamWebRtcHostPeer {
     if (peerId !== this.#peerId) return;
     const authFrame = channel === "rpc" && isString(data) ? authenticationFrame(data) : null;
     if (authFrame?.type === "auth-init") {
+      if (!this.#peerBinding) {
+        this.#earlyAuthFrame = { peerId, frame: authFrame };
+        return;
+      }
       this.#dispatch(
         this.#handleAuthentication(peerId, authFrame).pipe(Effect.catchCause(() => this.#failProtocol(peerId))),
       );

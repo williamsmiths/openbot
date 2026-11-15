@@ -4,7 +4,7 @@
 set -euo pipefail
 cd ~/Projects/kongcowork/apps/mobile/ios
 export DEVELOPER_DIR=/Applications/Xcode-26.6.0.app/Contents/Developer PATH=/opt/homebrew/bin:$HOME/.bun-1.4.2/bin:$PATH
-export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 KONG_IOS_LOCAL=1 EXPO_PUBLIC_OPENBOT_API_URL=https://lab.codanang.com EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME=kong-lab NODE_BINARY=/opt/homebrew/bin/node
+export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 KONG_IOS_LOCAL=1 EXPO_PUBLIC_OPENBOT_API_URL=https://lab.codanang.com EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME=kong-lab EXPO_PUBLIC_KONG_LITE=1 NODE_BINARY=/opt/homebrew/bin/node
 DEVICE=6b8313361f1897bf564d797f82c8471945f54cd1
 APP="build/dd/Build/Products/Release-iphoneos/kongCowork.app"
 # The Team ID is the OU of the "Apple Development" certificate (MAM2NH6X27), not the code in its name.

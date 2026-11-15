@@ -16,12 +16,15 @@ export interface MotionPreferences {
 
 export type MotionPreference = keyof MotionPreferences;
 
+// kongCowork fork: the light build for old iPhones (`EXPO_PUBLIC_KONG_LITE=1`) starts with every
+// animation off. Settings > Animations turns them on again.
+const ANIMATIONS_ON = process.env.EXPO_PUBLIC_KONG_LITE !== "1";
 const DEFAULTS: MotionPreferences = {
-  allAnimations: true,
-  agentFaces: true,
-  composerResize: true,
-  textReveal: true,
-  searchTransitions: true,
+  allAnimations: ANIMATIONS_ON,
+  agentFaces: ANIMATIONS_ON,
+  composerResize: ANIMATIONS_ON,
+  textReveal: ANIMATIONS_ON,
+  searchTransitions: ANIMATIONS_ON,
 };
 export const MOTION_PREFERENCE_NAMES: readonly MotionPreference[] = [
   "allAnimations",
