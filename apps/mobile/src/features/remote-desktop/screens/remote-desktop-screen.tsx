@@ -3,6 +3,7 @@ import * as Clipboard from "expo-clipboard";
 import { GlassView } from "expo-glass-effect";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { router, Stack, useLocalSearchParams } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
 import { Button, Typography } from "heroui-native";
 import { useThemeColor } from "heroui-native/hooks";
 import ArrowDown from "lucide-react-native/icons/arrow-down";
@@ -35,6 +36,7 @@ import { useMobileWorkspace } from "@/features/workspace/context/mobile-workspac
 import { type MenuAction, MenuView } from "@/shared/components/menu-view";
 import { toolbarMenuItems } from "@/shared/components/toolbar-menu-items";
 import { haptics } from "@/shared/lib/haptics";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 import { useReducedMotion } from "@/shared/lib/motion";
 import { NATIVE_BAR_HEIGHT } from "@/shared/lib/native-bar";
 import { isIOS } from "@/shared/lib/platform";
@@ -58,6 +60,7 @@ import {
 } from "../model/remote-desktop-stats";
 import { typedChange } from "../model/remote-keys";
 import { remoteViewerProxyNative } from "../model/remote-viewer-proxy-native";
+import { forgetViewerFiles } from "../model/viewer-file-cache";
 import {
   type ViewerQuality,
   type ViewerTouchMode,
@@ -91,8 +94,11 @@ const PASTE_MAX_LENGTH = 2_000;
 const NOTICE_MS = 2_200;
 
 // The choices of this app run. A new stream starts with them.
-let chosenQuality: ViewerQuality = "smooth";
+// An A9 phone (the light build) decodes a 1080p stream too slowly: it starts at Data saver.
+let chosenQuality: ViewerQuality = KONG_LITE ? "saver" : "smooth";
 let chosenTouchMode: ViewerTouchMode = "trackpad";
+/** The mounted Control computer screens, which let the phone turn. */
+let turningScreens = 0;
 
 type Phase =
   | { type: "starting" }
@@ -239,6 +245,7 @@ export function RemoteDesktopScreen() {
             );
           },
           receiveRemoteDesktopStats,
+          serverId,
         );
         if (!current()) {
           await proxy?.stop();
@@ -294,6 +301,20 @@ export function RemoteDesktopScreen() {
     };
   }, []);
 
+  // The phone turns with the hand here, so landscape shows the computer's 16:9 screen in full. The
+  // lock stays while a sheet opens over this screen. `DEFAULT` is every orientation except upside
+  // down. Leaving locks portrait again: `unlockAsync` would keep `DEFAULT` for every other screen.
+  useEffect(() => {
+    turningScreens += 1;
+    void ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT).catch(() => undefined);
+    return () => {
+      turningScreens -= 1;
+      // Another Control computer screen under this one keeps turning.
+      if (turningScreens > 0) return;
+      void ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP).catch(() => undefined);
+    };
+  }, []);
+
   const viewing = phase.type === "viewing" ? phase : null;
   const sessionId = viewing?.session.id ?? null;
   // A stream that shows no picture in time failed: the host says nothing more when its stream never starts.
@@ -301,7 +322,9 @@ export function RemoteDesktopScreen() {
     if (!sessionId || (viewer.kind !== "connecting" && viewer.kind !== "switching")) return;
     const switching = viewer.kind === "switching";
     const timer = setTimeout(
-      () =>
+      () => {
+        // Old cached viewer files after a host update can fail without a report: retry loads them again.
+        forgetViewerFiles(serverId);
         setViewer((previous) =>
           previous.kind === "switching"
             ? {
@@ -313,11 +336,12 @@ export function RemoteDesktopScreen() {
             : previous.kind === "connecting"
               ? { kind: "failed", message: t("mobile.server.remoteDesktop.streamNotReady") }
               : previous,
-        ),
+        );
+      },
       switching ? DISPLAY_SWITCH_MS : STREAM_READY_TIMEOUT_MS,
     );
     return () => clearTimeout(timer);
-  }, [sessionId, viewer.kind, t]);
+  }, [sessionId, serverId, viewer.kind, t]);
 
   useEffect(() => {
     if (!notice) return;

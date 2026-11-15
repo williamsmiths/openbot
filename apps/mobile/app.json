@@ -4,7 +4,7 @@
     "slug": "openbot",
     "platforms": ["ios", "android"],
     "version": "1.4.9",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icons/app-icon.png",
     "scheme": "openbot",
     "userInterfaceStyle": "automatic",
@@ -44,6 +44,8 @@
       "./plugins/with-workspace-bundle-inputs",
       "./plugins/with-update-channel",
       "expo-router",
+      ["expo-screen-orientation", { "initialOrientation": "PORTRAIT_UP" }],
+      "./plugins/with-android-portrait",
       "expo-video",
       [
         "expo-splash-screen",

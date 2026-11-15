@@ -9,6 +9,13 @@ import type {
 } from "@/features/workspace/components/remote-team-transport";
 import { currentText } from "@/shared/lib/text";
 import { remoteViewerProxyNative, type ViewerProxyRequest } from "./remote-viewer-proxy-native";
+import {
+  cachedViewerFile,
+  forgetViewerFiles,
+  keepViewerFile,
+  type ViewerFile,
+  viewerFileKey,
+} from "./viewer-file-cache";
 import { VIEWER_STATS_FILE } from "./viewer-page-script";
 
 // The phone's copy of the desktop app's `RemoteViewerProxy`. The host's Moonlight viewer loads in a
@@ -32,15 +39,24 @@ export interface ViewerProxy {
   stop(): Promise<void>;
 }
 
-/** The host's file answers and the attachment limit allow a few files at a time. */
-const REQUESTS_IN_FLIGHT = 4;
+/**
+ * The host's file answers and the attachment limit allow a few files at a time: the team client
+ * takes 10 downloads at once, and the screens below this one (agent pictures, attachments) need
+ * some of them: a download over the limit is cancelled.
+ */
+const REQUESTS_IN_FLIGHT = 6;
 /** The native server answers 504 after this, so a request that takes longer frees its place. */
 const REQUEST_DEADLINE_MS = 60_000;
 /** As the desktop proxy: what a socket can hold before the host opens it. */
 const MAX_PENDING_SIGNAL_BYTES = 1024 * 1024;
-// The desktop proxy sends the same policy for the viewer's pages.
-const VIEWER_PAGE_POLICY =
-  "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; media-src 'self' blob:; worker-src 'self' blob:";
+/**
+ * The desktop proxy sends the same policy for the viewer's pages. It also names the proxy's own
+ * `ws:` origin: the WebKit of iOS 15 does not match `ws:` to `'self'`, so the viewer's stream socket
+ * threw "SecurityError: The operation is insecure." there.
+ */
+function viewerPagePolicy(port: number): string {
+  return `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws://127.0.0.1:${port}; img-src 'self' data:; media-src 'self' blob:; worker-src 'self' blob:`;
+}
 
 interface ViewerSocket {
   stream: RemoteDesktopStream | null;
@@ -121,6 +137,8 @@ export async function startViewerProxy(
   sessionId: string,
   onViewerReport: (report: ViewerReport) => void,
   onStats: (stats: unknown) => void,
+  /** The server: Moonlight's static files are kept for it, for the next connect. */
+  cacheScope: string,
 ): Promise<ViewerProxy | null> {
   const native = remoteViewerProxyNative;
   if (!native) return null;
@@ -135,6 +153,7 @@ export async function startViewerProxy(
   const streamPath = `${sessionPath}/stream`;
   // The page's stats for the app's stats sheet. Moonlight serves no file of this name.
   const statsPath = `${sessionPath}/moonlight/${VIEWER_STATS_FILE}`;
+  const moonlightPath = `${sessionPath}/moonlight/`;
   const limit = createLimiter(REQUESTS_IN_FLIGHT);
   const sockets = new Map<string, ViewerSocket>();
   let stopped = false;
@@ -157,6 +176,16 @@ export async function startViewerProxy(
       .catch(() => undefined);
   const respondText = (requestId: string, status: number, text: string) =>
     respond(requestId, status, { "Content-Type": "text/plain; charset=utf-8" }, utf8Base64(text));
+  const respondFile = (request: ViewerProxyRequest, status: number, file: ViewerFile) => {
+    const page = file.mimeType.includes("text/html");
+    const content = page || file.mimeType.includes("javascript") ? rewriteNamespace(file.base64, prefix) : file.base64;
+    respond(
+      request.requestId,
+      status,
+      { "Content-Type": file.mimeType, ...(page ? { "Content-Security-Policy": viewerPagePolicy(port) } : {}) },
+      request.method === "HEAD" ? "" : content,
+    );
+  };
 
   const forward = async (request: ViewerProxyRequest) => {
     const route = upstream(request.target);
@@ -174,6 +203,9 @@ export async function startViewerProxy(
       return respond(request.requestId, 204, {});
     }
     const method = request.method === "HEAD" ? "GET" : request.method;
+    const fileKey = method === "GET" ? viewerFileKey(cacheScope, moonlightPath, route.path) : null;
+    const cached = cachedViewerFile(fileKey);
+    if (cached) return respondFile(request, 200, cached);
     const contentType = request.headers["content-type"] ?? "application/octet-stream";
     let body: TeamProtocolV2Json = {};
     let upload: { name: string; mimeType: string; base64: string } | undefined;
@@ -182,6 +214,8 @@ export async function startViewerProxy(
         const text = utf8Text(base64ToBytes(request.bodyBase64));
         if (route.pathname === `${sessionPath}/viewer-state`) {
           const update = decodeViewerState(text);
+          // A failed viewer can be old cached files after a host update: the next try loads them again.
+          if (update?.state === "error") forgetViewerFiles(cacheScope);
           if (update) onViewerReport(update);
         }
         try {
@@ -209,15 +243,9 @@ export async function startViewerProxy(
       if (answer.status === 204) return respond(request.requestId, 204, {});
       const file = answer.body;
       if (isDynamicRecord(file) && isString(file.mimeType) && isString(file.base64) && isString(file.name)) {
-        const page = file.mimeType.includes("text/html");
-        const content =
-          page || file.mimeType.includes("javascript") ? rewriteNamespace(file.base64, prefix) : file.base64;
-        return respond(
-          request.requestId,
-          answer.status,
-          { "Content-Type": file.mimeType, ...(page ? { "Content-Security-Policy": VIEWER_PAGE_POLICY } : {}) },
-          request.method === "HEAD" ? "" : content,
-        );
+        const viewerFile = { name: file.name, mimeType: file.mimeType, base64: file.base64 };
+        keepViewerFile(fileKey, answer.status, viewerFile, sessionId);
+        return respondFile(request, answer.status, viewerFile);
       }
       const json = JSON.stringify(answer.body ?? null);
       return respond(

@@ -741,9 +741,12 @@ function AuthenticatedStack() {
 function AuthenticatedSplit({ children }: PropsWithChildren) {
   const onboarding = useHomeOnboarding();
   const { t } = useText();
+  // Control computer, with its stats and help sheets, keeps the whole window: the computer's screen
+  // fills a landscape phone, which is wide enough for the split.
+  const controlsComputer = useSegments().some((segment) => segment.startsWith("remote-desktop"));
   return (
     <AdaptiveSplit
-      enabled={!onboarding.active}
+      enabled={!onboarding.active && !controlsComputer}
       resizeLabel={t("mobile.agent.home.chatListWidth")}
       pane={
         <ChatListPaneProvider>

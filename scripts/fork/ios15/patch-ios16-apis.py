@@ -512,3 +512,22 @@ patch("react-native-screens/ios/RNSScreenStack.mm",
       "    }\n"
       "  }\n\n",
       "screens hide the bar of a headerless screen on iOS 15")
+
+# expo-screen-orientation (pinned 58.0.3: 58.0.4 needs a newer expo-modules-core) locks the orientation
+# with iOS 16 calls. iOS 15 rotates with the `UIDevice` orientation and `attemptRotationToDeviceOrientation`
+# lines that follow them.
+patch("expo-screen-orientation/ios/ScreenOrientationRegistry.swift",
+      "      let windowScene = SceneGeometry.windowScene(for: self.rootViewController?.view)\n"
+      "      windowScene?.requestGeometryUpdate(",
+      "      let windowScene = SceneGeometry.windowScene(for: self.rootViewController?.view)\n"
+      "      // kongCowork iOS 15 build: the geometry calls exist from iOS 16.\n"
+      "      if #available(iOS 16.0, *) {\n"
+      "      windowScene?.requestGeometryUpdate(",
+      "screen orientation geometry update")
+patch("expo-screen-orientation/ios/ScreenOrientationRegistry.swift",
+      "      self.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()\n"
+      "      UIDevice.current",
+      "      self.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()\n"
+      "      }\n"
+      "      UIDevice.current",
+      "screen orientation iOS 16 block end")
