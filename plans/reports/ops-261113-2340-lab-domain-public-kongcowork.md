@@ -49,3 +49,7 @@ Gmail SMTP for sign-in codes, VPS changes allowed.
 - Desktop `OPENBOT_REMOTE_SIGNAL_URL` only feeds the CSP; tickets name `wss://lab.codanang.com/v1/signal`.
   The Mac app (LSEnvironment) and `run-server.sh` now use that URL (the server picks it up at next restart).
 - Rollback: `chmod 600` the conf restores the old (broken) state; `TURN_HOST=$PUBLIC_HOST` in the script.
+- 2026-11-15: coturn ran out of relay ports ("no available ports"): 41 ports (49160-49200) with failed
+  attempts holding theirs. Now `max-port=51999` and ufw allows 49160:51999/udp (backup
+  `turnserver.conf.bak-ports`). Paperclip (`paperclip.service`) is stopped: its agents filled the
+  kong-lab disk with `/tmp/paperclip-ai-*` folders.

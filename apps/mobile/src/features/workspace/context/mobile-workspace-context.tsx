@@ -267,6 +267,18 @@ const NO_IDS: string[] = [];
  * app starts, over the desktop that paired the phone and over a faster server.
  */
 const KONG_DEFAULT_SERVER_NAME = process.env.EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME;
+/**
+ * kongCowork fork: the light build for old iPhones (`EXPO_PUBLIC_KONG_LITE=1`) shows and connects only
+ * that named server. Each server holds its own WebRTC page, which an old phone feels.
+ */
+const KONG_ONLY_DEFAULT_SERVER = process.env.EXPO_PUBLIC_KONG_LITE === "1" && Boolean(KONG_DEFAULT_SERVER_NAME);
+
+/** The hosts that this build shows: only the named server in the light build, when the list has it. */
+function shownHosts(hosts: readonly RemoteTeamHost[]): readonly RemoteTeamHost[] {
+  if (!KONG_ONLY_DEFAULT_SERVER) return hosts;
+  const named = hosts.filter((host) => host.name === KONG_DEFAULT_SERVER_NAME);
+  return named.length > 0 ? named : hosts;
+}
 const NO_AGENTS: MobileAgent[] = [];
 /** The longest that the servers which are not selected wait for the selected one on a return to the app. */
 const OTHER_SERVERS_RETURN_DELAY_MS = 3_000;
@@ -609,7 +621,8 @@ export function MobileWorkspaceProvider({ children }: PropsWithChildren) {
    * starts the connections early, and the list of the account service then drops and keeps.
    */
   const installHosts = useCallback(
-    (hosts: readonly RemoteTeamHost[], confirmed = true) => {
+    (listedHosts: readonly RemoteTeamHost[], confirmed = true) => {
+      const hosts = shownHosts(listedHosts);
       const available = new Set(hosts.map((host) => host.hostId));
       if (confirmed) {
         dropServerState(new Set(serversRef.current.filter((server) => !available.has(server.id)).map(({ id }) => id)));
