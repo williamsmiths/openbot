@@ -47,13 +47,12 @@ export function useServerOrder(
   }, [defaultKey, pairedHostId]);
   const [savedDefaultServer, setSavedDefaultServer] = useState<{ key: string; id: string | null } | null>(null);
   // kongCowork fork: a build can name the server that opens first (`EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME`),
-  // so a phone paired by the QR code of a desktop still opens the always-on server. The user's own
-  // order of the list replaces it.
+  // so a phone paired by the QR code of a desktop still opens the always-on server. It stays first
+  // over a saved order too; the other servers keep that order.
   const preferredServerName = process.env.EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME;
-  const preferredServerId =
-    preferredServerName && serverOrder.length === 0
-      ? servers.find((server) => server.name === preferredServerName)?.id
-      : undefined;
+  const preferredServerId = preferredServerName
+    ? servers.find((server) => server.name === preferredServerName)?.id
+    : undefined;
   const defaultServerId =
     preferredServerId ?? (savedDefaultServer?.key === defaultKey ? savedDefaultServer.id : storedDefaultServer);
   const orderedServers = useMemo(

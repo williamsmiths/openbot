@@ -664,11 +664,15 @@ async function handleSignal(state: PeerState, message: SignalServerMessage): Pro
     await state.peerConnection?.setRemoteDescription({ type: "answer", sdp: message.sdp });
   } else if (message.type === "ice-candidate") {
     if (state.privateNetwork && !isPrivateNetworkCandidate(message.candidate)) return;
-    await state.peerConnection?.addIceCandidate({
-      candidate: message.candidate,
-      sdpMid: message.sdpMid,
-      sdpMLineIndex: message.sdpMLineIndex,
-    });
+    // One candidate that this connection cannot use, such as a late or early one from WebKit on
+    // iOS 15, must not end the connection: the other candidates can still make the path.
+    await state.peerConnection
+      ?.addIceCandidate({
+        candidate: message.candidate,
+        sdpMid: message.sdpMid,
+        sdpMLineIndex: message.sdpMLineIndex,
+      })
+      .catch(() => undefined);
   } else {
     await restartIce(state);
   }

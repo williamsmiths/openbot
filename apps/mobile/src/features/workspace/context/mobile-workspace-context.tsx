@@ -262,6 +262,11 @@ export type {
 } from "@/features/workspace/model/workspace-types";
 
 const NO_IDS: string[] = [];
+/**
+ * kongCowork fork: the server that a build names (`EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME`) opens when the
+ * app starts, over the desktop that paired the phone and over a faster server.
+ */
+const KONG_DEFAULT_SERVER_NAME = process.env.EXPO_PUBLIC_KONG_DEFAULT_SERVER_NAME;
 const NO_AGENTS: MobileAgent[] = [];
 /** The longest that the servers which are not selected wait for the selected one on a return to the app. */
 const OTHER_SERVERS_RETURN_DELAY_MS = 3_000;
@@ -598,6 +603,7 @@ export function MobileWorkspaceProvider({ children }: PropsWithChildren) {
     [connectionWaits, readRefresh, queryClient, queryScope, conversationStore, liveState, workspaceCache, keepHosts],
   );
 
+  const preferredServerOpened = useRef(false);
   /**
    * Shows the servers of a list. `confirmed` is false for the list that the phone kept: it only
    * starts the connections early, and the list of the account service then drops and keeps.
@@ -618,10 +624,17 @@ export function MobileWorkspaceProvider({ children }: PropsWithChildren) {
           serverFromHost(host, serverKind(host.hostId, session.host?.hostId), previousServers.get(host.hostId)),
         );
       });
-      setActiveServerId((current) =>
-        hosts.some((host) => host.hostId === current)
-          ? current
-          : (sortByPreference(hosts.map((host) => ({ id: host.hostId })))[0]?.id ?? null),
+      const preferred =
+        preferredServerOpened.current || !KONG_DEFAULT_SERVER_NAME
+          ? undefined
+          : hosts.find((host) => host.name === KONG_DEFAULT_SERVER_NAME)?.hostId;
+      if (preferred) preferredServerOpened.current = true;
+      setActiveServerId(
+        (current) =>
+          preferred ??
+          (hosts.some((host) => host.hostId === current)
+            ? current
+            : (sortByPreference(hosts.map((host) => ({ id: host.hostId })))[0]?.id ?? null)),
       );
     },
     [dropServerState, session.host?.hostId, sortByPreference, workspaceCache, keepHosts],
@@ -1520,6 +1533,8 @@ export function MobileWorkspaceProvider({ children }: PropsWithChildren) {
       return;
     }
     if (active?.resuming === true) return;
+    // The named server of the build keeps its retries; the app does not open another one instead.
+    if (KONG_DEFAULT_SERVER_NAME && active?.name === KONG_DEFAULT_SERVER_NAME) return;
     const activeFailed = active?.state === "offline" || active?.state === "error";
     if (!startupWaitOver && !activeFailed) return;
     const online = sortByPreference(servers).find((server) => server.state === "online");
