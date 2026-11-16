@@ -498,6 +498,7 @@ export class DynamicIslandCoordinator {
       serverId,
       agents: snapshot.agents,
       activeTurns: Object.fromEntries(snapshot.activeTurns.map((turn) => [turn.agentId, turn.turnId])),
+      laneTurns: Object.fromEntries((snapshot.laneTurns ?? []).map((turn) => [turn.agentId, turn.turnId])),
       queues: queueSnapshotsFromRuntimeWork(snapshot.work),
       unreadReplies: { ...runtime.unreadReplies },
       unreadMessageIds: { ...runtime.unreadMessageIds },

@@ -500,6 +500,18 @@ text do not change. A released peer that saves an agent with the changed level r
 level. The WebRTC host peer sends the local request and the events socket with the peer's
 capabilities, so a relayed peer gets the same levels.
 
+### Lane turns
+
+`agent-lane-turns-v1` (protocol 9 only) tells a joined client that an agent works outside its own chat:
+in a channel, a task or a messaging thread. The turn events of those threads stay on the host, and
+`activeTurns` holds only the agent's own chat, so without it such an agent looked idle on the Dynamic
+Island and in the agent list. The host adds `laneTurns` (one `{ botId, turnId }` row for each agent, the
+`botId` spelling of the rest of the snapshot; no thread, since a member may not see the channel) beside the frozen keys of the `snapshot` of the
+`runtime-snapshot` event, only for a connection that advertises the capability, and sends a fresh
+snapshot when such a turn starts or ends. The rows are filtered as the rest of the snapshot, so a member
+gets only the agents that the member can see. A present value that the decoder refuses fails closed. The
+island shows the agent at work but no Stop button for that turn. See `team-protocol/agent-lane-turns-v1.ts`.
+
 ### Context usage
 
 `context-usage-v1` carries how full the context window of each agent is, so a desktop joined to a

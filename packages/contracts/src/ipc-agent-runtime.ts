@@ -265,6 +265,13 @@ export interface AgentRuntimeSnapshot {
    * snapshot, as `usageLimits` is.
    */
   subagentTurns?: Array<{ agentId: string; turnId: string }>;
+  /**
+   * One running turn of each agent that works outside its own chat: in a channel, a task or a
+   * messaging thread. `activeTurns` holds only the agent's own chat, so without this an agent at work
+   * in a channel looks idle. The Team API carries it through the optional `agent-lane-turns-v1`
+   * capability; absent from a released snapshot.
+   */
+  laneTurns?: Array<{ agentId: string; turnId: string }>;
 }
 
 export function isAgentRuntimeSnapshot(value: unknown): value is AgentRuntimeSnapshot {
@@ -339,7 +346,18 @@ export function isAgentRuntimeSnapshot(value: unknown): value is AgentRuntimeSna
         value.subagentTurns.length <= INPUT_LIMITS.agents &&
         value.subagentTurns.every(
           (turn) => isDynamicRecord(turn) && isIdentifier(turn.agentId) && isIdentifier(turn.turnId),
-        )))
+        ))) &&
+    (value.laneTurns === undefined || isRuntimeLaneTurns(value.laneTurns))
+  );
+}
+
+/** See `AgentRuntimeSnapshot.laneTurns`: at most one turn for each agent. */
+export function isRuntimeLaneTurns(value: unknown): value is NonNullable<AgentRuntimeSnapshot["laneTurns"]> {
+  return (
+    Array.isArray(value) &&
+    value.length <= INPUT_LIMITS.agents &&
+    new Set(value.map((turn) => (isDynamicRecord(turn) ? turn.agentId : null))).size === value.length &&
+    value.every((turn) => isDynamicRecord(turn) && isIdentifier(turn.agentId) && isIdentifier(turn.turnId))
   );
 }
 

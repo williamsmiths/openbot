@@ -45,6 +45,11 @@ export interface DynamicIslandPresentationInput {
   serverId: string;
   agents: DynamicIslandAgentSource[];
   activeTurns: Record<string, string | null>;
+  /**
+   * A running turn of each agent in a channel, task or messaging thread (`AgentRuntimeSnapshot.laneTurns`).
+   * It shows the agent at work. It is not `activeTurns`: the island stops only a turn of the agent's chat.
+   */
+  laneTurns?: Record<string, string>;
   queues: Record<string, QueueSnapshot>;
   unreadReplies: Record<string, number>;
   unreadMessageIds?: Record<string, string | null>;
@@ -173,7 +178,11 @@ function messageTimestamp(value: string): number {
 }
 
 function isAgentWorking(agentId: string, input: DynamicIslandPresentationInput): boolean {
-  return Boolean(input.activeTurns[agentId]) || Boolean(runningDelivery(input.queues[agentId]));
+  return (
+    Boolean(input.activeTurns[agentId]) ||
+    Boolean(input.laneTurns?.[agentId]) ||
+    Boolean(runningDelivery(input.queues[agentId]))
+  );
 }
 
 function currentTask(agentId: string, queues: Record<string, QueueSnapshot>, text: DynamicIslandText): string {

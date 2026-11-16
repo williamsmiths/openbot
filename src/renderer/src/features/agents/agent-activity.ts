@@ -14,21 +14,34 @@ import { useAgents } from "./agents-context";
  */
 export function createAgentActivity() {
   const { agentList } = useAgents();
-  const { activeTurns, subagentTurns, queues, failedTurns, usageLimits, pendingPrompts, pendingApprovals, approvals } =
-    useTurns();
+  const {
+    activeTurns,
+    subagentTurns,
+    laneTurns,
+    queues,
+    failedTurns,
+    usageLimits,
+    pendingPrompts,
+    pendingApprovals,
+    approvals,
+  } = useTurns();
   const { unreadReplies, recentReplies } = useConversation();
   const agentTasks = useAgentTasks();
 
   /* The turn events of a side thread reach only its thread list, so an agent that works in a side
-   * thread is found there. A subagent that runs on after its turn keeps its agent at work. */
+   * thread is found there. A subagent that runs on after its turn keeps its agent at work, and so does
+   * a turn in a channel, task or messaging thread that the runtime snapshot reports. */
   const workingTurns = createMemo(() => {
     const turns = { ...activeTurns() };
     const subagents = subagentTurns();
+    const lanes = laneTurns();
     for (const agent of agentList()) {
       const running = agentTasks.snapshot(agent.id)?.tasks.find((task) => task.state === "running");
       if (running && !turns[agent.id]) turns[agent.id] = running.activeTurnId ?? running.id;
       const subagentTurn = subagents[agent.id];
       if (subagentTurn && !turns[agent.id]) turns[agent.id] = subagentTurn;
+      const laneTurn = lanes[agent.id];
+      if (laneTurn && !turns[agent.id]) turns[agent.id] = laneTurn;
     }
     return turns;
   });

@@ -95,6 +95,9 @@ const Turns = createSimpleContext({
     const [usageLimits, setUsageLimits] = createSignal<Record<string, number | null>>({});
     // The turn of each agent whose subagents still run, also after the turn ended. Only a runtime snapshot of the local host carries it.
     const [subagentTurns, setSubagentTurns] = createSignal<Record<string, string>>({});
+    // A running turn of each agent in a channel, task or messaging thread: their turn events stay on the
+    // host, so only a runtime snapshot carries them (`laneTurns`).
+    const [laneTurns, setLaneTurns] = createSignal<Record<string, string>>({});
     // Each provider account and model that a usage limit holds, also with no agent on it.
     const [usageLimitedModels, setUsageLimitedModels] = createSignal<AgentModelChoice[]>([]);
     // Each provider account and model that a provider error holds, so that a switch passes over it.
@@ -581,6 +584,8 @@ const Turns = createSimpleContext({
       setUsageLimits,
       subagentTurns,
       setSubagentTurns,
+      laneTurns,
+      setLaneTurns,
       usageLimitedModels,
       setUsageLimitedModels,
       failedModels,

@@ -15,6 +15,7 @@ import { AGENT_IMPORT_CAPABILITY } from "./agent-import-v1";
 import { AGENT_IMPORT_V2_CAPABILITY } from "./agent-import-v2";
 import { AGENT_INSTALL_CAPABILITY } from "./agent-install-v1";
 import { AGENT_INSTRUCTIONS_CAPABILITY } from "./agent-instructions-v1";
+import { TEAM_AGENT_LANE_TURNS_CAPABILITY } from "./agent-lane-turns-v1";
 import { AGENT_MEMORIES_CAPABILITY } from "./agent-memories-v1";
 import { AGENT_MEMORY_LIMIT_CAPABILITY } from "./agent-memory-limit-v1";
 import { AGENT_NEW_CHAT_CAPABILITY } from "./agent-new-chat-v1";
@@ -357,6 +358,7 @@ export {
   STORAGE_CAPABILITY,
   STORAGE_CHANNEL_CAPABILITY,
   STORAGE_DISK_CAPABILITY,
+  TEAM_AGENT_LANE_TURNS_CAPABILITY,
   TEAM_BROWSER_NAVIGATION_CAPABILITY,
   TEAM_BROWSER_VIEW_CAPABILITY,
   TEAM_BROWSER_VIEW_CLIPBOARD_CAPABILITY,
@@ -583,6 +585,7 @@ export const TEAM_CURRENT_CAPABILITIES = [
   WHATSAPP_WORKING_MESSAGE_CAPABILITY,
   LIBRARY_FOLDERS_CAPABILITY,
   PROVIDER_ACCOUNT_POOL_CAPABILITY,
+  TEAM_AGENT_LANE_TURNS_CAPABILITY,
 ] as const;
 
 export type TeamCurrentCapability = (typeof TEAM_CURRENT_CAPABILITIES)[number];
@@ -699,6 +702,7 @@ export const TEAM_BOOTSTRAP_CAPABILITIES = TEAM_CURRENT_CAPABILITIES.filter(
     capability !== PROVIDER_ACCOUNT_RELAY_V2_CAPABILITY &&
     capability !== STORAGE_DISK_CAPABILITY &&
     capability !== MACHINE_RESOURCES_CAPABILITY &&
+    capability !== TEAM_AGENT_LANE_TURNS_CAPABILITY &&
     capability !== PROMPT_CACHE_TTL_CAPABILITY &&
     capability !== PROVIDER_DEFAULT_CAPABILITY &&
     capability !== CLAUDE_API_KEY_CAPABILITY &&
@@ -880,6 +884,7 @@ export const TEAM_PROTOCOL_V9_ONLY_CAPABILITIES: ReadonlySet<string> = new Set<T
   WHATSAPP_WORKING_MESSAGE_CAPABILITY,
   LIBRARY_FOLDERS_CAPABILITY,
   PROVIDER_ACCOUNT_POOL_CAPABILITY,
+  TEAM_AGENT_LANE_TURNS_CAPABILITY,
 ]);
 // A v8 host reads at most 128 capabilities, so a client sends the protocol 9 ones only after it
 // negotiates protocol 9.
@@ -954,6 +959,7 @@ export function legacyTeamCapabilities(capabilities: readonly string[]): string[
       capability !== PROVIDER_ACCOUNT_RELAY_V2_CAPABILITY &&
       capability !== STORAGE_DISK_CAPABILITY &&
       capability !== MACHINE_RESOURCES_CAPABILITY &&
+      capability !== TEAM_AGENT_LANE_TURNS_CAPABILITY &&
       capability !== PROMPT_CACHE_TTL_CAPABILITY &&
       capability !== PROVIDER_DEFAULT_CAPABILITY &&
       capability !== CLAUDE_API_KEY_CAPABILITY &&

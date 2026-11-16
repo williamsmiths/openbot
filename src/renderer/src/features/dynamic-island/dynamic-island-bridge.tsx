@@ -40,6 +40,7 @@ export function DynamicIslandBridge() {
   const { agentList, appendUiError } = useAgents();
   const {
     activeTurns,
+    laneTurns,
     queues,
     pendingPrompts,
     setPendingPrompts,
@@ -61,6 +62,7 @@ export function DynamicIslandBridge() {
         serverId: activeServerId(),
         agents: agentList(),
         activeTurns: activeTurns(),
+        laneTurns: laneTurns(),
         queues: queues(),
         unreadReplies: unreadReplies(),
         unreadMessageIds: Object.fromEntries(

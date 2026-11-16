@@ -558,6 +558,12 @@ export class AgentService extends EventEmitter<AgentServiceEvents> {
   #scope = Scope.makeUnsafe();
   /** User sends still before their mailbox write, by idempotency key: a retry joins the first call. */
   readonly #pendingUserSends = new Map<string, Deferred.Deferred<QueuedMessageReceipt, AgentLifecycleFailed>>();
+  /**
+   * The running turns of channel, task and messaging threads, by turn id. Their turn events stay on
+   * the host, so the runtime snapshot carries them (`laneTurns`). In memory: a restart ends every turn.
+   * The snapshot keeps only the turns that still run, so a turn that ends with no event drops out.
+   */
+  readonly #laneTurns = new Map<string, { agentId: string; turnId: string }>();
   readonly #store: AgentStore;
   readonly #mailbox: MailboxStore;
   readonly #browser: AgentBrowserHost;
@@ -2075,6 +2081,7 @@ export class AgentService extends EventEmitter<AgentServiceEvents> {
       turn: this.#turn,
       attention: this.#attention,
       usageLimits: this.#usageLimits,
+      laneTurns: [...this.#laneTurns.values()].filter((turn) => this.#turn.turnStartedAt(turn.turnId) !== null),
     });
   }
 
@@ -6407,8 +6414,30 @@ export class AgentService extends EventEmitter<AgentServiceEvents> {
     // The account in use is not saved: a new reading, as at start, sets it again.
     if (event.type === "usage-changed") for (const provider of AGENT_PROVIDERS) this.#refreshPoolInUse(provider);
     this.#liveVoice?.observe(event);
-    if (this.channels?.event(event) || this.messaging?.event(event, this.#scope) || this.#tasks?.event(event)) return;
-    this.emit("event", event, memberId);
+    const kept = Boolean(
+      this.channels?.event(event) || this.messaging?.event(event, this.#scope) || this.#tasks?.event(event),
+    );
+    const laneTurnsChanged = this.#trackLaneTurn(event, kept);
+    if (!kept) this.emit("event", event, memberId);
+    // A client sees no turn event of a channel, task or messaging thread, so a fresh snapshot tells it.
+    if (laneTurnsChanged) this.#emitRuntimeSnapshot();
+  }
+
+  /**
+   * Records a turn that a channel, task or messaging thread kept from the clients. A completion removes
+   * the turn also when no thread keeps it any more, such as after its channel was deleted. True when
+   * the set changed.
+   */
+  #trackLaneTurn(event: AgentEvent, kept: boolean): boolean {
+    if (event.type === "turn-started" && kept) {
+      this.#laneTurns.set(event.turnId, { agentId: event.agentId, turnId: event.turnId });
+      return true;
+    }
+    if (event.type !== "turn-completed") return false;
+    // An agent that is gone takes its turns with it.
+    const agentIds = new Set(this.#store.list().map((agent) => agent.id));
+    for (const [turnId, turn] of this.#laneTurns) if (!agentIds.has(turn.agentId)) this.#laneTurns.delete(turnId);
+    return this.#laneTurns.delete(event.turnId);
   }
 
   /** Removes live provider state for an execution thread before its durable rows are deleted. */

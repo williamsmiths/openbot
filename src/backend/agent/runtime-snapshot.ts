@@ -153,6 +153,8 @@ export interface RuntimeSnapshotSources {
   turn: Pick<TurnLifecycle, "failedTurns" | "subagentTurns">;
   attention: Pick<AttentionRegistry, "runtimeAttention">;
   usageLimits: Pick<UsageLimitGate, "limitedAgents" | "limitedModels" | "failedModels">;
+  /** The running turns outside each agent's own chat, oldest first. See `AgentRuntimeSnapshot.laneTurns`. */
+  laneTurns?: Iterable<{ agentId: string; turnId: string }>;
 }
 
 /** The runtime view of every agent: active turns, queued work, latest messages and attention. */
@@ -166,6 +168,7 @@ export function buildRuntimeSnapshot({
   turn,
   attention,
   usageLimits,
+  laneTurns = [],
 }: RuntimeSnapshotSources): AgentRuntimeSnapshot {
   const runtimeAgents: AgentRuntimeSnapshot["agents"] = agents.map((agent) => ({
     id: agent.id,
@@ -226,7 +229,20 @@ export function buildRuntimeSnapshot({
     usageLimitedModels: usageLimits.limitedModels(),
     failedModels: usageLimits.failedModels(),
     subagentTurns: turn.subagentTurns(new Set(agents.map((agent) => agent.id))),
+    laneTurns: oneLaneTurnPerAgent(laneTurns, new Set(agents.map((agent) => agent.id))),
     ...(contextStates ? { contextStates } : {}),
     ...(threadContextStates ? { threadContextStates } : {}),
   });
+}
+
+/** The oldest running lane turn of each listed agent: a client only needs to know that it works. */
+function oneLaneTurnPerAgent(
+  turns: Iterable<{ agentId: string; turnId: string }>,
+  agentIds: ReadonlySet<string>,
+): NonNullable<AgentRuntimeSnapshot["laneTurns"]> {
+  const byAgent = new Map<string, { agentId: string; turnId: string }>();
+  for (const { agentId, turnId } of turns) {
+    if (agentIds.has(agentId) && !byAgent.has(agentId)) byAgent.set(agentId, { agentId, turnId });
+  }
+  return [...byAgent.values()];
 }

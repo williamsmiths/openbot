@@ -15,6 +15,7 @@ import {
   isAgentProfileRoute,
   supportsTeamSemanticTags,
   TEAM_AGENT_CREATE_MODEL_CAPABILITY,
+  TEAM_AGENT_LANE_TURNS_CAPABILITY,
   TEAM_CHANNEL_ATTENTION_CAPABILITY,
   TEAM_CONTEXT_USAGE_CAPABILITY,
   TEAM_CURRENT_CAPABILITIES,
@@ -917,6 +918,7 @@ export class TeamWebRtcHostPeer {
                 // Only the V8 event reads them.
                 browserSignIn: this.#peerCapabilities.has(BROWSER_SIGN_IN_CAPABILITY),
                 contextUsage: this.#peerCapabilities.has(TEAM_CONTEXT_USAGE_CAPABILITY),
+                laneTurns: this.#peerCapabilities.has(TEAM_AGENT_LANE_TURNS_CAPABILITY),
                 // Only the V7 and V8 events read them.
                 uiBlocks: this.#peerCapabilities.has(TEAM_UI_BLOCKS_CAPABILITY),
                 subagents: this.#peerCapabilities.has(TEAM_SUBAGENTS_CAPABILITY),
