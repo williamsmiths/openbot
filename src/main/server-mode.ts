@@ -12,6 +12,13 @@
  * or the claim back. The Mobile Connect code signs one phone
  * in to the account of the server; the account service lets it work for one sign-in, for two minutes.
  *
+ * With `OPENBOT_SERVER_AGENT_COMMANDS=1` the list also has three agent commands: list the agents,
+ * create one agent, and turn Local scripts on or off for an agent (CR-011). Risk: an agent with Full
+ * access runs as the service user and can connect to this socket. It can then turn Local scripts on
+ * for itself, and a local script sends messages as a person. Those messages pass the person gate
+ * (workflows, Vault keys, channels) and answer approval cards. The variable is a default-off switch,
+ * not a security boundary, where the service user owns its start script or unit.
+ *
  * The protocol is HTTP with form bodies and `key=value` text lines, so the command needs only
  * `curl --unix-socket`.
  */
@@ -41,8 +48,14 @@ const MAX_EMAIL_LENGTH = 254;
 /** The name of a server whose owner signed in without one. The same default as a mobile connect. */
 const DEFAULT_SERVER_NAME = PRODUCT_NAME;
 
+/** The first message of an agent that the operator creates. The route reads no message from the caller. */
+export const SERVER_AGENT_FIRST_MESSAGE =
+  "You were created from the server terminal. Reply with one short line that you are ready.";
+
 export interface ServerModeEnvironment {
   controlSocketPath: string;
+  /** `OPENBOT_SERVER_AGENT_COMMANDS=1`: the agent commands of CR-011 are on. */
+  agentCommands: boolean;
 }
 
 /** Returns null unless this process is a self-hosted server that systemd started. */
@@ -56,7 +69,25 @@ export function takeServerModeEnvironment(
   if (environment.OPENBOT_HOSTED_SERVER === "1") return null;
   const runtimeDirectory = environment.XDG_RUNTIME_DIR?.trim() ?? "";
   if (!isAbsolute(runtimeDirectory)) return null;
-  return { controlSocketPath: join(runtimeDirectory, CONTROL_SOCKET_FILE) };
+  return {
+    controlSocketPath: join(runtimeDirectory, CONTROL_SOCKET_FILE),
+    agentCommands: environment.OPENBOT_SERVER_AGENT_COMMANDS === "1",
+  };
+}
+
+export interface ServerModeAgent {
+  id: string;
+  name: string;
+  /** The effective value of Local scripts. */
+  localScripts: boolean;
+}
+
+/** The agent operations of the agent commands. The wiring in `application-services.ts` fills it. */
+export interface ServerModeAgents {
+  list(): readonly ServerModeAgent[];
+  /** Makes one agent with this name and the fixed first message. */
+  create(name: string): Effect.Effect<ServerModeAgent, RemoteWorkflowError>;
+  setLocalScripts(agentId: string, on: boolean): Effect.Effect<ServerModeAgent, RemoteWorkflowError>;
 }
 
 export interface ServerModeOptions {
@@ -76,6 +107,8 @@ export interface ServerModeOptions {
   host: Pick<HostService, "getStatus" | "configure" | "start" | "updateIdentity" | "getMobileConnectHost">;
   /** The memory guard, so that `status` shows the memory ceiling and the turn limit. */
   memory: Pick<ServerMemory, "level" | "sample" | "turnLimit"> | null;
+  /** Null when the agent commands are off (AC-SA-01). */
+  agents: ServerModeAgents | null;
   onError: (message: string, error: unknown) => void;
   /** Tests only. */
   uid?: number;
@@ -220,6 +253,12 @@ export class ServerMode {
         return runCauseEffect(this.#rename(body.get("name") ?? ""));
       case "POST /v1/mobile-connect":
         return runCauseEffect(this.#mobileConnect());
+      case "GET /v1/agents":
+        return this.#listAgents();
+      case "POST /v1/agents/create":
+        return runCauseEffect(this.#createAgent(body.get("name") ?? ""));
+      case "POST /v1/agents/local-scripts":
+        return runCauseEffect(this.#setLocalScripts(body.get("agent") ?? "", body.get("state") ?? ""));
       case "POST /v1/logout":
         await runCauseEffect(
           this.#options.centralAuth.logout().pipe(Effect.mapError(({ cause }) => new RemoteWorkflowError({ cause }))),
@@ -274,7 +313,17 @@ export class ServerMode {
       .requestEmailCode(normalized)
       .pipe(Effect.mapError(({ cause }) => new RemoteWorkflowError({ cause })));
     if (state.status === "code_sent" && !state.issue) {
-      return { status: 200, lines: { challenge: state.challengeId, expires_at: state.expiresAt } };
+      return {
+        status: 200,
+        lines: {
+          challenge: state.challengeId,
+          expires_at: state.expiresAt,
+          // Only a local development account service returns the code (AUTH_EXPOSE_DEVELOPMENT_CODE):
+          // it sends no email, so the terminal is the one place that can show it.
+          development_code:
+            state.developmentCode && /^[A-Za-z0-9-]{4,32}$/u.test(state.developmentCode) ? state.developmentCode : null,
+        },
+      };
     }
     // A server has no browser for the company provider. The owner signs in with another email.
     if (state.status === "company_sign_in") {
@@ -353,6 +402,54 @@ export class ServerMode {
     return { status: 200, lines: { qr: Buffer.from(qr).toString("base64"), expires_at: ticket.expiresAt } };
   });
 
+  /** AC-SA-01, AC-SA-09. */
+  #listAgents(): Answer {
+    const { agents } = this.#options;
+    if (!agents) return failure(403, "agent_commands_off");
+    const list = agents.list();
+    const lines: Answer["lines"] = { agents: list.length };
+    list.forEach((agent, index) => {
+      lines[`agent_${index + 1}`] = `${agent.id} ${agent.localScripts ? "on" : "off"} ${cleanName(agent.name)}`;
+    });
+    return { status: 200, lines };
+  }
+
+  /** AC-SA-01, AC-SA-02, AC-SA-03. */
+  readonly #createAgent = Effect.fn("ServerMode.createAgent")(function* (
+    this: ServerMode,
+    name: string,
+  ): Effect.fn.Return<Answer, RemoteWorkflowError> {
+    const { agents } = this.#options;
+    if (!agents) return failure(403, "agent_commands_off");
+    const trimmed = name.trim();
+    // A name with a hidden character would not match the cleaned name that an answer shows.
+    if (trimmed.length < 1 || trimmed.length > INPUT_LIMITS.agentName || HIDDEN_CHARACTERS.test(trimmed))
+      return failure(400, "invalid_agent_name");
+    const key = trimmed.toLowerCase();
+    if (agents.list().some((agent) => agent.name.trim().toLowerCase() === key)) return failure(409, "agent_exists");
+    return agentAnswer(yield* agents.create(trimmed));
+  });
+
+  /** AC-SA-01, AC-SA-04 to AC-SA-07. */
+  readonly #setLocalScripts = Effect.fn("ServerMode.setLocalScripts")(function* (
+    this: ServerMode,
+    reference: string,
+    state: string,
+  ): Effect.fn.Return<Answer, RemoteWorkflowError> {
+    const { agents } = this.#options;
+    if (!agents) return failure(403, "agent_commands_off");
+    if (state !== "on" && state !== "off") return failure(400, "invalid_state");
+    const list = agents.list();
+    const wanted = reference.trim();
+    const key = wanted.toLowerCase();
+    const matches = list.filter((agent) => agent.id === wanted);
+    if (matches.length === 0) matches.push(...list.filter((agent) => agent.name.trim().toLowerCase() === key));
+    if (!wanted || matches.length === 0) return failure(404, "agent_not_found");
+    const [agent] = matches;
+    if (matches.length > 1 || !agent) return failure(409, "agent_ambiguous");
+    return agentAnswer(yield* agents.setLocalScripts(agent.id, state === "on"));
+  });
+
   readonly #rename = Effect.fn("ServerMode.rename")(function* (
     this: ServerMode,
     name: string,
@@ -368,6 +465,21 @@ export class ServerMode {
     }
     return this.#status();
   });
+}
+
+/** Control, format (such as a direction override) and line or paragraph separator characters. */
+const HIDDEN_CHARACTERS = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
+
+/** A name in an answer has no hidden character: an answer can reach a terminal of root. */
+function cleanName(name: string): string {
+  return name.replace(new RegExp(HIDDEN_CHARACTERS.source, "gu"), "");
+}
+
+function agentAnswer(agent: ServerModeAgent): Answer {
+  return {
+    status: 200,
+    lines: { id: agent.id, name: cleanName(agent.name), local_scripts: agent.localScripts ? "on" : "off" },
+  };
 }
 
 /** The form body, or null when it is larger than a control request can be. */

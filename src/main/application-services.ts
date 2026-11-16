@@ -74,6 +74,7 @@ import { RemoteWorkflowError, toRemoteWorkflowError } from "./remote-service-eff
  * when - see `teardown-registry.ts` for why shutdown here is not the reverse of construction.
  */
 
+import { randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readdir, rm } from "node:fs/promises";
 import { homedir, hostname, tmpdir } from "node:os";
@@ -96,6 +97,8 @@ import type {
   VoiceStreamTranscript,
 } from "@openbot/contracts/ipc";
 import {
+  type AgentSummary,
+  agentAutomationAllowed,
   agentBrowserProfile,
   type ChannelCommand,
   DEFAULT_DYNAMIC_ISLAND_PREFERENCE,
@@ -380,7 +383,13 @@ import {
 } from "./secret-storage-cipher";
 import { SERVER_AUDIT_FILE, ServerAuditStore, serverAuditNames } from "./server-audit-store";
 import { AGENT_PROCESS_VARIABLE, agentProcessEnvironment, ServerMemory } from "./server-memory";
-import { ServerMode, type ServerModeEnvironment } from "./server-mode";
+import {
+  SERVER_AGENT_FIRST_MESSAGE,
+  ServerMode,
+  type ServerModeAgent,
+  type ServerModeAgents,
+  type ServerModeEnvironment,
+} from "./server-mode";
 import { ServerPersonalityPreferenceStore } from "./server-personality-preference-store";
 import { ServerTimezonePreferenceStore } from "./server-timezone-preference-store";
 import {
@@ -4222,6 +4231,37 @@ export async function createApplicationServices({
       Effect.runPromise(launchPublishRetry.stop()),
     );
   }
+  /** The agent commands of the server control socket (CR-011). Only built when they are on. */
+  const serverModeAgents = (): ServerModeAgents => {
+    const describe = (agent: AgentSummary): ServerModeAgent => ({
+      id: agent.id,
+      name: agent.name,
+      localScripts: agentAutomationAllowed(agent, agentDefaults.get()),
+    });
+    return {
+      list: () => service.listAgents().map(describe),
+      // AC-SA-02: the input has the name only from the caller. No configure, sender or welcome.
+      create: (name) =>
+        service
+          .createAgent({
+            name,
+            description: "",
+            initialMessage: SERVER_AGENT_FIRST_MESSAGE,
+            avatarSeed: randomUUID(),
+            avatarHue: null,
+          })
+          .pipe(
+            Effect.map(describe),
+            Effect.mapError(({ cause }) => new RemoteWorkflowError({ cause })),
+          ),
+      // AC-SA-04, AC-SA-07: the same write as the local UI.
+      setLocalScripts: (agentId, on) =>
+        service.updateAgent({ agentId, allowAutomation: on }).pipe(
+          Effect.map(describe),
+          Effect.mapError(({ cause }) => new RemoteWorkflowError({ cause })),
+        ),
+    };
+  };
   const serverMode = serverModeEnvironment
     ? new ServerMode({
         environment: serverModeEnvironment,
@@ -4229,6 +4269,7 @@ export async function createApplicationServices({
         centralAuth,
         host,
         memory: hostMemory,
+        agents: serverModeEnvironment.agentCommands ? serverModeAgents() : null,
         onError: (message, error) => logger.warn(message, toLogValue(error)),
       })
     : null;

@@ -150,6 +150,26 @@ open a database that a newer one migrated. It also refuses a computer that is a 
 Run the account commands with `sudo` or as the service user. Other users cannot open the control
 socket.
 
+### Agent commands
+
+A server with no usable window has no way to make an agent. Start the server with
+`OPENBOT_SERVER_AGENT_COMMANDS=1` in its environment to turn on these commands. Without the
+variable, each command fails with `agent_commands_off`.
+
+| Command | Use |
+| --- | --- |
+| `openbot agent list` | Show one line for each agent: id, `on` or `off` for Local scripts, name. |
+| `openbot agent create <name>` | Create one agent. The first message is a fixed text. |
+| `openbot agent local-scripts <agent> on\|off` | Turn Local scripts on or off. `<agent>` is an id or a name. |
+
+Risk: an agent with Full access runs as the service user and can connect to the control socket.
+With these commands on, it can turn Local scripts on for itself or for another agent. A local
+script sends messages as a person. Those messages can edit workflows, save Vault keys, manage
+channels and answer approval cards. The variable is a default-off switch. It is not a security
+boundary where the service user owns its start script or unit. The packaged launcher drops this
+variable from `openbot.env`, so a server that the installer made cannot turn the commands on.
+To go back, remove the variable and restart the server.
+
 ## Memory
 
 A self-hosted server uses the memory guards of a hosted server (see
@@ -327,7 +347,8 @@ interrupted copy, starts the service, and exits with an error.
 The `openbot` command talks to main over HTTP on a Unix socket, with form bodies and `key=value`
 text answers, so it needs only `curl`. The routes are `GET /v1/status`, `POST /v1/login/start`,
 `POST /v1/login/verify`, `POST /v1/login/claim`, `POST /v1/name`, `POST /v1/mobile-connect` and
-`POST /v1/logout`.
+`POST /v1/logout`. With `OPENBOT_SERVER_AGENT_COMMANDS=1` it also answers `GET /v1/agents`,
+`POST /v1/agents/create` and `POST /v1/agents/local-scripts`.
 
 Threat model:
 
@@ -335,9 +356,14 @@ Threat model:
   Main refuses to listen when the directory belongs to another user or other users can enter it. It
   never removes a file at the socket path that is not a socket.
 - Only the service user and root can connect. Agents run as the service user and already have full
-  access to its files, its keyring and the OpenBot database, so the socket gives them nothing new.
-- The socket answers a closed list of requests. It never sends the session token, the sign-in
-  code or the claim back, and a value cannot add a line to an answer. A body is at most 4 KiB.
+  access to its files, its keyring and the OpenBot database, so the socket gives them nothing new,
+  except the agent commands (see [Agent commands](#agent-commands)).
+- The socket answers a closed list of requests. It never sends the session token or the claim
+  back, and a value cannot add a line to an answer. A body is at most 4 KiB.
+- The answer of `POST /v1/login/start` has the sign-in code only when the account service returned
+  one. Only a local development account service does that (`AUTH_EXPOSE_DEVELOPMENT_CODE`): it sends
+  no email, and it gives the code to each caller of its API. Such a service must listen only where
+  trusted computers reach it, for example on a WireGuard address.
 - Server mode starts only in a packaged Linux build with `OPENBOT_SERVER=1`, and never on a hosted
   server, which signs in with its claim.
 

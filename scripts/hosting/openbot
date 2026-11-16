@@ -30,6 +30,12 @@ Usage: openbot <command>
                                  account. It works for one sign-in and expires after two minutes.
   logout                         Sign out. The server stops until the next sign-in.
   name <name>                    Change the server name.
+  agent list                     List the agents and their Local scripts setting.
+                                 The agent commands need OPENBOT_SERVER_AGENT_COMMANDS=1.
+  agent create <name>            Create an agent.
+  agent local-scripts <agent> on|off
+                                 Turn Local scripts on or off for an agent (id or name).
+                                 Needs OPENBOT_SERVER_AGENT_COMMANDS=1.
   logs [-f]                      Show the OpenBot log.
   start | stop | restart         Control the OpenBot service (sudo).
   update                         Install the newest release now (sudo).
@@ -116,6 +122,12 @@ check_answer() {
       signed_in) message="This server is signed in. To use another account, run: openbot logout" ;;
       account_signed_out | account_code_sent) message="Sign in first with: openbot login" ;;
       account_error | account_loading) message="OpenBot could not check the account yet. Run: openbot status" ;;
+      agent_commands_off) message="The agent commands are off. Start the server with OPENBOT_SERVER_AGENT_COMMANDS=1. Risk: an agent with Full access can then turn Local scripts on for itself, and a local script acts as a person." ;;
+      invalid_agent_name) message="Enter an agent name of 1 to 80 characters, with no control characters." ;;
+      agent_exists) message="An agent with this name exists. Use another name." ;;
+      invalid_state) message="Use on or off." ;;
+      agent_not_found) message="No agent has this id or name. Run: openbot agent list" ;;
+      agent_ambiguous) message="More than one agent has this name. Use the id. Run: openbot agent list" ;;
       session_not_storable) message="This server cannot store the session securely. The claim was not used." ;;
       *) message="OpenBot refused the request ($(value error))." ;;
     esac
@@ -236,6 +248,36 @@ mobile_connect_command() {
   echo "It works for one sign-in and expires in $((expires_at / 1000 - $(date +%s))) seconds. Run the command again for a new code."
 }
 
+agent_command() {
+  local sub=${1:-} line
+  [ "$#" -eq 0 ] || shift
+  case $sub in
+    list)
+      control GET /v1/agents
+      check_answer || exit 1
+      [ "$(value agents)" != 0 ] || echo "No agents. Create one with: openbot agent create <name>"
+      line=1
+      while [ "$line" -le "$(value agents)" ]; do
+        value "agent_$line"
+        line=$((line + 1))
+      done
+      ;;
+    create)
+      [ "$#" -ge 1 ] || fail "Usage: openbot agent create <name>"
+      control POST /v1/agents/create "name=$*"
+      check_answer || exit 1
+      echo "Created the agent $(value name) ($(value id)). Local scripts: $(value local_scripts)."
+      ;;
+    local-scripts)
+      [ "$#" -eq 2 ] || fail "Usage: openbot agent local-scripts <agent> on|off"
+      control POST /v1/agents/local-scripts "agent=$1" "state=$2"
+      check_answer || exit 1
+      echo "Local scripts of $(value name) ($(value id)): $(value local_scripts)."
+      ;;
+    *) fail "Usage: openbot agent list | create <name> | local-scripts <agent> on|off" ;;
+  esac
+}
+
 logs_command() {
   require_host "read the log on the host with: docker logs <container>"
   if [ "${1:-}" = -f ]; then exec journalctl --unit "$UNIT" --follow --lines 100; fi
@@ -337,6 +379,7 @@ case $command in
     show_status
     ;;
   mobile-connect) mobile_connect_command ;;
+  agent) agent_command "$@" ;;
   logs) logs_command "$@" ;;
   start | stop | restart)
     require_host "run docker $command <container> on the host"
