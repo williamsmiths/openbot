@@ -654,6 +654,9 @@ function AuthenticatedStack() {
         }}
       />
       <Stack.Screen name="server-usage/index" options={largeTitlePage} />
+      <Stack.Screen name="server-machine" options={largeTitlePage} />
+      <Stack.Screen name="github-trending" options={largeTitlePage} />
+      <Stack.Screen name="github-repo" options={largeTitlePage} />
       <Stack.Screen name="server-library" options={largeTitlePage} />
       <Stack.Screen name="server-marketplace/index" options={largeTitlePage} />
       <Stack.Screen

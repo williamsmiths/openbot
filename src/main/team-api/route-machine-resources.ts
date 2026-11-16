@@ -3,9 +3,14 @@ import {
   MACHINE_RESOURCES_CAPABILITY,
   MACHINE_RESOURCES_ROUTES,
 } from "@openbot/contracts/team-protocol/machine-resources-v1";
+import {
+  MACHINE_DETAILS_CAPABILITY,
+  MACHINE_DETAILS_ROUTES,
+  machineHistoryLimit,
+} from "@openbot/contracts/team-protocol/machine-resources-v2";
 import { sourceText } from "@openbot/i18n/source";
 import { runCauseEffect } from "../../backend/effect-boundary";
-import type { TeamApiMachine } from "./dependencies";
+import type { TeamApiMachine, TeamApiMachineDetails } from "./dependencies";
 import { HttpError } from "./http-error";
 import type { RouteOutcome, TeamApiRequestContext } from "./request-context";
 import { readJson, requireAdmin } from "./request-helpers";
@@ -14,9 +19,18 @@ import { readJson, requireAdmin } from "./request-helpers";
 export async function routeMachineResources(
   context: TeamApiRequestContext,
   machine: TeamApiMachine | undefined,
+  machineDetails?: TeamApiMachineDetails,
 ): Promise<RouteOutcome> {
   const { method, url, capabilities, member, request, json } = context;
   const path = url.pathname;
+  // `machine-resources-v2`: the live monitor. Admin-only, like the metrics.
+  if (method === "POST" && path === MACHINE_DETAILS_ROUTES.details) {
+    if (!machineDetails || !capabilities.has(MACHINE_DETAILS_CAPABILITY))
+      throw new HttpError(400, sourceText("error.team.machineResourcesUnsupported"));
+    requireAdmin(member);
+    const limit = machineHistoryLimit(await readJson(request));
+    return json(200, await runCauseEffect(machineDetails.details(limit)));
+  }
   if (
     method !== "POST" ||
     (path !== MACHINE_RESOURCES_ROUTES.metrics &&

@@ -138,6 +138,7 @@ interface HostServiceOptions {
   storage?: ForwardedApiOptions["storage"];
   libraryFolders?: ForwardedApiOptions["libraryFolders"];
   machine?: ForwardedApiOptions["machine"];
+  machineDetails?: ForwardedApiOptions["machineDetails"];
   backgroundProcesses?: ForwardedApiOptions["backgroundProcesses"];
   liveVoice?: ForwardedApiOptions["liveVoice"];
   hostedSites?: ForwardedApiOptions["hostedSites"];
@@ -504,6 +505,7 @@ export class HostService extends EventEmitter<HostEvents> {
       ...(options.storage === undefined ? {} : { storage: options.storage }),
       ...(options.libraryFolders === undefined ? {} : { libraryFolders: options.libraryFolders }),
       ...(options.machine === undefined ? {} : { machine: options.machine }),
+      ...(options.machineDetails === undefined ? {} : { machineDetails: options.machineDetails }),
       ...(options.backgroundProcesses === undefined ? {} : { backgroundProcesses: options.backgroundProcesses }),
       ...(options.liveVoice === undefined ? {} : { liveVoice: options.liveVoice }),
       ...(options.hostedSites === undefined ? {} : { hostedSites: options.hostedSites }),

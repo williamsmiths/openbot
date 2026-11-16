@@ -77,6 +77,7 @@ import { LIVE_ACTIVITY_PUSH_CODECS } from "./live-activity-push-v1";
 import { LIVE_VOICE_CODECS } from "./live-voice-v1";
 import { LOCAL_SERVERS_CODECS } from "./local-servers-v1";
 import { MACHINE_RESOURCES_CODECS } from "./machine-resources-v1";
+import { MACHINE_DETAILS_CODECS } from "./machine-resources-v2";
 import { MCP_ACCESS_CODECS } from "./mcp-access-v1";
 import { MCP_SIGN_IN_APP_CODECS } from "./mcp-sign-in-app-v1";
 import { MCP_SIGN_IN_CODECS } from "./mcp-sign-in-v1";
@@ -227,6 +228,7 @@ const CODECS: ReadonlyMap<string, OptionalRouteCodec> = new Map([
   ...STORAGE_DISK_CODECS,
   ...STORAGE_CHANNEL_CODECS,
   ...MACHINE_RESOURCES_CODECS,
+  ...MACHINE_DETAILS_CODECS,
   ...PROVIDER_USAGE_TERTIARY_CODECS,
   ...PROVIDER_ACCOUNTS_CODECS,
   ...PROVIDER_ACCOUNT_RELAY_CODECS,

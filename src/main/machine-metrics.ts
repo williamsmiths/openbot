@@ -48,8 +48,15 @@ export class MachineMetricsSampler {
   readonly #dataPath: string;
   readonly #platform: NodeJS.Platform;
   #previous: CpuSample | null = null;
+  readonly #minimumSampleMs: number;
 
-  constructor(dataPath: string, platform: NodeJS.Platform = process.platform) {
+  constructor(
+    dataPath: string,
+    platform: NodeJS.Platform = process.platform,
+    /** The shortest gap between two CPU samples; a read sooner than this waits for a new pair. */
+    minimumSampleMs = CPU_FIRST_SAMPLE_MS,
+  ) {
+    this.#minimumSampleMs = minimumSampleMs;
     this.#dataPath = dataPath;
     this.#platform = platform;
   }
@@ -74,9 +81,9 @@ export class MachineMetricsSampler {
     let previous = this.#previous;
     let current = yield* readCpu(this.#platform);
     // A first reading, a reading right after another, or a limit that changed needs a new pair.
-    if (!previous || current.at - previous.at < CPU_FIRST_SAMPLE_MS || current.cores !== previous.cores) {
+    if (!previous || current.at - previous.at < this.#minimumSampleMs || current.cores !== previous.cores) {
       previous = current;
-      yield* Effect.sleep(CPU_FIRST_SAMPLE_MS);
+      yield* Effect.sleep(this.#minimumSampleMs);
       current = yield* readCpu(this.#platform);
     }
     this.#previous = current;

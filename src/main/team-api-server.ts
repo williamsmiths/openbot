@@ -183,6 +183,7 @@ import {
   MACHINE_RESOURCES_CAPABILITY,
   type MachineAlertEvent,
 } from "@openbot/contracts/team-protocol/machine-resources-v1";
+import { MACHINE_DETAILS_CAPABILITY } from "@openbot/contracts/team-protocol/machine-resources-v2";
 import { MCP_ACCESS_CAPABILITY } from "@openbot/contracts/team-protocol/mcp-access-v1";
 import { MCP_MANY_SERVERS_CAPABILITY } from "@openbot/contracts/team-protocol/mcp-many-servers-v1";
 import { MESSAGE_PINS_CAPABILITY } from "@openbot/contracts/team-protocol/message-pins-v1";
@@ -1166,7 +1167,9 @@ export class TeamApiServer {
         )) === "handled"
       )
         return;
-      if ((await routeMachineResources(context, this.#options.machine)) === "handled") return;
+      if ((await routeMachineResources(context, this.#options.machine, this.#options.machineDetails)) === "handled")
+        return;
+      if ((await routeKongGithub(context, this.#options.kongGithub)) === "handled") return;
       if ((await routeBackgroundProcesses(context, this.#options.backgroundProcesses, hidden)) === "handled") return;
       if ((await routeHostedSites(context, this.#options.hostedSites)) === "handled") return;
       if ((await routeAgentAdmin(context, this.#options.admin, hidden)) === "handled") return;
@@ -2544,6 +2547,7 @@ export class TeamApiServer {
           if (capability === STORAGE_CHANNEL_CAPABILITY)
             return this.#options.storage !== undefined && this.#options.channels !== undefined;
           if (capability === MACHINE_RESOURCES_CAPABILITY) return this.#options.machine !== undefined;
+          if (capability === MACHINE_DETAILS_CAPABILITY) return this.#options.machineDetails !== undefined;
           if (capability === BACKGROUND_PROCESSES_CAPABILITY) return this.#options.backgroundProcesses !== undefined;
           // The routes use the agent operations, which every host has. A channel owner also needs `channel-chats-v1`.
           if (capability === ROUTINES_ONCE_CAPABILITY) return true;

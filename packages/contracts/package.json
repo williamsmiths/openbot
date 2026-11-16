@@ -140,6 +140,7 @@
     "./team-protocol/storage-channel-v1": "./src/team-protocol/storage-channel-v1.ts",
     "./team-protocol/storage-disk-v1": "./src/team-protocol/storage-disk-v1.ts",
     "./team-protocol/machine-resources-v1": "./src/team-protocol/machine-resources-v1.ts",
+    "./team-protocol/machine-resources-v2": "./src/team-protocol/machine-resources-v2.ts",
     "./team-protocol/provider-usage-tertiary-v1": "./src/team-protocol/provider-usage-tertiary-v1.ts",
     "./team-protocol/agent-admin-v1": "./src/team-protocol/agent-admin-v1.ts",
     "./team-protocol/agent-memories-v1": "./src/team-protocol/agent-memories-v1.ts",

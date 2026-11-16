@@ -252,6 +252,12 @@ import {
   type MachineAlertEvent,
   machineAlertEvent,
 } from "@openbot/contracts/team-protocol/machine-resources-v1";
+import {
+  decodeMachineDetails,
+  MACHINE_DETAILS_CAPABILITY,
+  MACHINE_DETAILS_ROUTES,
+  MACHINE_HISTORY_LIMIT,
+} from "@openbot/contracts/team-protocol/machine-resources-v2";
 import { MEMORY_REVIEW_CAPABILITY, MEMORY_REVIEW_ROUTES } from "@openbot/contracts/team-protocol/memory-review-v1";
 import { MESSAGE_DELETE_CAPABILITY, MESSAGE_DELETE_ROUTES } from "@openbot/contracts/team-protocol/message-delete-v1";
 import { MESSAGE_PINS_CAPABILITY, MESSAGE_PINS_ROUTES } from "@openbot/contracts/team-protocol/message-pins-v1";
@@ -387,6 +393,7 @@ import {
 } from "../src/main/instance-transfer-manifest";
 import { LibraryFoldersService, type LibraryFoldersSources } from "../src/main/library-folders-service";
 import { MachineAlertMonitor, MachineAlertPreferenceStore } from "../src/main/machine-alerts";
+import { MachineDetailsSampler } from "../src/main/machine-details";
 import { MemoryReviewPreferenceStore } from "../src/main/memory-review-preference-store";
 import type { PasswordManagerDriver } from "../src/main/password-managers/driver";
 import { PasswordManagersService } from "../src/main/password-managers/password-managers-service";
@@ -1981,6 +1988,8 @@ const machine = new MachineAlertMonitor({
   members: () => store.listMembers(),
   onError: (message) => logged.push(message),
 });
+// The real sampler over this machine: it reads the OS, the CPU, `nvidia-smi` (when present) and /proc.
+const machineDetails = new MachineDetailsSampler(root);
 const database = new OpenBotDatabase(join(root, "user-data"));
 let server: TeamApiServer | null = null;
 let channelHost: TeamApiServer | null = null;
@@ -2374,6 +2383,7 @@ try {
     instanceTransfer: emptyInstanceTransferService(transferUploads, [transferAgent]),
     browserProfiles,
     machine,
+    machineDetails,
     // The host reads its own Hermes folder: one profile under a token.
     hermesImport: {
       read: () =>
@@ -6487,6 +6497,45 @@ try {
         machine.pending(bobId).length === 0,
       [first, delivered],
     );
+
+    // ---- Live machine monitor (machine-resources-v2) ----
+    const detailsCapabilities = [MACHINE_DETAILS_CAPABILITY];
+    const detailsWithout = await call("POST", MACHINE_DETAILS_ROUTES.details, { token: adaToken, json: {} });
+    const detailsMember = await call("POST", MACHINE_DETAILS_ROUTES.details, {
+      token: bobToken,
+      json: {},
+      capabilities: detailsCapabilities,
+    });
+    check(
+      "the machine details without the capability get 400, and a member gets 403",
+      errorIs(detailsWithout, 400, sourceText("error.team.machineResourcesUnsupported")) &&
+        detailsMember.status === 403,
+      [summary(detailsWithout), summary(detailsMember)],
+    );
+    const detailsRead = await call("POST", MACHINE_DETAILS_ROUTES.details, {
+      token: adaToken,
+      json: {},
+      capabilities: detailsCapabilities,
+    });
+    let decodedDetails: ReturnType<typeof decodeMachineDetails> | null = null;
+    try {
+      decodedDetails = decodeMachineDetails(detailsRead.body);
+    } catch {
+      decodedDetails = null;
+    }
+    check(
+      "an admin reads the live machine monitor: cores, uptime, load and a first reading in the history",
+      detailsRead.status === 200 &&
+        decodedDetails !== null &&
+        decodedDetails.cpuCores > 0 &&
+        decodedDetails.uptimeSeconds > 0 &&
+        decodedDetails.sampleIntervalMs === 500 &&
+        decodedDetails.history.length >= 1 &&
+        decodedDetails.history.length <= MACHINE_HISTORY_LIMIT,
+      summary(detailsRead),
+    );
+    machineDetails.close();
+
   }
 
   // ---- Keys of the key-only providers (providers-v8) ----

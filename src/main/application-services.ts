@@ -294,6 +294,7 @@ import { createLoginItem } from "./login-item";
 import { LogoColorService } from "./logo-color-service";
 import type { MacHapticFeedback } from "./mac-haptic-feedback";
 import { MACHINE_ALERTS_PREFERENCE_FILE, MachineAlertMonitor, MachineAlertPreferenceStore } from "./machine-alerts";
+import { MachineDetailsSampler } from "./machine-details";
 import { MachineMetricsSampler } from "./machine-metrics";
 import {
   computerUseCoveringWindowIds,
@@ -2779,6 +2780,9 @@ export async function createApplicationServices({
     onError: (message, error) => logger.warn(message, toLogValue(error)),
   });
   teardown.push(TEARDOWN_ORDER.machineAlerts, "the machine alert check", () => machineAlerts.close());
+  // Samples only while an owner or admin watches (`machine-resources-v2`).
+  const machineDetails = new MachineDetailsSampler(storageSources.roots.data);
+  teardown.push(TEARDOWN_ORDER.machineAlerts, "the machine monitor", () => machineDetails.close());
   ingressHostId = () => teamStore.getIdentity()?.serverId ?? null;
   signalIngress.reconnect();
   const webhookRelay = new WebhookRelay({
@@ -3179,6 +3183,8 @@ export async function createApplicationServices({
     libraryFolders: libraryFoldersService,
     // Present, so the host advertises `machine-resources-v1`. The routes are admin-only.
     machine: machineAlerts,
+    // Present, so the host advertises `machine-resources-v2`. The route is admin-only.
+    machineDetails,
     // Present, so the host advertises `background-processes-v1`. The routes are admin-only. A Windows
     // host answers a null list, as Settings > Agents does there.
     backgroundProcesses: {

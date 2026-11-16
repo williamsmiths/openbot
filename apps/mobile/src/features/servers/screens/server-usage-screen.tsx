@@ -10,6 +10,7 @@ import { UsageLoading } from "@/features/agents/components/usage-motion";
 import { lastUsageDays, UsageRangePicker } from "@/features/agents/components/usage-range-picker";
 import { mobileAnalytics } from "@/features/analytics/mobile-analytics";
 import { useQueryScope } from "@/features/auth/context/mobile-session-context";
+import { MachineMonitorBody } from "@/features/servers/components/machine-monitor/machine-monitor-body";
 import { MachineUsageSummary } from "@/features/servers/components/machine-usage-summary";
 import { PlanLimitsSummary } from "@/features/servers/components/plan-limits-summary";
 import { SettingsNote } from "@/features/settings/components/settings-content";
@@ -25,7 +26,7 @@ export function ServerUsageScreen() {
   const { t } = useText();
   const { serverId } = useLocalSearchParams<{ serverId: string }>();
   const queryScope = useQueryScope();
-  const { servers, agents, loadHostAnalytics } = useMobileWorkspace();
+  const { servers, agents, loadHostAnalytics, canReadMachineDetails } = useMobileWorkspace();
   const server = servers.find((item) => item.id === serverId);
   const online = server?.state === "online";
   const serverAgents = agents.filter((agent) => agent.serverId === serverId);
@@ -73,7 +74,12 @@ export function ServerUsageScreen() {
     <LargeTitleScrollView title={title} caption={server.name} contentContainerClassName="px-4 pt-3">
       <View className="gap-4">
         {/* Above the range: the limits and the machine use are now, not of a range. */}
-        <MachineUsageSummary serverId={server.id} />
+        {/* The live machine monitor where the host has it; an older host keeps the summary of its use. */}
+        {canReadMachineDetails(server.id) ? (
+          <MachineMonitorBody serverId={server.id} showSubtitle />
+        ) : (
+          <MachineUsageSummary serverId={server.id} />
+        )}
         <PlanLimitsSummary serverId={server.id} />
         <UsageRangePicker range={range} onChange={setRange} />
         {!online ? (

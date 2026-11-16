@@ -202,6 +202,7 @@ export const queryKeys = {
   ],
   /** The plan limits of a server's providers. The host's `usage-changed` event writes the providers' own sign-ins. */
   planLimits: (scope: QueryScope, serverId: string) => ["plan-limits", ...scope, serverId],
+  machineDetails: (scope: QueryScope, serverId: string) => ["machine-details", ...scope, serverId],
   machineMetrics: (scope: QueryScope, serverId: string) => ["machine-metrics", ...scope, serverId],
   serverUsage: (scope: QueryScope, serverId: string, range: unknown) => ["server-usage", ...scope, serverId, range],
   /** The past year of the paired desktop, which the Profile page summarizes as the desktop Profile tab does. */

@@ -49,6 +49,7 @@ import { LIVE_ACTIVITY_PUSH_CAPABILITY } from "@openbot/contracts/team-protocol/
 import { LIVE_VOICE_EVENT } from "@openbot/contracts/team-protocol/live-voice-v1";
 import { LOCAL_SERVERS_CAPABILITY } from "@openbot/contracts/team-protocol/local-servers-v1";
 import { MACHINE_RESOURCES_CAPABILITY } from "@openbot/contracts/team-protocol/machine-resources-v1";
+import { MACHINE_DETAILS_CAPABILITY } from "@openbot/contracts/team-protocol/machine-resources-v2";
 import { ONEPASSWORD_CONNECTOR_CAPABILITY } from "@openbot/contracts/team-protocol/onepassword-connector-v1";
 import { PASSWORD_MANAGERS_CAPABILITY } from "@openbot/contracts/team-protocol/password-managers-v1";
 import { PROVIDER_ACCOUNTS_CAPABILITY } from "@openbot/contracts/team-protocol/provider-accounts-v1";
@@ -2487,6 +2488,8 @@ export function MobileWorkspaceProvider({ children }: PropsWithChildren) {
         administers(serverId, LOCAL_SERVERS_CAPABILITY),
       canManageServerTimezone: (serverId) => administers(serverId, HOST_TIMEZONE_CAPABILITY),
       canReadMachineMetrics: (serverId) => administers(serverId, MACHINE_RESOURCES_CAPABILITY),
+      canReadMachineDetails: (serverId) => administers(serverId, MACHINE_DETAILS_CAPABILITY),
+      canUseKongGithub: (serverId) => administers(serverId, KONG_GITHUB_CAPABILITY),
       canManageAgentMemoryLimit: (serverId) => administers(serverId, AGENT_MEMORY_LIMIT_CAPABILITY),
       canManageServerPersonality: (serverId) => administers(serverId, HOST_PERSONALITY_CAPABILITY),
       servesServerPersonality: (serverId) => {

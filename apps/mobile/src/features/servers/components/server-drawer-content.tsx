@@ -69,6 +69,7 @@ import { isAndroid, longPressDelay } from "@/shared/lib/platform";
 import { currentText, useText } from "@/shared/lib/text";
 import { typeScale } from "@/shared/lib/type-scale";
 import { DrawerHeaderBlur } from "./drawer-header-blur";
+import { DrawerMachineCard } from "./machine-monitor/drawer-machine-card";
 import { ServerAvatar } from "./server-avatar";
 import { ServerDrawerIconButton } from "./server-drawer-icon-button";
 import { SERVER_ROW_HEIGHT, SortableServerList } from "./sortable-server-list";
@@ -187,12 +188,21 @@ export const ServerDrawerContent = memo(function ServerDrawerContent({
   // The iOS menu host sizes to its content, so a row in a menu gets the slot width explicitly.
   const [rowWidth, setRowWidth] = useState<number>();
   const activeServer = servers.find((server) => server.id === activeServerId);
+  // A tap on the open server opens the live monitor of its machine, for an owner or admin of a host with
+  // `machine-resources-v2`. A tap on another server opens that server.
+  const monitorServerId = useMobileWorkspaceSelector((current) =>
+    activeServerId && current.canReadMachineDetails(activeServerId) ? activeServerId : null,
+  );
   const serverIds = servers.map((server) => server.id);
   const canReorder = serverIds.length > 1;
   // Without an open server the list is the only content, so it stays open.
   // kongCowork fork: a build that names its default server (the iOS 15 build) keeps the list open, so
   // every server can be picked without the collapse, which does not open on iOS 15.
-  const showsList = KEEP_SERVER_LIST_OPEN || listOpen || editing || !activeServer;
+  // With a single server the list repeats the header, so it stays closed and the header opens the
+  // machine monitor of that server instead.
+  const singleServer = servers.length <= 1;
+  const showsList = (KEEP_SERVER_LIST_OPEN && !singleServer) || listOpen || editing || !activeServer;
+  const headerOpensMonitor = singleServer && monitorServerId !== null;
   const memberCount = useDrawerMemberCount(activeServer?.id ?? "");
   const hostedServerIds = useHostedServerAvailability((state) =>
     state.userId === session.user.id ? state.serverIds : null,
@@ -331,7 +341,16 @@ export const ServerDrawerContent = memo(function ServerDrawerContent({
           if (action === "moveDown") move(serverItem.id, listIndex + 1);
         }}
         className={`flex-row items-center gap-3 rounded-2xl px-2.5 ${selected ? "bg-control" : ""}`}
-        onPress={editing ? undefined : () => onSelectServer(serverItem.id)}
+        onPress={
+          editing
+            ? undefined
+            : serverItem.id === monitorServerId
+              ? () => {
+                  void haptics.selection();
+                  onNavigate({ pathname: "/server-machine", params: { serverId: serverItem.id } });
+                }
+              : () => onSelectServer(serverItem.id)
+        }
         // The native context menu does not cancel this touch. Without a long-press handler, lifting the
         // finger after the menu opens counts as a tap and closes the drawer under the open menu.
         delayLongPress={longPressDelay}
@@ -443,7 +462,9 @@ export const ServerDrawerContent = memo(function ServerDrawerContent({
                 style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
                 onPress={() => {
                   void haptics.selection();
-                  setListOpen((current) => !current);
+                  if (headerOpensMonitor)
+                    onNavigate({ pathname: "/server-machine", params: { serverId: activeServer.id } });
+                  else setListOpen((current) => !current);
                 }}
               >
                 <ServerAvatar server={activeServer} size={HEADER_AVATAR_SIZE} />
@@ -452,17 +473,19 @@ export const ServerDrawerContent = memo(function ServerDrawerContent({
                     <Typography.Heading className="font-bold shrink" numberOfLines={1} style={typeScale.drawerTitle}>
                       {activeServer.name}
                     </Typography.Heading>
-                    <Animated.View
-                      style={{
-                        marginTop: 3,
-                        transform: [{ rotate: showsList ? "180deg" : "0deg" }],
-                        transitionProperty: "transform",
-                        transitionDuration: reducedMotion ? 0 : 240,
-                        transitionTimingFunction: cubicBezier(0.23, 1, 0.32, 1),
-                      }}
-                    >
-                      <ChevronDown color={mutedColor} size={20} strokeWidth={2.4} />
-                    </Animated.View>
+                    {singleServer ? null : (
+                      <Animated.View
+                        style={{
+                          marginTop: 3,
+                          transform: [{ rotate: showsList ? "180deg" : "0deg" }],
+                          transitionProperty: "transform",
+                          transitionDuration: reducedMotion ? 0 : 240,
+                          transitionTimingFunction: cubicBezier(0.23, 1, 0.32, 1),
+                        }}
+                      >
+                        <ChevronDown color={mutedColor} size={20} strokeWidth={2.4} />
+                      </Animated.View>
+                    )}
                   </View>
                   {subtitle ? (
                     <Typography.Paragraph className="text-text-secondary" numberOfLines={1} style={typeScale.caption}>
@@ -678,6 +701,8 @@ function DrawerServerTools({
 
   return (
     <View className="pt-1.5" onLayout={(event) => setRowWidth(event.nativeEvent.layout.width)}>
+      {/* The live machine, while the drawer is open. A host without `machine-resources-v2` shows nothing. */}
+      {editing ? null : <DrawerMachineCard serverId={serverId} open={open} onNavigate={onNavigate} />}
       {editing ? (
         <>
           <SortableServerList

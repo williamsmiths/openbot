@@ -63,6 +63,7 @@ import {
 } from "@/features/search/components/home-search";
 import { setHomeSearchUnavailable } from "@/features/search/model/home-search-request";
 import { useAppDrawer } from "@/features/servers/components/app-drawer-shell";
+import { MachineHeaderButton } from "@/features/servers/components/machine-monitor/machine-header-button";
 import { PlanLimitsHeaderButton } from "@/features/servers/components/plan-limits-header-button";
 import { usePlanLimits } from "@/features/servers/model/plan-limits";
 import { ConnectionHeaderStatus } from "@/features/workspace/components/connection-header-status";
@@ -91,6 +92,7 @@ import { LargeTitle, LargeTitleBar, useLargeTitleScroll } from "@/shared/compone
 import { type MenuAction, MenuView } from "@/shared/components/menu-view";
 import { useChromeGlass } from "@/shared/lib/chrome-glass";
 import { haptics } from "@/shared/lib/haptics";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 import { BAR_BUTTON_SIZE, NATIVE_BAR_HEIGHT, useBarTop } from "@/shared/lib/native-bar";
 import { isAndroid, isIOS } from "@/shared/lib/platform";
 import { currentText, useText } from "@/shared/lib/text";
@@ -382,6 +384,8 @@ export function ConnectedScreen({ variant = "screen" }: { variant?: "screen" | "
   const hasSelectedServer = servers.some((server) => server.id === activeServer.id);
   const planLimits = usePlanLimits(activeServer.id);
   const showsPlanLimits = hasSelectedServer && planLimits.rows.length > 0;
+  const machineShown = useMobileWorkspaceSelector((current) => current.canReadMachineDetails(activeServer.id));
+  const showsMachine = KONG_LITE && hasSelectedServer && machineShown;
   // A server that the phone shows from its cache has its list at once, while it connects.
   const showLoader =
     (serverDirectoryState === "loading" && servers.length === 0) ||
@@ -755,7 +759,12 @@ export function ConnectedScreen({ variant = "screen" }: { variant?: "screen" | "
   );
   const headerTrailing = (
     <View className="shrink-0 flex-row items-center gap-1">
-      {showsPlanLimits ? (
+      {/* The light build shows the live machine of the server in place of the plan limits. */}
+      {showsMachine ? (
+        <HeaderGlass glass={buttonGlass} capsule>
+          <MachineHeaderButton serverId={activeServer.id} />
+        </HeaderGlass>
+      ) : showsPlanLimits ? (
         isAndroid ? (
           <PlanLimitsHeaderButton
             serverId={activeServer.id}
@@ -1062,7 +1071,11 @@ export function ConnectedScreen({ variant = "screen" }: { variant?: "screen" | "
             </Stack.Toolbar.View>
           </Stack.Toolbar>
           <Stack.Toolbar placement="right">
-            <Stack.Toolbar.View hidden={search.open || !showsPlanLimits}>
+            {/* The light build shows the live machine of the server in place of the plan limits. */}
+            <Stack.Toolbar.View hidden={search.open || !showsMachine}>
+              <MachineHeaderButton serverId={activeServer.id} />
+            </Stack.Toolbar.View>
+            <Stack.Toolbar.View hidden={search.open || showsMachine || !showsPlanLimits}>
               <PlanLimitsHeaderButton
                 serverId={activeServer.id}
                 rows={planLimits.rows}

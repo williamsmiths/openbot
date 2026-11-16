@@ -56,7 +56,7 @@ const TONE_TEXT = {
  */
 export function MachineUsageSummary({ serverId }: { serverId: string }) {
   const { t } = useText();
-  const { canReadServerStorage } = useMobileWorkspace();
+  const { canReadServerStorage, canReadMachineDetails } = useMobileWorkspace();
   const { available, query } = useMachineMetrics(serverId);
   const metrics = query.data;
   if (!available || !metrics || query.isError) return null;
@@ -67,6 +67,13 @@ export function MachineUsageSummary({ serverId }: { serverId: string }) {
         router.push({ pathname: "/server-settings/storage", params: { serverId } });
       }
     : undefined;
+  // CPU and memory open the live monitor when the host serves `machine-resources-v2`.
+  const openMonitor = canReadMachineDetails(serverId)
+    ? () => {
+        void haptics.impact("soft");
+        router.push({ pathname: "/server-machine", params: { serverId } });
+      }
+    : undefined;
   return (
     <SettingsSection title={t("mobile.server.machine.title")}>
       <View className="flex-row px-2 py-3">
@@ -75,7 +82,7 @@ export function MachineUsageSummary({ serverId }: { serverId: string }) {
             key={metric}
             metrics={metrics}
             metric={metric}
-            onPress={metric === "disk" ? openStorage : undefined}
+            onPress={metric === "disk" ? openStorage : openMonitor}
           />
         ))}
       </View>

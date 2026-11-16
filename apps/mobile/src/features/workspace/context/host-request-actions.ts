@@ -130,6 +130,11 @@ import {
   MACHINE_RESOURCES_CAPABILITY,
   MACHINE_RESOURCES_ROUTES,
 } from "@openbot/contracts/team-protocol/machine-resources-v1";
+import {
+  decodeMachineDetails,
+  MACHINE_DETAILS_CAPABILITY,
+  MACHINE_DETAILS_ROUTES,
+} from "@openbot/contracts/team-protocol/machine-resources-v2";
 import { MCP_SIGN_IN_CAPABILITY } from "@openbot/contracts/team-protocol/mcp-sign-in-v1";
 import { MESSAGE_DELETE_CAPABILITY, MESSAGE_DELETE_ROUTES } from "@openbot/contracts/team-protocol/message-delete-v1";
 import { ONEPASSWORD_CONNECTOR_CAPABILITY } from "@openbot/contracts/team-protocol/onepassword-connector-v1";
@@ -387,6 +392,11 @@ type HostRequestActions = Pick<
   | "loadAgentStorage"
   | "loadServerStorage"
   | "loadMachineMetrics"
+  | "loadMachineDetails"
+  | "loadKongTrend"
+  | "loadKongAnalyses"
+  | "loadKongAnalysis"
+  | "askKongRepo"
   | "clearServerStorage"
   | "loadAgentAdminSettings"
   | "updateAgentAdminSettings"
@@ -1197,6 +1207,28 @@ export function createHostRequestActions({
     loadMachineMetrics: async (serverId) => {
       requireCapability(capabilities, serverId, MACHINE_RESOURCES_CAPABILITY, "mobile.server.machine.unsupported");
       return request("POST", MACHINE_RESOURCES_ROUTES.metrics, decodeMachineMetrics, {}, serverId);
+    },
+    loadMachineDetails: async (serverId, historyLimit) => {
+      requireCapability(capabilities, serverId, MACHINE_DETAILS_CAPABILITY, "mobile.server.machine.unsupported");
+      // A poll twice a second asks only for the readings that the charts draw.
+      const body: TeamProtocolV2Json = historyLimit === undefined ? {} : { historyLimit };
+      return request("POST", MACHINE_DETAILS_ROUTES.details, decodeMachineDetails, body, serverId);
+    },
+    loadKongTrend: async (serverId, input) => {
+      requireCapability(capabilities, serverId, KONG_GITHUB_CAPABILITY, "mobile.server.trending.unsupported");
+      return request("POST", KONG_GITHUB_ROUTES.discover, decodeKongTrendList, input, serverId);
+    },
+    loadKongAnalyses: async (serverId) => {
+      requireCapability(capabilities, serverId, KONG_GITHUB_CAPABILITY, "mobile.server.trending.unsupported");
+      return request("POST", KONG_GITHUB_ROUTES.analyses, decodeKongAnalysisRows, {}, serverId);
+    },
+    loadKongAnalysis: async (serverId, input) => {
+      requireCapability(capabilities, serverId, KONG_GITHUB_CAPABILITY, "mobile.server.trending.unsupported");
+      return request("POST", KONG_GITHUB_ROUTES.analysis, decodeKongRepoAnalysis, input, serverId);
+    },
+    askKongRepo: async (serverId, input) => {
+      requireCapability(capabilities, serverId, KONG_GITHUB_CAPABILITY, "mobile.server.trending.unsupported");
+      return request("POST", KONG_GITHUB_ROUTES.ask, decodeKongRepoAnalysis, input, serverId);
     },
     clearServerStorage: async (category, serverId) => {
       requireCapability(capabilities, serverId, STORAGE_CAPABILITY, "mobile.workspace.error.filesUnsupported");

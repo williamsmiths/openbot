@@ -83,6 +83,7 @@ export { default as Hand } from "lucide-solid/icons/hand";
 export { default as HardDrive } from "lucide-solid/icons/hard-drive";
 export { default as Hash } from "lucide-solid/icons/hash";
 export { default as Heart } from "lucide-solid/icons/heart";
+export { default as HeartPulse } from "lucide-solid/icons/heart-pulse";
 export { default as Highlighter } from "lucide-solid/icons/highlighter";
 export { default as Hourglass } from "lucide-solid/icons/hourglass";
 export { default as Image } from "lucide-solid/icons/image";

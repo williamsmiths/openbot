@@ -22,6 +22,7 @@ import type { HostEventsService } from "../host-events-service";
 import type { HostReleaseService } from "../host-release-service";
 import type { HostService } from "../host-service";
 import type { MachineAlertMonitor } from "../machine-alerts";
+import type { MachineDetailsSampler } from "../machine-details";
 import type { MemoryReviewPreferenceStore } from "../memory-review-preference-store";
 import type { ModelVisibility } from "../model-visibility";
 import type { PreferenceFileFailure } from "../preference-file";
@@ -319,6 +320,8 @@ export type TeamApiMachine = Pick<
   MachineAlertMonitor,
   "metrics" | "alerts" | "setAlerts" | "canBeResponsible" | "pending" | "subscribe"
 >;
+/** `machine-resources-v2`: the live machine monitor. The route is admin-only. */
+export type TeamApiMachineDetails = Pick<MachineDetailsSampler, "details">;
 /**
  * `background-processes-v1`: the programs that the host's agents left running. The routes are
  * admin-only. The list redacts each command line, as Settings > Agents on this computer does.
@@ -737,6 +740,7 @@ export interface TeamApiOptions {
   storage?: TeamApiStorage;
   libraryFolders?: TeamApiLibraryFolders;
   machine?: TeamApiMachine;
+  machineDetails?: TeamApiMachineDetails;
   backgroundProcesses?: TeamApiBackgroundProcesses;
   liveVoice?: TeamApiLiveVoice;
   hostedSites?: TeamApiHostedSites;

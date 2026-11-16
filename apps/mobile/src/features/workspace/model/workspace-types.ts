@@ -180,6 +180,7 @@ import type {
   WebhookSecret,
 } from "@openbot/contracts/ipc-events";
 import type { LiveVoiceSessionResponse, LiveVoiceStartRequest } from "@openbot/contracts/team-protocol/live-voice-v1";
+import type { MachineDetails } from "@openbot/contracts/team-protocol/machine-resources-v2";
 import type { QueueEditRequest } from "@openbot/contracts/team-protocol/queue-edit-v1";
 import type { RemoteConnectionFailure, RemoteRecoveryStatus, RemoteTeamDirectoryClient } from "@openbot/team-client";
 import type { PlanLimits } from "@openbot/team-client/plan-limits";
@@ -815,6 +816,27 @@ export interface MobileWorkspaceContextValue {
   canReadMachineMetrics: (serverId: string) => boolean;
   /** The disk, memory and CPU use of the machine that runs the host. Owners and admins only. */
   loadMachineMetrics: (serverId: string) => Promise<MachineMetrics>;
+  /** An owner or admin of an online host that serves `machine-resources-v2`. The host checks the role again. */
+  canReadMachineDetails: (serverId: string) => boolean;
+  /** The live monitor of the machine: system, load, GPUs, network and the last minutes. Owners and admins only. */
+  /** `historyLimit`: the newest readings to send; the host sends all it keeps without it. */
+  loadMachineDetails: (serverId: string, historyLimit?: number) => Promise<MachineDetails>;
+  /** An owner or admin of an online host that serves `kong-github-v1` (the KongCowork companion). */
+  canUseKongGithub: (serverId: string) => boolean;
+  /** A page of GitHub Trending or of the new repositories, with the companion's Vietnamese summaries. */
+  loadKongTrend: (
+    serverId: string,
+    input: { kind: KongTrendKind; since: KongTrendSince; lang: string; page: number },
+  ) => Promise<KongTrendList>;
+  /** The latest AI analyses of the companion, newest first. */
+  loadKongAnalyses: (serverId: string) => Promise<KongAnalysisRow[]>;
+  /** The analysis of one repository. `start` starts it, again with `force`. */
+  loadKongAnalysis: (
+    serverId: string,
+    input: { repo: string; start?: boolean; force?: boolean },
+  ) => Promise<KongRepoAnalysis>;
+  /** Asks a question about an analysed repository. */
+  askKongRepo: (serverId: string, input: { repo: string; question: string }) => Promise<KongRepoAnalysis>;
   /** True when the host advertises `remote-desktop`. The host decides which members it lets in. */
   canControlComputer: (serverId: string) => boolean;
   /** The connected peer's path for the remote desktop viewer, or null while the server is not connected. */
@@ -1181,6 +1203,8 @@ type MobileWorkspaceStateKey =
   | "localServerKind"
   | "canManageServerTimezone"
   | "canReadMachineMetrics"
+  | "canReadMachineDetails"
+  | "canUseKongGithub"
   | "canManageAgentMemoryLimit"
   | "canManageServerPersonality"
   | "servesServerPersonality"
