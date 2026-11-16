@@ -2,6 +2,7 @@ import {
   DEFAULT_DYNAMIC_ISLAND_PREFERENCE,
   DYNAMIC_ISLAND_SIZE_LIMITS,
   type DynamicIslandPreference,
+  isDynamicIslandGlow,
   isDynamicIslandServerVisibility,
   isDynamicIslandSizePercent,
 } from "@openbot/contracts/ipc";
@@ -51,6 +52,8 @@ export const readDynamicIslandPreference = Effect.fn("readDynamicIslandPreferenc
         ...(isDynamicIslandServerVisibility(parsed.serverVisibility) && isBoolean(parsed.newServersVisible)
           ? { serverVisibility: { ...parsed.serverVisibility }, newServersVisible: parsed.newServersVisible }
           : { serverVisibility: {}, newServersVisible: defaults.newServersVisible }),
+        // Optional for the same reason; a missing or unknown glow reads as the default.
+        glow: isDynamicIslandGlow(parsed.glow) ? parsed.glow : defaults.glow,
       };
     }).pipe(
       Effect.catch((failure) => {

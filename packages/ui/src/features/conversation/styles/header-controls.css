@@ -63,8 +63,8 @@
 .provider-model-trigger {
   display: flex;
   width: max-content;
-  /* Room for the effort after the model name. The model name shortens first. */
-  max-width: 240px;
+  /* Room for the effort (its brain and name) after the model name. The model name shortens first. */
+  max-width: 272px;
   height: 28px;
   align-items: center;
   gap: 6px;
@@ -174,6 +174,33 @@
   .conversation-header .provider-model-trigger :is(.provider-model-trigger-name, .provider-model-trigger-effort) {
     transition: none;
   }
+}
+
+/* The chosen effort, in the colour of its place on the effort slider, with the slider's brain. */
+.provider-model-trigger-level {
+  gap: var(--openbot-space-1);
+  color: var(--effort-color);
+  font-weight: 600;
+}
+
+.provider-model-trigger-level::before {
+  color: var(--openbot-text-muted);
+  font-weight: 400;
+}
+
+.provider-model-trigger-brain {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 3px color-mix(in oklch, var(--effort-color) 80%, transparent));
+}
+
+/* The trigger glows a little in the effort colour while the pointer is on it or the picker is open. */
+.provider-model-trigger:has(.provider-model-trigger-level):is(:hover, [aria-expanded="true"]) {
+  border-color: color-mix(in oklch, var(--openbot-effort-low) 45%, var(--openbot-border-strong));
+  box-shadow:
+    inset 0 1px var(--openbot-hover),
+    0 0 12px color-mix(in oklch, var(--openbot-effort-low) 30%, transparent);
 }
 
 /* The Fast chip gets its own room, so the model name keeps the width it has without it. A form field
@@ -323,22 +350,27 @@
   transition: transform var(--openbot-duration-normal) ease;
 }
 
-.provider-model-trigger[aria-expanded="true"] .provider-model-chevron {
+.provider-model-trigger[aria-expanded="true"] .provider-model-chevron,
+.provider-model-chip[aria-expanded="true"] .provider-model-chevron {
   transform: rotate(180deg);
 }
 
 .provider-model-popover {
   --provider-model-rail-bg: var(--openbot-bg-sheet-inset);
+  /* A glowing edge from the effort slider's low colour to its high colour, as in the design. */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--ui-menu-bg), var(--ui-menu-bg)) padding-box,
+    var(--openbot-glow-edge) border-box;
+  box-shadow: var(--openbot-glow-shadow), var(--ui-menu-panel-shadow);
   position: relative;
   z-index: var(--openbot-layer-dropdown);
-  width: min(360px, calc(100vw - 24px));
-  min-height: 226px;
-  overflow: hidden;
-  border: 0;
+  width: min(392px, calc(100vw - 24px));
+  min-height: 0;
+  /* Visible, so the model dropdown can float past the frame's edge; the rail rounds its own corners. */
+  overflow: visible;
   border-radius: var(--ui-menu-radius);
-  background: var(--ui-menu-bg);
   color: var(--openbot-text-primary);
-  box-shadow: var(--ui-menu-panel-shadow);
   transform-origin: var(--kb-popover-content-transform-origin);
   animation: ui-menu-in var(--ui-menu-duration) var(--ui-menu-ease) both;
 }
@@ -356,6 +388,8 @@
 }
 
 .provider-model-rail {
+  border-start-start-radius: var(--ui-menu-radius);
+  border-end-start-radius: var(--ui-menu-radius);
   display: flex;
   width: 52px;
   flex: 0 0 52px;
@@ -520,6 +554,9 @@
 }
 
 .provider-model-panel {
+  /* The popover does not clip (the model dropdown floats past it), so the panel rounds its corners. */
+  border-start-end-radius: var(--ui-menu-radius);
+  border-end-end-radius: var(--ui-menu-radius);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -637,6 +674,71 @@
   justify-self: stretch;
 }
 
+/* The model chip: the chosen model, and the list folds under it as a dropdown. */
+.provider-model-chip {
+  display: flex;
+  width: 100%;
+  min-height: var(--openbot-control-lg);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--openbot-space-2);
+  margin-bottom: var(--openbot-space-1-5);
+  border: 1px solid var(--openbot-border-strong);
+  border-radius: var(--openbot-radius-lg);
+  background: var(--openbot-bg-control);
+  padding-inline: var(--openbot-space-3);
+  color: var(--openbot-text-primary);
+  font-size: var(--openbot-text-lg);
+  font-weight: 600;
+}
+
+.provider-model-chip:hover {
+  background: var(--openbot-bg-control-hover);
+}
+
+/* The chip and its dropdown. The list floats over the effort row, so the panel keeps its size. */
+.provider-model-select {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.provider-model-dropdown {
+  position: absolute;
+  top: calc(100% - var(--openbot-space-1));
+  inset-inline: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--openbot-border-strong);
+  border-radius: var(--openbot-radius-lg);
+  background: var(--ui-menu-bg);
+  padding: var(--ui-menu-padding);
+  box-shadow: var(--ui-menu-panel-shadow);
+  animation: ui-menu-in var(--ui-menu-duration) var(--ui-menu-ease) both;
+}
+
+/* The chip of a tab that does not hold the agent's model names the model it starts on. */
+.provider-model-chip-note {
+  flex-shrink: 0;
+  border-radius: var(--openbot-radius-pill);
+  background: var(--ui-menu-item-hover);
+  padding: 0 var(--openbot-space-1-5);
+  color: var(--openbot-text-muted);
+  font-size: var(--openbot-text-sm);
+  font-weight: 500;
+}
+
+.provider-model-chip-name {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .provider-model-list {
   display: grid;
   /* A long model name must not widen its row past the panel. */
@@ -663,7 +765,8 @@
 }
 
 /* The effort and auto-approve rows are one group under one separator. */
-.provider-model-effort + .provider-model-effort {
+.provider-model-effort + .provider-model-effort,
+.provider-model-effort-slider + .provider-model-effort {
   margin-top: 0;
   border-top: 0;
   padding-top: var(--openbot-space-1);
@@ -674,6 +777,362 @@
   display: flex;
   min-height: var(--openbot-control-md);
   align-items: center;
+}
+
+/* The effort slider takes the whole row, under the same separator: its heading names the effort. */
+.provider-model-effort-slider {
+  flex-shrink: 0;
+  /* When the rail is taller than the panel, the effort sits at the bottom, not under a blank gap. */
+  margin: auto calc(var(--ui-menu-padding) * -1) 0;
+  border-top: 1px solid var(--openbot-border);
+  /* Room under the track for the knob's rays. */
+  padding-block: var(--ui-menu-padding) var(--openbot-space-4);
+  padding-inline: calc(var(--ui-menu-padding) + var(--ui-menu-inset)) var(--ui-menu-padding);
+  color: var(--openbot-text-muted);
+  font-size: var(--openbot-text-sm);
+}
+
+/* The effort colour at `--effort-at` (0 to 1): the slider and the picker trigger share it. */
+.effort-slider,
+.provider-model-trigger-level {
+  --effort-mix: color-mix(
+    in oklch,
+    var(--openbot-effort-low),
+    var(--openbot-effort-high) calc(var(--effort-at) * 100%)
+  );
+  /* A step brighter than the track under it. */
+  --effort-color: color-mix(in oklch, var(--effort-mix) 82%, var(--openbot-text-on-accent));
+}
+
+.effort-slider {
+  --effort-knob: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--openbot-space-1-5);
+  user-select: none;
+}
+
+.effort-slider-head {
+  display: flex;
+  min-height: var(--openbot-control-md);
+  align-items: baseline;
+  gap: var(--openbot-space-2);
+  font-size: var(--openbot-text-lg);
+}
+
+.effort-slider-value {
+  color: var(--effort-color);
+  font-size: var(--openbot-text-xl);
+  font-weight: 700;
+  text-shadow: 0 0 12px color-mix(in oklch, var(--effort-color) 55%, transparent);
+  animation: effort-slider-pop var(--openbot-duration-overlay) var(--openbot-ease-out) both;
+}
+
+.effort-slider-ends {
+  position: relative;
+  display: flex;
+  min-height: 22px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--openbot-text-muted);
+  font-size: var(--openbot-text-md);
+}
+
+.effort-slider-recommended {
+  position: absolute;
+  top: 0;
+  left: calc(var(--effort-step) * (100% - var(--effort-knob)) + var(--effort-knob) / 2);
+  transform: translateX(-50%);
+  border: 1px solid color-mix(in oklch, var(--openbot-effort-low) 45%, var(--openbot-effort-high));
+  border-radius: var(--openbot-radius-pill);
+  padding: 1px var(--openbot-space-2);
+  background: color-mix(in oklch, var(--openbot-effort-core) 85%, transparent);
+  color: var(--openbot-text-primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* The line from the pill down to its step, as in the design. */
+.effort-slider-recommended::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1px;
+  height: 18px;
+  background: color-mix(in oklch, var(--openbot-text-primary) 70%, transparent);
+}
+
+.effort-slider-root {
+  touch-action: none;
+}
+
+.effort-slider-track {
+  position: relative;
+  height: var(--effort-knob);
+  cursor: pointer;
+}
+
+/* The agent decides the effort: the track dims and stays still, so it does not read as a control. */
+.effort-slider-locked :is(.effort-slider-track, .effort-slider-knob) {
+  cursor: not-allowed;
+}
+
+.effort-slider-locked .effort-slider-pixels {
+  filter: saturate(0.35);
+  opacity: 0.55;
+}
+
+.effort-slider-locked .effort-slider-knob {
+  filter: saturate(0.4);
+  opacity: 0.8;
+  animation: none;
+}
+
+.effort-slider-locked .effort-slider-knob::before,
+.effort-slider-locked .effort-slider-knob::after,
+.effort-slider-locked .effort-slider-cell-twinkle {
+  animation: none;
+  opacity: 0.35;
+}
+
+.effort-slider-value-locked {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--openbot-space-1-5);
+  color: var(--openbot-text-secondary);
+  text-shadow: none;
+}
+
+.effort-slider-lock {
+  width: 15px;
+  height: 15px;
+  color: var(--openbot-text-muted);
+}
+
+.effort-slider-root[data-disabled] {
+  opacity: 0.5;
+}
+
+.effort-slider-root[data-disabled] .effort-slider-track {
+  cursor: default;
+}
+
+.effort-slider-pixels {
+  position: absolute;
+  inset: 2px 0;
+  display: grid;
+  grid-template-columns: repeat(var(--effort-columns), 1fr);
+  grid-template-rows: repeat(var(--effort-rows), 1fr);
+  gap: 2px;
+  overflow: hidden;
+  border-radius: var(--openbot-radius-pill);
+  padding: 3px 8px;
+  background: var(--openbot-effort-core);
+  box-shadow: 0 0 14px color-mix(in oklch, var(--effort-mix) 40%, transparent);
+  transition: box-shadow var(--openbot-duration-slow) var(--openbot-ease-out);
+}
+
+.effort-slider-cell {
+  border-radius: 0;
+  background: color-mix(in oklch, var(--openbot-effort-low), var(--openbot-effort-high) calc(var(--effort-x) * 100%));
+  /* Past the knob the track stays lit, a little dimmer, as in the design. */
+  opacity: calc(var(--effort-alpha) * 0.6);
+  /* The cells sweep from the fast end, so a choice reads as a charge filling up. */
+  transition: opacity var(--openbot-duration-normal) var(--openbot-ease-out);
+  transition-delay: calc(var(--effort-x) * var(--openbot-duration-fast));
+}
+
+.effort-slider-cell-lit {
+  opacity: min(1, calc(var(--effort-alpha) + 0.3));
+}
+
+/* A few cells twinkle, like stars. */
+.effort-slider-cell-twinkle {
+  animation: effort-slider-twinkle 2.6s ease-in-out infinite;
+  animation-delay: calc(var(--effort-alpha) * -2.6s);
+}
+
+.effort-slider-step {
+  position: absolute;
+  top: 0;
+  left: calc(var(--effort-step) * (100% - var(--effort-knob)));
+  display: grid;
+  width: var(--effort-knob);
+  height: var(--effort-knob);
+  place-items: center;
+  pointer-events: none;
+}
+
+.effort-slider-step::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: var(--openbot-radius-pill);
+  background: var(--openbot-text-on-accent);
+  box-shadow:
+    0 0 0 4px color-mix(in oklch, var(--openbot-effort-core) 85%, transparent),
+    0 0 6px 4px color-mix(in oklch, var(--openbot-text-on-accent) 25%, transparent);
+}
+
+.effort-slider-knob {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  display: grid;
+  width: var(--effort-knob);
+  height: var(--effort-knob);
+  place-items: center;
+  border: 2px solid var(--effort-color);
+  border-radius: var(--openbot-radius-pill);
+  background: radial-gradient(
+    circle at 50% 40%,
+    color-mix(in oklch, var(--effort-mix) 45%, var(--openbot-effort-core)),
+    var(--openbot-effort-core) 75%
+  );
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--effort-color) 25%, transparent),
+    0 0 18px 4px color-mix(in oklch, var(--effort-color) 70%, transparent);
+  color: color-mix(in oklch, var(--effort-color) 35%, var(--openbot-text-on-accent));
+  outline: none;
+  cursor: grab;
+  transition:
+    left var(--openbot-duration-overlay) var(--openbot-ease-out),
+    border-color var(--openbot-duration-normal) var(--openbot-ease-out),
+    box-shadow var(--openbot-duration-normal) var(--openbot-ease-out);
+  animation: effort-slider-glow 2.4s ease-in-out infinite;
+}
+
+/* Two rings of thin rays that turn in opposite ways, like the sparkle in the design. */
+.effort-slider-knob::before,
+.effort-slider-knob::after {
+  content: "";
+  position: absolute;
+  border-radius: var(--openbot-radius-pill);
+  pointer-events: none;
+}
+
+.effort-slider-knob::before {
+  inset: -16px;
+  background: repeating-conic-gradient(var(--effort-color) 0deg 2deg, transparent 2deg 22.5deg);
+  mask: radial-gradient(circle, transparent 46%, currentcolor 50%, transparent 72%);
+  animation: effort-slider-rays 10s linear infinite;
+}
+
+.effort-slider-knob::after {
+  inset: -24px;
+  background: repeating-conic-gradient(
+    from 11deg,
+    color-mix(in oklch, var(--effort-color) 70%, transparent) 0deg 1.5deg,
+    transparent 1.5deg 30deg
+  );
+  mask: radial-gradient(circle, transparent 52%, currentcolor 62%, transparent 74%);
+  animation: effort-slider-rays 16s linear infinite reverse;
+}
+
+.effort-slider-icon {
+  position: relative;
+  width: 19px;
+  height: 19px;
+  filter: drop-shadow(0 0 4px color-mix(in oklch, var(--effort-color) 80%, transparent));
+}
+
+.effort-slider-knob:focus-visible {
+  outline: 2px solid var(--openbot-border-focus);
+  outline-offset: 3px;
+}
+
+.effort-slider-knob[data-dragging] {
+  cursor: grabbing;
+  transition:
+    border-color var(--openbot-duration-normal) var(--openbot-ease-out),
+    box-shadow var(--openbot-duration-normal) var(--openbot-ease-out);
+}
+
+.effort-slider-root[data-disabled] .effort-slider-knob {
+  cursor: default;
+}
+
+.effort-slider-root[data-disabled] :is(.effort-slider-knob, .effort-slider-knob::before, .effort-slider-knob::after) {
+  animation: none;
+}
+
+@keyframes effort-slider-rays {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes effort-slider-glow {
+  50% {
+    box-shadow:
+      0 0 0 4px color-mix(in oklch, var(--effort-color) 35%, transparent),
+      0 0 26px 7px color-mix(in oklch, var(--effort-color) 80%, transparent);
+  }
+}
+
+@keyframes effort-slider-twinkle {
+  50% {
+    filter: brightness(1.9);
+  }
+}
+
+@keyframes effort-slider-pop {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.92);
+  }
+}
+
+.effort-slider-names {
+  position: relative;
+  height: var(--openbot-leading-sm);
+  margin-top: var(--openbot-space-1);
+  color: var(--openbot-text-muted);
+  font-size: var(--openbot-text-md);
+}
+
+.effort-slider-name {
+  position: absolute;
+  top: 0;
+  left: calc(var(--effort-step) * (100% - var(--effort-knob)) + var(--effort-knob) / 2);
+  max-width: 25%;
+  overflow: hidden;
+  transform: translateX(-50%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--openbot-duration-normal) var(--openbot-ease-out);
+}
+
+/* The end names stay inside the panel. */
+.effort-slider-name-first {
+  transform: translateX(calc(var(--effort-knob) / -2));
+}
+
+.effort-slider-name-last {
+  transform: translateX(calc(-100% + var(--effort-knob) / 2));
+}
+
+.effort-slider-name-current {
+  color: var(--openbot-text-primary);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .effort-slider-cell,
+  .effort-slider-knob,
+  .effort-slider-name,
+  .effort-slider-pixels {
+    transition: none;
+  }
+
+  .effort-slider-value,
+  .effort-slider-cell-twinkle,
+  .effort-slider-knob,
+  .effort-slider-knob::before,
+  .effort-slider-knob::after {
+    animation: none;
+  }
 }
 
 .provider-model-effort-select {

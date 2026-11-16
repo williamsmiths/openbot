@@ -2,15 +2,20 @@ import {
   type AppInfo,
   type AppVariant,
   DEFAULT_DYNAMIC_ISLAND_PREFERENCE,
+  DYNAMIC_ISLAND_GLOWS,
   DYNAMIC_ISLAND_SIZE_LIMITS,
   type DynamicIslandGeometry,
+  type DynamicIslandGlow,
   type DynamicIslandNotchSize,
   IDLE_DYNAMIC_ISLAND_PRESENTATION,
+  isDynamicIslandGlow,
   isDynamicIslandServerVisible,
   type ServerSummary,
 } from "@openbot/contracts/ipc";
+import type { AppTextKey } from "@openbot/i18n";
 import {
   Button,
+  EyeOff,
   Item,
   ItemActions,
   ItemContent,
@@ -20,6 +25,9 @@ import {
   ItemTitle,
   SettingsSection,
   SliderField,
+  SlidingTabs,
+  Sparkles,
+  Sun,
   Switch,
   SwitchField,
 } from "@openbot/ui";
@@ -58,8 +66,19 @@ export interface SettingsDynamicIslandTabProps {
   onUpdateSettings: (patch: Partial<GeneralSettingsValue>) => void;
 }
 
+const GLOW_LABELS = {
+  off: "settings.notch.glow.off",
+  soft: "settings.notch.glow.soft",
+  bright: "settings.notch.glow.bright",
+} as const satisfies Record<DynamicIslandGlow, AppTextKey>;
+
+const GLOW_ICONS = { off: EyeOff, soft: Sparkles, bright: Sun } as const satisfies Record<
+  DynamicIslandGlow,
+  typeof EyeOff
+>;
+
 /**
- * The Dynamic Island switches, the servers that it shows, and its size.
+ * The Dynamic Island switches, the servers that it shows, its size and its glow.
  *
  * Each slider step saves at once, so the island on the screen follows the thumb during a drag. A
  * step is 5%, so one drag across the track writes the preference at most 12 times.
@@ -206,7 +225,7 @@ export function SettingsDynamicIslandTab(props: SettingsDynamicIslandTabProps) {
         <ItemGroup class="settings-modal-card settings-dynamic-island-size">
           <div class="settings-dynamic-island-preview">
             <Show when={!linux()}>
-              <figure class="settings-dynamic-island-preview-display">
+              <figure class="settings-dynamic-island-preview-display" data-island-glow={props.value.macBookNotchGlow}>
                 <PreviewFit widestWidth={widestBuiltInWidth()}>
                   <OpenBotDynamicIsland
                     presentation={IDLE_DYNAMIC_ISLAND_PRESENTATION}
@@ -225,7 +244,7 @@ export function SettingsDynamicIslandTab(props: SettingsDynamicIslandTabProps) {
                 </figcaption>
               </figure>
             </Show>
-            <figure class="settings-dynamic-island-preview-display">
+            <figure class="settings-dynamic-island-preview-display" data-island-glow={props.value.macBookNotchGlow}>
               <PreviewFit widestWidth={widestExternalWidth}>
                 <OpenBotDynamicIsland
                   presentation={IDLE_DYNAMIC_ISLAND_PRESENTATION}
@@ -265,6 +284,34 @@ export function SettingsDynamicIslandTab(props: SettingsDynamicIslandTabProps) {
             formatValue={(value) => `${value}%`}
             onChange={(value) => props.onUpdateSetting("macBookNotchHeightPercent", value)}
           />
+          <Item data-settings-row="settings.notch.glow.title">
+            <ItemContent>
+              <ItemTitle>{i18n.t("settings.notch.glow.title")}</ItemTitle>
+            </ItemContent>
+            <ItemActions>
+              <SlidingTabs.Root
+                value={props.value.macBookNotchGlow}
+                onChange={(value: string) => {
+                  if (isDynamicIslandGlow(value)) props.onUpdateSetting("macBookNotchGlow", value);
+                }}
+                disabled={!props.value.macBookNotch}
+              >
+                <SlidingTabs.List aria-label={i18n.t("settings.notch.glow.title")}>
+                  <For each={DYNAMIC_ISLAND_GLOWS}>
+                    {(glow) => {
+                      const Icon = GLOW_ICONS[glow];
+                      return (
+                        <SlidingTabs.Trigger value={glow} class="settings-dynamic-island-glow-option">
+                          <Icon aria-hidden="true" />
+                          {i18n.t(GLOW_LABELS[glow])}
+                        </SlidingTabs.Trigger>
+                      );
+                    }}
+                  </For>
+                </SlidingTabs.List>
+              </SlidingTabs.Root>
+            </ItemActions>
+          </Item>
         </ItemGroup>
       </SettingsSection>
     </>

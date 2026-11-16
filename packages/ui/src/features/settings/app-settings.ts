@@ -6,6 +6,7 @@ import {
   DEFAULT_AGENT_MEMORY_LIMIT,
   DEFAULT_BUSY_MESSAGE_MODE,
   DEFAULT_EXTERNAL_LINK_PREFERENCE,
+  type DynamicIslandGlow,
   type ExternalLinkTarget,
   type QuitGuard,
 } from "@openbot/contracts/ipc";
@@ -47,6 +48,7 @@ export interface GeneralSettingsValue {
   /** The compact Dynamic Island size, as percents of the default. */
   macBookNotchWidthPercent: number;
   macBookNotchHeightPercent: number;
+  macBookNotchGlow: DynamicIslandGlow;
   /** The user's choice for each server, by server id. A server with no choice uses `macBookNotchNewServers`. */
   macBookNotchServers: Record<string, boolean>;
   /** Whether the island shows a server with no choice of its own, such as a server added later. */
@@ -93,6 +95,7 @@ export const DEFAULT_GENERAL_SETTINGS: GeneralSettingsValue = {
   macBookNotchAdditionalDisplays: true,
   macBookNotchWidthPercent: 100,
   macBookNotchHeightPercent: 100,
+  macBookNotchGlow: "soft",
   macBookNotchServers: {},
   macBookNotchNewServers: true,
   taskSound: "classic",

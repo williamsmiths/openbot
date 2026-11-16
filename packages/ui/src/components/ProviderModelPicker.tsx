@@ -31,6 +31,7 @@ import type { AppTextKey, AppTranslate } from "@openbot/i18n";
 import { planLimitWindowKind, spentUsageWindow } from "@openbot/team-client/plan-limits";
 import {
   Badge,
+  Brain,
   Button,
   Input,
   KeyRound,
@@ -54,6 +55,7 @@ import { ContentExitMotion } from "@openbot/ui/menu-motion";
 import { cx } from "@openbot/ui/utils";
 import type { JSX } from "@solidjs/web";
 import { createEffect, createMemo, createSignal, For, onSettled, Show, untrack } from "solid-js";
+import { EffortSlider, scalePosition } from "../effort-slider";
 import { formatUsageReset, usageWindowLabel } from "../features/account/account-usage-view";
 import { currentText, type TextValue, useText } from "../text";
 import { createScrollFades } from "./createScrollFades";
@@ -615,6 +617,21 @@ export function ProviderModelPicker(props: ProviderModelPickerProps) {
     if (!model?.supportedReasoningEfforts.includes(effort) || model.reasoningEffortConfigurable === false) return;
     return reasoningLabel(effort, t);
   };
+  /**
+   * Where a chosen effort sits among the model's efforts, 0 to 1, so the trigger takes the effort
+   * slider's colour. Undefined for an effort the model fixes or a variant, which have no slider.
+   */
+  const triggerEffortAt = () => {
+    if (!triggerEffort()) return;
+    // An effort that the model value fixes sits at its place on the full scale.
+    const fixed = selectedFixed()?.effort;
+    if (fixed) return scalePosition(fixed);
+    const effort = props.reasoningEffort;
+    const efforts = selectedModel()?.supportedReasoningEfforts ?? [];
+    if (!effort) return;
+    // One listed effort is the agent's own choice: it stays plain, as the panel shows its slider locked.
+    return efforts.length < 2 ? undefined : efforts.indexOf(effort) / (efforts.length - 1);
+  };
   /** The account name, only while the agent's provider lists more than one. */
   const triggerAccount = () => {
     if (props.foreignProvider !== undefined) return null;
@@ -719,7 +736,16 @@ export function ProviderModelPicker(props: ProviderModelPickerProps) {
             <SwapLabel class="provider-model-trigger-name" text={triggerShownName()} motion={TRIGGER_SWAP} />
             <Show when={triggerEffort()}>
               {(effort) => (
-                <span class="provider-model-trigger-effort">
+                <span
+                  class={[
+                    "provider-model-trigger-effort",
+                    { "provider-model-trigger-level": triggerEffortAt() !== undefined },
+                  ]}
+                  style={{ "--effort-at": triggerEffortAt() ?? 0 }}
+                >
+                  <Show when={triggerEffortAt() !== undefined}>
+                    <Brain class="provider-model-trigger-brain" aria-hidden="true" />
+                  </Show>
                   <SwapLabel text={effort()} motion={TRIGGER_SWAP} />
                 </span>
               )}
@@ -892,6 +918,16 @@ export function ProviderModelPicker(props: ProviderModelPickerProps) {
                 const status = () => entryStatus(key);
                 const models = createMemo(() => pickerModels(entryModelOptions(key), props.customProviders));
                 const [showOlder, setShowOlder] = createSignal(false);
+                /** The model list folds under a model chip, as a dropdown, so the panel stays short. */
+                const [listOpen, setListOpen] = createSignal(false);
+                let chipButton: HTMLButtonElement | undefined;
+                // Each opening of the picker starts with the list folded.
+                createEffect(
+                  () => open(),
+                  (shown) => {
+                    if (shown) setListOpen(false);
+                  },
+                );
                 const olderExpanded = () => (showOlder() ? "true" : "false");
                 // An endpoint and a custom agent can both list `goose/default`: match the provider too.
                 // Another account of the same provider can list the same models, but not this agent's.
@@ -969,6 +1005,10 @@ export function ProviderModelPicker(props: ProviderModelPickerProps) {
                             disabled={!modelEnabled(model)}
                             onClick={() => {
                               if (!isSelected()) selectModel(model, accountId(), key);
+                              if (!chipModel()) return;
+                              setListOpen(false);
+                              // The option goes with the list; the chip keeps the keyboard focus.
+                              queueMicrotask(() => chipButton?.focus({ preventScroll: true }));
                             }}
                           >
                             <span class="provider-model-option-name">
@@ -1017,6 +1057,11 @@ export function ProviderModelPicker(props: ProviderModelPickerProps) {
                   return list.find((model) => model.id === railDefaultModel(provider)) ?? list[0];
                 });
                 const effortOption = () => (ownsSelection() ? selectedModel() : pickerModelOption(effortModel()));
+                /**
+                 * The model the chip names: the agent's model on the tab that holds it, else the model this
+                 * tab starts on, marked "default" when it is the provider's default. Every tab folds its list.
+                 */
+                const chipModel = () => (available() ? effortModel() : undefined);
                 const effortOptions = createMemo(() => {
                   const variants = effortModel()?.variants ?? [];
                   if (variants.length) return variants;
@@ -1108,11 +1153,126 @@ export function ProviderModelPicker(props: ProviderModelPickerProps) {
                     ? text.sourceText(message)
                     : t("provider.picker.unavailable", { name: railName(provider, t) });
                 };
+                /** The search field and the model list: in the dropdown, or in the panel when no chip shows. */
+                function listBody(): JSX.Element {
+                  return (
+                    <>
+                      <Input
+                        class="provider-model-search"
+                        aria-label={t("provider.picker.search")}
+                        placeholder={t("provider.picker.search")}
+                        value={search()}
+                        onValueChange={setSearch}
+                      />
+                      <div class={["provider-model-scroll", fades.classes()]} ref={fades.bind} onScroll={fades.measure}>
+                        <Show
+                          when={groups().length > 0}
+                          fallback={
+                            <Show when={available()}>
+                              <div class="provider-model-empty" role="status">
+                                <Show
+                                  when={provider === CUSTOM_RAIL && !search().trim()}
+                                  fallback={
+                                    search().trim()
+                                      ? t("provider.picker.noMatches")
+                                      : // Meta sends a signed-in Muse account an empty list where Muse is not offered (#5983).
+                                        provider === "muse"
+                                        ? t("provider.picker.museNoModels")
+                                        : t("provider.picker.noModels", { name: railName(provider, t) })
+                                  }
+                                >
+                                  {/* A saved endpoint lists no model until its provider restarts and reads it. */}
+                                  <Show
+                                    when={props.customProviders?.length && endpointsRead()}
+                                    fallback={
+                                      <span>
+                                        {props.customProviders?.length
+                                          ? t("provider.picker.customPending")
+                                          : t("provider.picker.customEmpty")}
+                                      </span>
+                                    }
+                                  >
+                                    <span>
+                                      {t("provider.picker.customUnlisted", { name: railName(endpointStatus().id, t) })}
+                                    </span>
+                                    <Show when={props.onManageProviders}>
+                                      {(manageProviders) => (
+                                        <Button
+                                          type="button"
+                                          size="xs"
+                                          variant="outline"
+                                          onClick={() => {
+                                            trigger?.focus({ preventScroll: true });
+                                            setOpen(false);
+                                            if (trigger) manageProviders()(trigger);
+                                          }}
+                                        >
+                                          {t("provider.picker.editEndpoints")}
+                                        </Button>
+                                      )}
+                                    </Show>
+                                  </Show>
+                                </Show>
+                              </div>
+                            </Show>
+                          }
+                        >
+                          {modelList({
+                            label: t("provider.picker.models", { name: railName(provider, t) }),
+                            groups: groups(),
+                          })}
+                          <Show when={folds()}>
+                            {/* A row of the list, so it takes the look of a model row. */}
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              class="provider-model-option provider-model-older"
+                              aria-expanded={olderExpanded()}
+                              onClick={() => setShowOlder((shown) => !shown)}
+                            >
+                              <span class="provider-model-option-name">
+                                <span>{t("provider.picker.olderModels")}</span>
+                                <small>{older().length}</small>
+                              </span>
+                              <ChevronDownIcon />
+                            </Button>
+                          </Show>
+                          <Show when={olderGroups().length > 0}>
+                            {modelList({
+                              label: t("provider.picker.olderModelsList", { name: railName(provider, t) }),
+                              groups: olderGroups(),
+                            })}
+                          </Show>
+                        </Show>
+                      </div>
+                    </>
+                  );
+                }
+                /** Escape closes the dropdown first, and the picker on the next press. */
+                function closeDropdownOnEscape(event: KeyboardEvent): void {
+                  if (event.key !== "Escape" || !listOpen()) return;
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setListOpen(false);
+                  chipButton?.focus({ preventScroll: true });
+                }
+                /** The room between the chip and the window's bottom edge, within the dropdown's bounds. */
+                const [dropdownMax, setDropdownMax] = createSignal(DROPDOWN_MAX_HEIGHT);
+                function dropdownRoom(): number {
+                  const chip = chipButton?.getBoundingClientRect();
+                  if (!chip) return DROPDOWN_MAX_HEIGHT;
+                  const room = Math.floor(window.innerHeight - chip.bottom - DROPDOWN_EDGE_GAP);
+                  return Math.min(DROPDOWN_MAX_HEIGHT, Math.max(DROPDOWN_MIN_HEIGHT, room));
+                }
                 return (
                   <Tabs.Content
                     value={key}
                     class="provider-model-panel"
                     aria-label={t("provider.picker.models", { name: entryName(key) })}
+                    onPointerDown={(event) => {
+                      if (!listOpen() || !(event.target instanceof Element)) return;
+                      if (!event.target.closest(".provider-model-select")) setListOpen(false);
+                    }}
                   >
                     <div class="provider-model-heading">
                       <div
@@ -1187,117 +1347,54 @@ export function ProviderModelPicker(props: ProviderModelPickerProps) {
                         </Show>
                       </div>
                     </Show>
-                    <Input
-                      class="provider-model-search"
-                      aria-label={t("provider.picker.search")}
-                      placeholder={t("provider.picker.search")}
-                      value={search()}
-                      onValueChange={setSearch}
-                    />
-                    <div class={["provider-model-scroll", fades.classes()]} ref={fades.bind} onScroll={fades.measure}>
-                      <Show
-                        when={groups().length > 0}
-                        fallback={
-                          <Show when={available()}>
-                            <div class="provider-model-empty" role="status">
-                              <Show
-                                when={provider === CUSTOM_RAIL && !search().trim()}
-                                fallback={
-                                  search().trim()
-                                    ? t("provider.picker.noMatches")
-                                    : // Meta sends a signed-in Muse account an empty list where Muse is not offered (#5983).
-                                      provider === "muse"
-                                      ? t("provider.picker.museNoModels")
-                                      : t("provider.picker.noModels", { name: railName(provider, t) })
-                                }
-                              >
-                                {/* A saved endpoint lists no model until its provider restarts and reads it. */}
-                                <Show
-                                  when={props.customProviders?.length && endpointsRead()}
-                                  fallback={
-                                    <span>
-                                      {props.customProviders?.length
-                                        ? t("provider.picker.customPending")
-                                        : t("provider.picker.customEmpty")}
-                                    </span>
-                                  }
-                                >
-                                  <span>
-                                    {t("provider.picker.customUnlisted", { name: railName(endpointStatus().id, t) })}
-                                  </span>
-                                  <Show when={props.onManageProviders}>
-                                    {(manageProviders) => (
-                                      <Button
-                                        type="button"
-                                        size="xs"
-                                        variant="outline"
-                                        onClick={() => {
-                                          trigger?.focus({ preventScroll: true });
-                                          setOpen(false);
-                                          if (trigger) manageProviders()(trigger);
-                                        }}
-                                      >
-                                        {t("provider.picker.editEndpoints")}
-                                      </Button>
-                                    )}
-                                  </Show>
-                                </Show>
-                              </Show>
-                            </div>
-                          </Show>
-                        }
-                      >
-                        {modelList({
-                          label: t("provider.picker.models", { name: railName(provider, t) }),
-                          groups: groups(),
-                        })}
-                        <Show when={folds()}>
-                          {/* A row of the list, so it takes the look of a model row. */}
+                    <Show when={chipModel()} fallback={listBody()}>
+                      {(model) => (
+                        // The model chip and its dropdown. The list floats over the panel, so the panel
+                        // keeps its size whether the list is open or not.
+                        <div
+                          class="provider-model-select"
+                          ref={(element: HTMLDivElement) => element.addEventListener("keydown", closeDropdownOnEscape)}
+                        >
                           <Button
                             type="button"
                             variant="ghost"
-                            class="provider-model-option provider-model-older"
-                            aria-expanded={olderExpanded()}
-                            onClick={() => setShowOlder((shown) => !shown)}
+                            ref={chipButton}
+                            class="provider-model-chip"
+                            aria-expanded={listOpen() ? "true" : "false"}
+                            onClick={() => {
+                              setSearch("");
+                              if (!listOpen()) setDropdownMax(dropdownRoom());
+                              setListOpen((shown) => !shown);
+                            }}
                           >
-                            <span class="provider-model-option-name">
-                              <span>{t("provider.picker.olderModels")}</span>
-                              <small>{older().length}</small>
-                            </span>
+                            <ProviderLogo provider={wireProvider(model().provider)} class="provider-model-mark" />
+                            <span class="provider-model-chip-name">{displayModelName(model().name, model().id)}</span>
+                            <Show when={!ownsSelection() && model().id === railDefaultModel(provider)}>
+                              <small class="provider-model-chip-note">{t("provider.model.default")}</small>
+                            </Show>
                             <ChevronDownIcon />
                           </Button>
-                        </Show>
-                        <Show when={olderGroups().length > 0}>
-                          {modelList({
-                            label: t("provider.picker.olderModelsList", { name: railName(provider, t) }),
-                            groups: olderGroups(),
-                          })}
-                        </Show>
-                      </Show>
-                    </div>
+                          <Show when={listOpen()}>
+                            <div class="provider-model-dropdown" style={{ "max-height": `${dropdownMax()}px` }}>
+                              {listBody()}
+                            </div>
+                          </Show>
+                        </div>
+                      )}
+                    </Show>
                     <Show when={effortOptions().length > 0}>
-                      <div class="provider-model-effort">
-                        <span>{t("provider.picker.effort")}</span>
-                        <Select<{ id: string; name: string }>
-                          class="provider-model-effort-select"
+                      <div class="provider-model-effort-slider">
+                        <EffortSlider
                           options={effortOptions()}
-                          optionValue="id"
-                          optionTextValue="name"
-                          value={effortOptions().find((option) => option.id === effortValue())}
-                          onChange={(option) => option && chooseEffort(option.id)}
-                          itemComponent={(item) => <SelectItem item={item.item}>{item.item.rawValue.name}</SelectItem>}
-                        >
-                          <SelectTrigger
-                            size="sm"
-                            aria-label={t("provider.picker.effortLabel")}
-                            disabled={effortLocked()}
-                          >
-                            <SelectValue<{ id: string; name: string }>>
-                              {(state) => state.selectedOption()?.name ?? t("provider.picker.selectEffort")}
-                            </SelectValue>
-                          </SelectTrigger>
-                          <SelectContent class="provider-model-effort-content" />
-                        </Select>
+                          value={effortValue()}
+                          recommended={
+                            effortModel()?.variants.length ? undefined : effortOption()?.defaultReasoningEffort
+                          }
+                          disabled={props.disabled || effortLocked()}
+                          label={t("provider.picker.effortLabel")}
+                          lockedLabel={t("provider.picker.effortAgentDecides", { provider: railName(provider, t) })}
+                          onChange={chooseEffort}
+                        />
                       </div>
                     </Show>
                     <Show when={ownsSelection() && effortOptions().length === 0 && selectedFixed()?.effort}>
@@ -1488,6 +1585,12 @@ const SPEED_TEXT: Record<Speed, AppTextKey> = {
 function speedName(speed: Speed, t: AppTranslate): string {
   return t(SPEED_NAME[speed]);
 }
+
+/** The model dropdown floats over the picker: as tall as the list, up to the window's bottom edge. */
+const DROPDOWN_MAX_HEIGHT = 360;
+const DROPDOWN_MIN_HEIGHT = 160;
+/** The space between the dropdown and the window's bottom edge. */
+const DROPDOWN_EDGE_GAP = 12;
 
 export function reasoningLabel(effort: AgentReasoningEffort, t: AppTranslate = currentText().t): string {
   return t(REASONING_LABEL[effort]);

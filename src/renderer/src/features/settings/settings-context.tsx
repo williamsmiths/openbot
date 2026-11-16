@@ -40,6 +40,7 @@ function islandSettings(preference: DynamicIslandPreference) {
     macBookNotchAdditionalDisplays: preference.additionalDisplaysEnabled,
     macBookNotchWidthPercent: preference.widthPercent,
     macBookNotchHeightPercent: preference.heightPercent,
+    macBookNotchGlow: preference.glow,
     macBookNotchServers: preference.serverVisibility,
     macBookNotchNewServers: preference.newServersVisible,
   } satisfies Partial<GeneralSettingsValue>;
@@ -431,6 +432,7 @@ const Settings = createSimpleContext({
         previous.macBookNotchAdditionalDisplays !== value.macBookNotchAdditionalDisplays ||
         previous.macBookNotchWidthPercent !== value.macBookNotchWidthPercent ||
         previous.macBookNotchHeightPercent !== value.macBookNotchHeightPercent ||
+        previous.macBookNotchGlow !== value.macBookNotchGlow ||
         previous.macBookNotchServers !== value.macBookNotchServers ||
         previous.macBookNotchNewServers !== value.macBookNotchNewServers
       ) {
@@ -447,6 +449,7 @@ const Settings = createSimpleContext({
             heightPercent: value.macBookNotchHeightPercent,
             serverVisibility: value.macBookNotchServers,
             newServersVisible: value.macBookNotchNewServers,
+            glow: value.macBookNotchGlow,
           })
           .then((preference) => {
             if (save !== dynamicIslandSaveCount) return;
@@ -466,6 +469,7 @@ const Settings = createSimpleContext({
               macBookNotchAdditionalDisplays: previous.macBookNotchAdditionalDisplays,
               macBookNotchWidthPercent: previous.macBookNotchWidthPercent,
               macBookNotchHeightPercent: previous.macBookNotchHeightPercent,
+              macBookNotchGlow: previous.macBookNotchGlow,
               macBookNotchServers: previous.macBookNotchServers,
               macBookNotchNewServers: previous.macBookNotchNewServers,
             }));

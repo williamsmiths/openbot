@@ -40,6 +40,19 @@ export const AllEffortLevels: Story = {
   },
 };
 
+/** A model with one effort: the slider shows locked at that effort's place, as Cursor's Auto does. */
+export const OneEffortLevel: Story = {
+  args: {
+    provider: "claude",
+    value: "claude-opus-5-5",
+    modelOptions: STORY_MODELS.map((model) =>
+      model.id === "claude-opus-5-5" ? { ...model, supportedReasoningEfforts: ["medium"] } : model,
+    ),
+    reasoningEffort: "medium",
+    onReasoningEffortChange: fn(),
+  },
+};
+
 /** A Codex model that offers Fast and Ultrafast, with Ultrafast on. */
 export const Ultrafast: Story = {
   args: {

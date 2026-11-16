@@ -150,3 +150,15 @@
 .voice-server-dialog .voice-server-line .settings-modal-select {
   width: 100%;
 }
+
+/* Each glow choice: an icon and a word. */
+.settings-dynamic-island-glow-option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--openbot-space-1-5);
+}
+
+.settings-dynamic-island-glow-option svg {
+  width: var(--openbot-icon-sm);
+  height: var(--openbot-icon-sm);
+}

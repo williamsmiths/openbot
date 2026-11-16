@@ -25,7 +25,14 @@
   border: 0;
   background: transparent;
   color: var(--openbot-text-primary);
-  filter: drop-shadow(0 0 0 transparent);
+  /* The glow of the edge, in the colours of the model picker's edge. Settings > Dynamic Island > Glow
+     sets it on an ancestor: soft (the default, also with no choice), bright or off. */
+  --dynamic-island-glow-low: color-mix(in oklch, var(--openbot-effort-low) 32%, transparent);
+  --dynamic-island-glow-high: color-mix(in oklch, var(--openbot-effort-high) 18%, transparent);
+  --dynamic-island-edge-opacity: 0.6;
+  /* Three shadows, as on hover, so the hover transition pairs each shadow with its own. */
+  filter: drop-shadow(0 0 10px transparent) drop-shadow(-2px 1px 4px var(--dynamic-island-glow-low))
+    drop-shadow(2px 2px 5px var(--dynamic-island-glow-high));
   pointer-events: none;
   transition: filter var(--openbot-duration-normal) var(--openbot-ease-out);
 }
@@ -47,9 +54,22 @@
   --dynamic-island-bottom-radius: 24px;
 }
 
+[data-island-glow="bright"] .dynamic-island {
+  --dynamic-island-glow-low: color-mix(in oklch, var(--openbot-effort-low) 60%, transparent);
+  --dynamic-island-glow-high: color-mix(in oklch, var(--openbot-effort-high) 38%, transparent);
+  --dynamic-island-edge-opacity: 1;
+}
+
+[data-island-glow="off"] .dynamic-island {
+  --dynamic-island-glow-low: transparent;
+  --dynamic-island-glow-high: transparent;
+  --dynamic-island-edge-opacity: 0;
+}
+
 .dynamic-island[data-layout-state="expanded"],
 .dynamic-island[data-hovered="true"] {
-  filter: drop-shadow(0 0 10px var(--openbot-shadow-dynamic-island));
+  filter: drop-shadow(0 0 10px var(--openbot-shadow-dynamic-island))
+    drop-shadow(-3px 2px 7px var(--dynamic-island-glow-low)) drop-shadow(3px 3px 9px var(--dynamic-island-glow-high));
 }
 
 .dynamic-island-shell[data-resizing] {
@@ -92,6 +112,21 @@
   background: var(--openbot-bg-notch);
   box-shadow: inset 0 -1px 0 var(--openbot-shadow-ring);
   transition: box-shadow var(--openbot-duration-normal) var(--openbot-ease-out);
+}
+
+/* A glowing edge down the sides and along the bottom; the top meets the screen edge, so it has none. */
+.dynamic-island-silhouette-body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0 1.5px 1.5px;
+  background: var(--openbot-glow-edge);
+  opacity: var(--dynamic-island-edge-opacity);
+  mask:
+    linear-gradient(currentcolor 0 0) content-box exclude,
+    linear-gradient(currentcolor 0 0);
+  pointer-events: none;
 }
 
 .dynamic-island-shoulder {

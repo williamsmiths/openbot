@@ -287,6 +287,7 @@ export function DynamicIslandSurface() {
         <fieldset
           ref={observeShape}
           class="dynamic-island-surface-anchor"
+          data-island-glow={preference().glow}
           aria-label={t("island.surface.interactionArea")}
           onMouseOver={enterInteraction}
           onMouseOut={leaveInteraction}

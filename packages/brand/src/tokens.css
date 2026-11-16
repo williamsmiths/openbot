@@ -169,6 +169,27 @@
   --openbot-provider-grok: var(--openbot-text-primary);
   /* The Gemini brand colour that Simple Icons gives. */
   --openbot-provider-antigravity: #8e75b2;
+  /* The effort slider in the model picker: its pixel track runs from the low end to the high end,
+     mixed in oklch along the shorter hue, so it passes indigo, violet, magenta and pink to coral.
+     The core is the dark disc of the knob, the same on the light and dark palettes. */
+  --openbot-effort-low: #4338ff;
+  --openbot-effort-high: #ff6b3d;
+  --openbot-effort-core: #1a0d2e;
+  /* The glowing edge of the model picker and of the open Settings section: a gradient border image
+     and its glow. Use as `background: linear-gradient(<fill>, <fill>) padding-box, var(--openbot-glow-edge)
+     border-box` with a transparent 1px border. */
+  --openbot-glow-edge: linear-gradient(
+    135deg,
+    var(--openbot-effort-low),
+    color-mix(in oklch, var(--openbot-effort-low), var(--openbot-effort-high)) 50%,
+    var(--openbot-effort-high)
+  );
+  --openbot-glow-shadow:
+    -6px -4px 26px color-mix(in oklch, var(--openbot-effort-low) 45%, transparent),
+    6px 6px 30px color-mix(in oklch, var(--openbot-effort-high) 30%, transparent);
+  --openbot-glow-shadow-sm:
+    -3px -2px 12px color-mix(in oklch, var(--openbot-effort-low) 35%, transparent),
+    3px 3px 14px color-mix(in oklch, var(--openbot-effort-high) 22%, transparent);
   /* A chart series needs a hue of its own: the logo colours above give codex and grok the
      same white, which no reader can tell apart in two overlaid areas. Validated together
      with the dataviz skill's checker -

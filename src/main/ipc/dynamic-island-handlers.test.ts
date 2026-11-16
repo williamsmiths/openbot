@@ -36,6 +36,7 @@ const PREFERENCE: DynamicIslandPreference = {
   heightPercent: 100,
   serverVisibility: {},
   newServersVisible: true,
+  glow: "soft",
 };
 
 function event(senderId: number, url = "openbot-app://app/helper.html?surface=dynamic-island") {

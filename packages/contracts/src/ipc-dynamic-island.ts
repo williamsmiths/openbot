@@ -19,6 +19,20 @@ export interface DynamicIslandPreference {
   serverVisibility: Record<string, boolean>;
   /** Whether a server with no choice of its own, such as a server the user adds later, shows its items. */
   newServersVisible: boolean;
+  /** The glowing edge of the island: none, soft, or bright. The choice is local to this computer. */
+  glow: DynamicIslandGlow;
+}
+
+/**
+ * The glow choices, in the Settings order. The identifiers are saved as written: add one, never
+ * rename one, or a saved choice reads back as the default.
+ */
+export const DYNAMIC_ISLAND_GLOWS = ["off", "soft", "bright"] as const;
+
+export type DynamicIslandGlow = (typeof DYNAMIC_ISLAND_GLOWS)[number];
+
+export function isDynamicIslandGlow(value: unknown): value is DynamicIslandGlow {
+  return DYNAMIC_ISLAND_GLOWS.some((glow) => glow === value);
 }
 
 /** The most server choices that a preference can hold. A user has far fewer servers. */
@@ -60,6 +74,7 @@ export const DEFAULT_DYNAMIC_ISLAND_PREFERENCE = {
   heightPercent: 100,
   serverVisibility: {},
   newServersVisible: true,
+  glow: "soft",
 } as const satisfies DynamicIslandPreference;
 
 /** Returns whether the island shows the items of a server. A muted server is hidden separately. */
@@ -214,7 +229,8 @@ export function isDynamicIslandPreference(value: unknown): value is DynamicIslan
     isDynamicIslandSizePercent(value.widthPercent, DYNAMIC_ISLAND_SIZE_LIMITS.widthPercent) &&
     isDynamicIslandSizePercent(value.heightPercent, DYNAMIC_ISLAND_SIZE_LIMITS.heightPercent) &&
     isDynamicIslandServerVisibility(value.serverVisibility) &&
-    isBoolean(value.newServersVisible)
+    isBoolean(value.newServersVisible) &&
+    isDynamicIslandGlow(value.glow)
   );
 }
 
