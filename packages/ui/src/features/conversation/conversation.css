@@ -48,6 +48,7 @@
 @import "./styles/question-prompt.css";
 @import "./styles/ui-blocks.css";
 @import "./styles/surface-overrides.css";
+@import "./styles/composer-glow.css";
 @import "./styles/browser-previews.css";
 @import "./styles/browser-dock.css";
 @import "./styles/browser-full-view.css";

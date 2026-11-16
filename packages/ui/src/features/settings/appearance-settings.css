@@ -1,0 +1,411 @@
+/* Settings › Appearance: the theme cards, the main color swatches, the wallpaper tiles and the
+ * segmented controls. Colors come from tokens; a theme card draws the colors of its own theme from
+ * its `--theme-card-*` properties, which a palette sets and the Dark and Light cards take from the
+ * fixed `--openbot-theme-card-*` tokens. */
+
+.theme-card-grid {
+  display: grid;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--openbot-space-2);
+}
+
+.theme-card {
+  display: flex;
+  height: auto;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--openbot-space-1-5);
+  padding: var(--openbot-space-1-5);
+  border: 1px solid var(--openbot-border-strong);
+  border-radius: var(--openbot-radius-lg);
+  background: var(--openbot-bg-surface);
+  text-align: start;
+}
+
+.theme-card-selected,
+.theme-card-selected:hover {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--openbot-accent);
+}
+
+.theme-card-preview {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--openbot-radius-md);
+}
+
+.theme-card-mini {
+  --theme-card-frame: var(--openbot-theme-card-dark-frame);
+  --theme-card-canvas: var(--openbot-theme-card-dark-canvas);
+  --theme-card-surface: var(--openbot-theme-card-dark-surface);
+  --theme-card-border: var(--openbot-theme-card-dark-border);
+  --theme-card-accent: var(--openbot-accent);
+
+  display: grid;
+  height: 72px;
+  grid-template-columns: 28% 1fr;
+  background: var(--theme-card-canvas);
+}
+
+.theme-card-mini-light {
+  --theme-card-frame: var(--openbot-theme-card-light-frame);
+  --theme-card-canvas: var(--openbot-theme-card-light-canvas);
+  --theme-card-surface: var(--openbot-theme-card-light-surface);
+  --theme-card-border: var(--openbot-theme-card-light-border);
+}
+
+.theme-card-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 5px;
+  background: var(--theme-card-frame);
+}
+
+.theme-card-sidebar i {
+  height: 5px;
+  border-radius: var(--openbot-radius-xs);
+  background: var(--theme-card-border);
+}
+
+.theme-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 7px;
+}
+
+.theme-card-bubble {
+  width: 55%;
+  height: 9px;
+  align-self: flex-end;
+  border: 1px solid color-mix(in srgb, var(--theme-card-accent) 55%, transparent);
+  border-radius: var(--openbot-radius-sm);
+  background: var(--theme-card-surface);
+}
+
+.theme-card-composer {
+  height: 13px;
+  border: 1.5px solid var(--theme-card-accent);
+  border-radius: var(--openbot-radius-sm);
+  background: var(--theme-card-surface);
+}
+
+/* System: the Dark drawing with the Light one cut in from the lower right. */
+.theme-card-split {
+  display: block;
+}
+
+.theme-card-split-light {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.theme-card-name {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--openbot-space-1-5);
+  padding: 0 var(--openbot-space-0-5) var(--openbot-space-0-5);
+  color: var(--openbot-text-primary);
+  font-size: var(--openbot-text-sm);
+}
+
+.theme-card-icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--openbot-text-muted);
+}
+
+.theme-card-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: var(--openbot-radius-pill);
+  background: var(--theme-card-accent);
+}
+
+/* The segmented controls of the page: an icon and a short word. */
+.appearance-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--openbot-space-1-5);
+}
+
+.appearance-segment svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Message box glow: the motion, then the colors. Off keeps the colors but dims them. */
+.composer-glow-setting {
+  display: grid;
+  gap: var(--openbot-space-3);
+}
+
+.composer-glow-setting .accent-swatches:disabled {
+  opacity: 0.45;
+}
+
+/* Transparency, under the Transparent window switch. */
+.appearance-glass-level {
+  padding: 0 var(--openbot-space-4) var(--openbot-space-4);
+}
+
+/* Main color. */
+.accent-setting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--openbot-space-3);
+}
+
+.accent-swatches {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: var(--openbot-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.accent-swatch {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  place-items: center;
+  padding: 0;
+  border-radius: var(--openbot-radius-pill);
+  background: var(--accent-swatch, var(--openbot-bg-surface));
+  box-shadow: inset 0 0 0 1px var(--openbot-border-strong);
+  color: var(--openbot-text-on-accent);
+}
+
+.accent-swatch:hover {
+  background: var(--accent-swatch, var(--openbot-bg-control-hover));
+}
+
+.accent-swatch svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+}
+
+.accent-swatch-theme svg {
+  color: var(--openbot-text-primary);
+  opacity: 1;
+}
+
+.accent-swatch-selected {
+  box-shadow:
+    0 0 0 2px var(--openbot-bg-canvas),
+    0 0 0 4px var(--openbot-text-primary);
+}
+
+.accent-swatch-selected svg {
+  opacity: 1;
+}
+
+/* Custom: a hue wheel with a plus, and the chosen color once there is one. */
+.accent-swatch-custom {
+  background: conic-gradient(
+    oklch(0.75 0.16 20),
+    oklch(0.75 0.16 80),
+    oklch(0.75 0.16 140),
+    oklch(0.75 0.16 200),
+    oklch(0.75 0.16 260),
+    oklch(0.75 0.16 320),
+    oklch(0.75 0.16 20)
+  );
+}
+
+.accent-swatch-custom:hover {
+  background: conic-gradient(
+    oklch(0.75 0.16 20),
+    oklch(0.75 0.16 80),
+    oklch(0.75 0.16 140),
+    oklch(0.75 0.16 200),
+    oklch(0.75 0.16 260),
+    oklch(0.75 0.16 320),
+    oklch(0.75 0.16 20)
+  );
+}
+
+.accent-swatch-plus {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: var(--openbot-radius-pill);
+  background: var(--accent-swatch, var(--openbot-bg-surface));
+  color: var(--openbot-text-primary);
+}
+
+.accent-swatch-selected .accent-swatch-plus {
+  color: var(--openbot-text-on-accent);
+}
+
+.accent-swatch-plus svg {
+  opacity: 1;
+}
+
+.accent-name {
+  color: var(--openbot-text-muted);
+  font-size: var(--openbot-text-sm);
+}
+
+/* Chat wallpaper. */
+.wallpaper-setting {
+  display: grid;
+  gap: var(--openbot-space-3);
+}
+
+.wallpaper-tiles {
+  display: grid;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: var(--openbot-space-2);
+}
+
+.wallpaper-tile {
+  display: flex;
+  height: auto;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--openbot-space-1-5);
+  padding: var(--openbot-space-1-5);
+  border: 1px solid var(--openbot-border-strong);
+  border-radius: var(--openbot-radius-lg);
+  background: var(--openbot-bg-surface);
+  color: var(--openbot-text-muted);
+  font-size: var(--openbot-text-sm);
+  text-align: center;
+}
+
+.wallpaper-tile-selected,
+.wallpaper-tile-selected:hover {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--openbot-accent);
+  color: var(--openbot-text-primary);
+}
+
+.wallpaper-tile-art {
+  position: relative;
+  display: grid;
+  height: 46px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--openbot-radius-md);
+  background: var(--openbot-bg-canvas);
+  color: var(--openbot-text-muted);
+}
+
+.wallpaper-tile-art svg {
+  width: 16px;
+  height: 16px;
+}
+
+.wallpaper-tile-art-glow {
+  background:
+    radial-gradient(60% 70% at 20% 80%, color-mix(in srgb, var(--openbot-accent) 45%, transparent), transparent 70%),
+    radial-gradient(
+      60% 70% at 85% 80%,
+      color-mix(in srgb, var(--openbot-accent-text) 40%, transparent),
+      transparent 70%
+    ),
+    var(--openbot-bg-canvas);
+}
+
+.wallpaper-tile-art-glyphs {
+  color: var(--openbot-accent-text);
+}
+
+.wallpaper-tile-art-glyphs svg {
+  width: 22px;
+  height: 22px;
+}
+
+.wallpaper-tile-art-dots {
+  background:
+    radial-gradient(color-mix(in srgb, var(--openbot-accent-text) 55%, transparent) 1px, transparent 1.5px) 0 0 / 9px
+    9px,
+    var(--openbot-bg-canvas);
+}
+
+.wallpaper-tile-photo {
+  position: absolute;
+  inset: 0;
+  background: var(--wallpaper-tile-photo) center / cover;
+}
+
+.wallpaper-change-photo {
+  justify-self: start;
+}
+
+.wallpaper-options {
+  display: grid;
+  gap: var(--openbot-space-4);
+  padding: var(--openbot-space-4);
+  border-radius: var(--openbot-radius-lg);
+  background: var(--openbot-bg-surface);
+}
+
+.wallpaper-levels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--openbot-space-8);
+}
+
+.wallpaper-glass {
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* The live preview: the real bubble and message box over the wallpaper layer of the stylesheet. */
+.appearance-preview {
+  position: relative;
+  display: flex;
+  height: 190px;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--openbot-space-3);
+  overflow: hidden;
+  padding: var(--openbot-space-3);
+  border: 1px solid var(--openbot-border-strong);
+  border-radius: var(--openbot-radius-card);
+  background: var(--openbot-bg-canvas);
+}
+
+.appearance-preview-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--openbot-space-2);
+}
+
+.appearance-preview-user {
+  align-self: flex-end;
+}
+
+.appearance-preview .composer {
+  margin: 0;
+}
+
+.appearance-preview-hint {
+  color: var(--openbot-text-placeholder);
+  font-size: var(--openbot-text-md);
+}

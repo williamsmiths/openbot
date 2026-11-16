@@ -11,8 +11,10 @@ export { default as ArrowRightToLine } from "lucide-solid/icons/arrow-right-to-l
 export { default as ArrowUp } from "lucide-solid/icons/arrow-up";
 export { default as AtSign } from "lucide-solid/icons/at-sign";
 export { default as AudioLines } from "lucide-solid/icons/audio-lines";
+export { default as Ban } from "lucide-solid/icons/ban";
 export { default as Bell } from "lucide-solid/icons/bell";
 export { default as BellOff } from "lucide-solid/icons/bell-off";
+export { default as Binary } from "lucide-solid/icons/binary";
 export { default as Blocks } from "lucide-solid/icons/blocks";
 export { default as Bold } from "lucide-solid/icons/bold";
 export { default as BookMarked } from "lucide-solid/icons/book-marked";
@@ -143,6 +145,7 @@ export { default as Repeat2 } from "lucide-solid/icons/repeat-2";
 export { default as RotateCcw } from "lucide-solid/icons/rotate-ccw";
 // `history` is an alias. The import names the icon file, so check:ui reads its class, `lucide-rotate-ccw-clock`.
 export { default as History } from "lucide-solid/icons/rotate-ccw-clock";
+export { default as RotateCw } from "lucide-solid/icons/rotate-cw";
 export { default as Scan } from "lucide-solid/icons/scan";
 export { default as ScanLine } from "lucide-solid/icons/scan-line";
 export { default as Search } from "lucide-solid/icons/search";
@@ -162,6 +165,7 @@ export { default as Square } from "lucide-solid/icons/square";
 export { default as Star } from "lucide-solid/icons/star";
 export { default as StickyNote } from "lucide-solid/icons/sticky-note";
 export { default as Store } from "lucide-solid/icons/store";
+export { default as Sun } from "lucide-solid/icons/sun";
 export { default as Table2 } from "lucide-solid/icons/table-2";
 export { default as Tag } from "lucide-solid/icons/tag";
 export { default as TextAlignCenter } from "lucide-solid/icons/text-align-center";

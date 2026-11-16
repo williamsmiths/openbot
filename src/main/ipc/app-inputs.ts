@@ -55,6 +55,9 @@ import type {
   VerifyEmailCodeInput,
 } from "@openbot/contracts/ipc";
 import {
+  clampChatWallpaperBlur,
+  clampChatWallpaperStrength,
+  clampTransparentWindowLevel,
   decodeExternalLinkTarget,
   IDLE_RESTART_TARGETS,
   isAgentDefaults,
@@ -79,6 +82,9 @@ import {
   isBrowserDockPresentation,
   isBusyMessageMode,
   isChatBackgroundColor,
+  isChatWallpaper,
+  isComposerGlow,
+  isComposerGlowGradient,
   isDynamicIslandAction,
   isDynamicIslandInteractive,
   isDynamicIslandPreference,
@@ -217,13 +223,44 @@ function parseFontFamily(value: unknown): AppFontFamily | null {
 
 export function parseAppAppearancePreference(input: unknown): SetAppAppearancePreferenceInput {
   if (!isDynamicRecord(input)) throw new Error("Appearance is required.");
-  const { appearance, transparentWindow, palette, chatBackgroundLight, chatBackgroundDark, interfaceFont, codeFont } =
-    input;
+  const {
+    appearance,
+    transparentWindow,
+    palette,
+    chatBackgroundLight,
+    chatBackgroundDark,
+    interfaceFont,
+    codeFont,
+    accentColor,
+    chatWallpaper,
+    chatWallpaperStrength,
+    chatWallpaperBlur,
+    chatGlass,
+    composerGlow,
+    composerGlowGradient,
+    transparentWindowLevel,
+  } = input;
   if (appearance !== undefined && !isAppAppearance(appearance)) throw new Error("Appearance is invalid.");
   if (transparentWindow !== undefined && typeof transparentWindow !== "boolean")
     throw new Error("Transparent window must be true or false.");
   if (palette !== undefined && palette !== null && !isAppThemePaletteId(palette))
     throw new Error("Theme palette is invalid.");
+  if (chatWallpaper !== undefined && !isChatWallpaper(chatWallpaper)) throw new Error("Chat wallpaper is invalid.");
+  if (composerGlow !== undefined && !isComposerGlow(composerGlow)) throw new Error("Composer glow is invalid.");
+  if (chatGlass !== undefined && typeof chatGlass !== "boolean") throw new Error("Chat glass must be true or false.");
+  const strength = chatWallpaperStrength === undefined ? undefined : clampChatWallpaperStrength(chatWallpaperStrength);
+  const blur = chatWallpaperBlur === undefined ? undefined : clampChatWallpaperBlur(chatWallpaperBlur);
+  if (strength === null) throw new Error("Wallpaper strength is invalid.");
+  if (blur === null) throw new Error("Wallpaper blur is invalid.");
+  if (
+    composerGlowGradient !== undefined &&
+    composerGlowGradient !== null &&
+    !isComposerGlowGradient(composerGlowGradient)
+  )
+    throw new Error("Composer glow gradient is invalid.");
+  const windowLevel =
+    transparentWindowLevel === undefined ? undefined : clampTransparentWindowLevel(transparentWindowLevel);
+  if (windowLevel === null) throw new Error("Transparency is invalid.");
   if (
     appearance === undefined &&
     transparentWindow === undefined &&
@@ -231,7 +268,15 @@ export function parseAppAppearancePreference(input: unknown): SetAppAppearancePr
     chatBackgroundLight === undefined &&
     chatBackgroundDark === undefined &&
     interfaceFont === undefined &&
-    codeFont === undefined
+    codeFont === undefined &&
+    accentColor === undefined &&
+    chatWallpaper === undefined &&
+    strength === undefined &&
+    blur === undefined &&
+    chatGlass === undefined &&
+    composerGlow === undefined &&
+    composerGlowGradient === undefined &&
+    windowLevel === undefined
   )
     throw new Error("Appearance is required.");
   return {
@@ -242,6 +287,15 @@ export function parseAppAppearancePreference(input: unknown): SetAppAppearancePr
     ...(chatBackgroundDark === undefined ? {} : { chatBackgroundDark: parseChatBackground(chatBackgroundDark) }),
     ...(interfaceFont === undefined ? {} : { interfaceFont: parseFontFamily(interfaceFont) }),
     ...(codeFont === undefined ? {} : { codeFont: parseFontFamily(codeFont) }),
+    // The main color is a `#rrggbb` color or null, as a chat background is.
+    ...(accentColor === undefined ? {} : { accentColor: parseChatBackground(accentColor) }),
+    ...(chatWallpaper === undefined ? {} : { chatWallpaper }),
+    ...(strength === undefined ? {} : { chatWallpaperStrength: strength }),
+    ...(blur === undefined ? {} : { chatWallpaperBlur: blur }),
+    ...(chatGlass === undefined ? {} : { chatGlass }),
+    ...(composerGlow === undefined ? {} : { composerGlow }),
+    ...(composerGlowGradient === undefined ? {} : { composerGlowGradient }),
+    ...(windowLevel === undefined ? {} : { transparentWindowLevel: windowLevel }),
   };
 }
 

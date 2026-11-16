@@ -1,6 +1,6 @@
 import * as SliderPrimitive from "@kobalte/core/slider";
 import type { JSX } from "@solidjs/web";
-import { Show } from "solid-js";
+import { onCleanup, Show } from "solid-js";
 import { cx } from "./utils";
 
 export interface SliderFieldProps {
@@ -34,6 +34,33 @@ const SLIDER_STEP_KEYS = new Set([
 /** One labelled value on a track, with the current value shown beside the label. */
 export function SliderField(props: SliderFieldProps): JSX.Element {
   const percent = () => ((props.value - props.minValue) / (props.maxValue - props.minValue)) * 100;
+  // A pointer drag ends here, not in Kobalte: its drag end reads `isDragging` right after it writes
+  // it, Solid 2 gives the old value until the next flush, so Kobalte never calls `onChangeEnd` for a
+  // drag. The thumb stops the release from bubbling, so the release is heard in the capture phase.
+  // A press that changes nothing ends with no call, and a page that closes mid-drag drops the drag:
+  // the caller shows its saved value again.
+  let dragging = false;
+  let startValue = props.value;
+  let lastValue = props.value;
+  const stopListening = () => {
+    dragging = false;
+    document.removeEventListener("pointerup", endDrag, true);
+    document.removeEventListener("pointercancel", endDrag, true);
+  };
+  function endDrag(): void {
+    if (!dragging) return;
+    stopListening();
+    if (lastValue !== startValue) props.onChangeEnd?.(lastValue);
+  }
+  const startDrag = () => {
+    if (props.disabled || dragging) return;
+    dragging = true;
+    startValue = props.value;
+    lastValue = props.value;
+    document.addEventListener("pointerup", endDrag, true);
+    document.addEventListener("pointercancel", endDrag, true);
+  };
+  onCleanup(stopListening);
   // On each thumb move, Kobalte reports the new value and then its own value again. Solid has not
   // applied the write yet, so the second report is the old value and would undo the drag. The first
   // report of a task is the real one.
@@ -44,6 +71,7 @@ export function SliderField(props: SliderFieldProps): JSX.Element {
     queueMicrotask(() => {
       reportedThisTask = false;
     });
+    lastValue = value;
     props.onChange?.(value);
   }
   return (
@@ -57,7 +85,6 @@ export function SliderField(props: SliderFieldProps): JSX.Element {
       disabled={props.disabled ?? false}
       getValueLabel={(params) => props.formatValue(params.values[0] ?? props.value)}
       onChange={(values) => reportChange(values[0] ?? props.value)}
-      onChangeEnd={(values) => props.onChangeEnd?.(values[0] ?? props.value)}
     >
       <div class="ui-slider-header">
         <SliderPrimitive.Label class="ui-slider-label">{props.label}</SliderPrimitive.Label>
@@ -69,6 +96,7 @@ export function SliderField(props: SliderFieldProps): JSX.Element {
       {/* The track keeps the pointer during a drag, so the cue plays once, when the user releases it. */}
       <SliderPrimitive.Track
         class="ui-slider-track"
+        onPointerDown={startDrag}
         data-cuelume-select={props.disabled ? undefined : ""}
         data-cuelume-emphasis="subtle"
       >
@@ -83,6 +111,7 @@ export function SliderField(props: SliderFieldProps): JSX.Element {
           style={{ left: `${percent()}%` }}
           aria-valuetext={props.formatValue(props.value)}
           aria-disabled={props.disabled ? "true" : undefined}
+          onPointerDown={startDrag}
           onKeyUp={(event) => {
             if (SLIDER_STEP_KEYS.has(event.key)) props.onChangeEnd?.(props.value);
           }}
@@ -120,10 +149,18 @@ export function SeekSlider(props: SeekSliderProps): JSX.Element {
     userChange = true;
     lastValue = props.value;
   };
-  // Kobalte ends a change only for a thumb drag, so a press on the picture ends where it is released.
+  // Kobalte ends a change only for a thumb drag, and under Solid 2 not even that, so the release ends
+  // it here. The thumb stops the release from bubbling, so it is heard in the capture phase.
   const startPointerChange = () => {
     startUserChange();
-    document.addEventListener("pointerup", () => endChange(lastValue), { once: true });
+    // A cancelled pointer, such as a touch that becomes a scroll, ends the change too.
+    const release = () => {
+      document.removeEventListener("pointerup", release, true);
+      document.removeEventListener("pointercancel", release, true);
+      endChange(lastValue);
+    };
+    document.addEventListener("pointerup", release, true);
+    document.addEventListener("pointercancel", release, true);
   };
   // The same double report as in SliderField: the first report of a task is the real one.
   let reportedThisTask = false;

@@ -1,0 +1,170 @@
+/*
+ * The glow message box. Two lights of the main color turn around the border of every chat
+ * composer, and a still halo sits outside it: the accent on the left, the lighter accent text on the
+ * right. Send takes the accent. Only the accent tokens give color, so the main color of Appearance
+ * settings changes the whole glow. `data-openbot-composer-glow` on the root is "still" (the lights
+ * stay where they are) or "off" (no ring and no halo); no value turns. The composer keeps its layout, size, fill and resize motion from composer.css; this
+ * file changes only its border, halo and Send.
+ *
+ * The ring is `::before`, masked to the 1px border band, so the fill stays the theme surface (and
+ * stays translucent in window glass). The halo is a box-shadow: it paints only outside the box and
+ * does not repaint while the ring turns. Only the 1px ring repaints on each frame.
+ */
+@property --composer-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* A glow gradient of Appearance settings sets `--openbot-composer-glow-start` and `-end` on the root;
+ * without them the glow takes the main color as before (AC-011). */
+.composer {
+  --composer-glow-light-a: var(--openbot-composer-glow-start, var(--openbot-accent-text));
+  --composer-glow-light-b: var(--openbot-composer-glow-end, var(--openbot-accent-text));
+  --composer-glow-dim: color-mix(in srgb, var(--openbot-composer-glow-start, var(--openbot-accent)) 22%, transparent);
+  --composer-glow-halo-start: color-mix(
+    in srgb,
+    var(--openbot-composer-glow-start, var(--openbot-accent)) calc(var(--openbot-glow-halo-opacity) * 100%),
+    transparent
+  );
+  --composer-glow-halo-end: color-mix(
+    in srgb,
+    var(--openbot-composer-glow-end, var(--openbot-accent-text)) calc(var(--openbot-glow-halo-opacity) * 100%),
+    transparent
+  );
+
+  border-color: transparent;
+  box-shadow:
+    -14px 4px 32px -10px var(--composer-glow-halo-start),
+    14px 4px 32px -10px var(--composer-glow-halo-end);
+  transition:
+    box-shadow var(--openbot-duration-hover) var(--openbot-ease-out),
+    border-radius var(--composer-resize-duration) var(--composer-resize-ease),
+    height var(--composer-resize-duration) var(--composer-resize-ease);
+}
+
+.composer:focus-within,
+.composer:has(.composer-editor-surface[aria-disabled="true"]) {
+  border-color: transparent;
+}
+
+/* Typing turns the halo up. */
+.composer:focus-within {
+  box-shadow:
+    -18px 4px 40px -8px var(--composer-glow-halo-start),
+    18px 4px 40px -8px var(--composer-glow-halo-end);
+}
+
+.composer::before {
+  position: absolute;
+  z-index: -1;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--composer-glow-angle),
+    var(--composer-glow-light-a) 0deg,
+    var(--composer-glow-dim) 70deg,
+    var(--composer-glow-dim) 110deg,
+    var(--composer-glow-light-b) 180deg,
+    var(--composer-glow-dim) 250deg,
+    var(--composer-glow-dim) 290deg,
+    var(--composer-glow-light-a) 360deg
+  );
+  content: "";
+  pointer-events: none;
+  mask:
+    linear-gradient(currentColor 0 0) content-box exclude,
+    linear-gradient(currentColor 0 0);
+  animation: composer-glow-turn 8s linear infinite;
+}
+
+/* The resize clips to the padding box; this keeps the ring in the border band visible. */
+.composer:is([data-resizing], [data-rows-resizing]) {
+  overflow-clip-margin: 1px;
+}
+
+/* A box that cannot take a message keeps a faint, still ring and no halo. */
+.composer:has(.composer-editor-surface[aria-disabled="true"]) {
+  box-shadow: none;
+}
+
+.composer:has(.composer-editor-surface[aria-disabled="true"])::before {
+  opacity: 0.35;
+  animation-play-state: paused;
+}
+
+@keyframes composer-glow-turn {
+  to {
+    --composer-glow-angle: 360deg;
+  }
+}
+
+/* Send: the accent, as a filled circle. */
+.composer .composer-send-button,
+.composer .composer-send-button.ui-button {
+  background: linear-gradient(135deg, var(--openbot-accent), var(--openbot-accent-hover));
+  box-shadow: 0 0 14px var(--openbot-accent-strong);
+  color: var(--openbot-text-on-accent);
+}
+
+.composer .composer-send-button:hover:not(:disabled),
+.composer .composer-send-button.ui-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--openbot-accent-hover), var(--openbot-accent));
+  color: var(--openbot-text-on-accent);
+}
+
+.composer .composer-send-button:disabled {
+  box-shadow: none;
+  opacity: 0.45;
+}
+
+/*
+ * The user's own message: the raised surface with a thin rim in the accent, the color of the
+ * message box. A bubble with a chat colour, or another member's tinted bubble, keeps its colour.
+ */
+.message-entry-user
+  .ui-bubble-variant-secondary:not(.message-bubble-colored, .message-bubble-member)
+  > .ui-bubble-content {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--openbot-bg-surface-raised) 0 0) padding-box,
+    linear-gradient(
+      120deg,
+      var(--openbot-accent-strong),
+      color-mix(in srgb, var(--openbot-accent-text) 45%, transparent) 50%,
+      var(--openbot-accent-strong)
+    )
+    border-box;
+}
+
+/* In window glass the surface is translucent and the rim gradient would show through it. */
+:root[data-openbot-window-glass]
+  .message-entry-user
+  .ui-bubble-variant-secondary:not(.message-bubble-colored, .message-bubble-member)
+  > .ui-bubble-content {
+  background: var(--openbot-bg-surface-raised);
+}
+
+/* Still: the lights stay where they are. */
+:root[data-openbot-composer-glow="still"] .composer::before {
+  animation: none;
+}
+
+/* Off: no ring and no halo, only the plain border of a message box. */
+:root[data-openbot-composer-glow="off"] .composer,
+:root[data-openbot-composer-glow="off"] .composer:focus-within,
+:root[data-openbot-composer-glow="off"] .composer:has(.composer-editor-surface[aria-disabled="true"]) {
+  border-color: var(--openbot-border-strong);
+  box-shadow: none;
+}
+
+:root[data-openbot-composer-glow="off"] .composer::before {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .composer::before {
+    animation: none;
+  }
+}

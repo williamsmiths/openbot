@@ -50,6 +50,7 @@ import { createProfileActivityStore } from "./profile-activity-store";
 import { renderProfileShareImage } from "./profile-share-image";
 import { type AgentDockSettingsModel, SettingsAgentDockTab } from "./SettingsAgentDockTab";
 import { createSettingsAgentsSection } from "./SettingsAgentsSection";
+import { SettingsAppearanceTab } from "./SettingsAppearanceTab";
 import { SettingsDynamicIslandTab } from "./SettingsDynamicIslandTab";
 import { SettingsGeneralTab } from "./SettingsGeneralTab";
 import { SettingsNotificationsTab } from "./SettingsNotificationsTab";
@@ -214,6 +215,7 @@ export function SettingsModal(props: SettingsModalProps) {
     onChange(value: string) {
       if (
         value === "general" ||
+        value === "appearance" ||
         value === "agents" ||
         value === "notifications" ||
         value === "voice" ||
@@ -305,6 +307,11 @@ export function SettingsModal(props: SettingsModalProps) {
             chatColor={props.account.chatColor ?? null}
             onSetChatColor={props.onSetChatColor}
           />
+        </Tabs.Content>
+
+        <Tabs.Content value="appearance" class="settings-modal-tab-panel" data-tab="appearance">
+          {preferencesLoadError()}
+          <SettingsAppearanceTab platform={props.appInfo?.platform} />
         </Tabs.Content>
 
         <Tabs.Content value="agents" class="settings-modal-tab-panel" data-tab="agents">

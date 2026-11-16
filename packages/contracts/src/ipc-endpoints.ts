@@ -785,6 +785,11 @@ export const IPC_ENDPOINTS = {
     ),
     // Sent to every window, because each window applies the choice to its own page.
     appAppearancePreference: event<AppAppearancePreference>()("app:appearance-preference"),
+    // Main opens the image dialog, saves a resized copy, and answers the new preference; a cancelled
+    // dialog answers the preference as it was. The renderer never sees a file path.
+    pickChatWallpaperPhoto: request<undefined, AppAppearancePreference>()("app:pick-chat-wallpaper-photo"),
+    // The saved photo as a `data:image/jpeg;base64,` URL, or null when none is saved.
+    getChatWallpaperPhoto: request<undefined, string | null>()("app:get-chat-wallpaper-photo"),
     // The font family names of this computer, for the font choices in Settings. Main reads them,
     // so the renderer needs no font access permission.
     listInstalledFonts: request<undefined, string[]>()("app:list-installed-fonts"),

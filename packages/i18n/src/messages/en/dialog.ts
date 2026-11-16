@@ -5,6 +5,7 @@ export const messages = defineMessages("dialog", {
   "dialog.chooseSiteDirectory": "Choose a static site directory",
   "dialog.chooseAgentFolder": "Choose a folder for {agent}",
   "dialog.chooseAgentExclusion": "Choose a folder that {agent} must not change",
+  "dialog.chooseChatWallpaper": "Choose a chat wallpaper",
   "dialog.chooseSkill": "Choose a skill folder or ZIP",
   "dialog.filter.skillPackages": "Skill packages",
   "dialog.filter.images": "Images",

@@ -150,4 +150,6 @@
   --openbot-shadow-menu: transparent;
   --openbot-shadow-ring: rgba(20, 20, 20, 0.04);
   --openbot-shadow-overlay: 0 0 0 transparent;
+  /* On paper the halo of the glow message box is softer. */
+  --openbot-glow-halo-opacity: 0.45;
 }

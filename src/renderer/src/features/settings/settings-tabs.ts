@@ -7,6 +7,7 @@ import {
   CreditCard,
   Mic,
   MousePointer2,
+  Palette,
   PanelRight,
   PanelTop,
   Server,
@@ -17,6 +18,7 @@ import {
 
 export type SettingsTab =
   | "general"
+  | "appearance"
   | "agents"
   | "notifications"
   | "voice"
@@ -71,7 +73,6 @@ export const navItems: ReadonlyArray<SettingsNavItem> = [
       { titleKey: "settings.codeFont.title", descriptionKey: "settings.codeFont.description" },
       { titleKey: "settings.logoColor.title", descriptionKey: "settings.logoColor.description" },
       { titleKey: "settings.chatColor.title", descriptionKey: "settings.chatColor.description" },
-      { titleKey: "settings.chatBackground.title", descriptionKey: "settings.chatBackground.description" },
       { titleKey: "settings.sendShortcut.title", descriptionKey: "settings.sendShortcut.description" },
       { titleKey: "sidebar.order.title", descriptionKey: "settings.chatOrder.description" },
       { titleKey: "settings.showAgentSteps.title", descriptionKey: "settings.showAgentSteps.description" },
@@ -89,6 +90,24 @@ export const navItems: ReadonlyArray<SettingsNavItem> = [
       { titleKey: "settings.restoreWorkspace.title", descriptionKey: "settings.restoreWorkspace.description" },
       { titleKey: "settings.quitGuard.title", descriptionKey: "settings.quitGuard.description", macOS: true },
       { titleKey: "settings.analytics.title", descriptionKey: "settings.analytics.description" },
+    ],
+  },
+  {
+    value: "appearance",
+    titleKey: "settings.tab.appearance.title",
+    descriptionKey: "settings.tab.appearance.description",
+    icon: Palette,
+    rows: [
+      { titleKey: "settings.appearance.theme.title", descriptionKey: "settings.appearance.theme.description" },
+      {
+        titleKey: "settings.appearance.transparentWindow.title",
+        descriptionKey: "settings.appearance.transparentWindow.description",
+        macOS: true,
+      },
+      { titleKey: "settings.accent.title", descriptionKey: "settings.accent.description" },
+      { titleKey: "settings.wallpaper.title", descriptionKey: "settings.wallpaper.description" },
+      { titleKey: "settings.chatBackground.title", descriptionKey: "settings.chatBackground.description" },
+      { titleKey: "settings.composerGlow.title", descriptionKey: "settings.composerGlow.description" },
     ],
   },
   {

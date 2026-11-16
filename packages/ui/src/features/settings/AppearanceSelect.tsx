@@ -2,13 +2,18 @@ import { APP_APPEARANCES, type AppAppearance, isAppAppearance } from "@openbot/c
 import type { AppTextKey } from "@openbot/i18n";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@openbot/ui";
 import type { JSX } from "@solidjs/web";
-import { createMemo } from "solid-js";
+import { createMemo, Show } from "solid-js";
 import { useText } from "../../text";
 
 /** A light, dark or system choice, or `palette:<id>` for a theme palette file. */
 export type AppearanceSelectValue = AppAppearance | `palette:${string}`;
 
 const PALETTE_PREFIX = "palette:";
+
+/** The select value of a theme palette. */
+export function paletteSelectValue(id: string): AppearanceSelectValue {
+  return `${PALETTE_PREFIX}${id}`;
+}
 
 /** The select value of a saved preference: the palette while one is selected, else the appearance. */
 export function appearanceSelectValue(preference: {
@@ -49,6 +54,8 @@ export interface AppearanceSelectPalette {
   id: string;
   /** The name that the palette file gives. It is data, so it shows as written. */
   name: string;
+  /** Hex colors that main validated. The list shows them as a dot, so each theme reads at a glance. */
+  colors?: { canvas: string; accent: string } | undefined;
 }
 
 export interface AppearanceSelectProps {
@@ -72,11 +79,29 @@ export function AppearanceSelect(props: AppearanceSelectProps): JSX.Element {
     ],
     { equals: sameValues },
   );
-  const label = (value: AppearanceSelectValue | undefined) => {
+  const paletteOf = (value: AppearanceSelectValue) => {
+    const id = paletteOfSelectValue(value);
+    return props.palettes?.find((palette) => palette.id === id);
+  };
+  const label = (value: AppearanceSelectValue | undefined): JSX.Element => {
     if (value === undefined) return "";
     if (isAppAppearance(value)) return t(APPEARANCE_KEYS[value]);
-    const id = paletteOfSelectValue(value);
-    return props.palettes?.find((palette) => palette.id === id)?.name ?? "";
+    const palette = paletteOf(value);
+    const colors = palette?.colors;
+    return (
+      <span class="settings-theme-option">
+        <Show when={colors}>
+          {(swatch) => (
+            <span
+              class="settings-theme-swatch"
+              style={{ "--theme-canvas": swatch().canvas, "--theme-accent": swatch().accent }}
+              aria-hidden="true"
+            />
+          )}
+        </Show>
+        {palette?.name ?? ""}
+      </span>
+    );
   };
 
   return (

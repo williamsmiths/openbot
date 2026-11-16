@@ -22,6 +22,7 @@ import {
   decodeAppSetupState,
   decodeBillingState,
   decodeCentralAuthState,
+  decodeChatWallpaperPhoto,
   decodeChatWindowTargets,
   decodeCustomAgentResult,
   decodeCustomAgents,
@@ -111,6 +112,41 @@ const voiceServer = {
   },
 };
 
+const basePreference = {
+  appearance: "dark",
+  transparentWindow: false,
+  palette: null,
+  palettes: [],
+  chatBackgroundLight: null,
+  chatBackgroundDark: null,
+  interfaceFont: null,
+  codeFont: null,
+} as const;
+
+/** The Appearance page fields at their defaults, for the cases that are about another field. */
+const appearanceExtras = {
+  accentColor: null,
+  chatWallpaper: "none",
+  chatWallpaperStrength: 80,
+  chatWallpaperBlur: 0,
+  chatGlass: false,
+  composerGlow: "turn",
+  composerGlowGradient: null,
+  transparentWindowLevel: 50,
+  chatWallpaperPhotoVersion: null,
+} as const satisfies Pick<
+  AppAppearancePreference,
+  | "composerGlowGradient"
+  | "transparentWindowLevel"
+  | "accentColor"
+  | "chatWallpaper"
+  | "chatWallpaperStrength"
+  | "chatWallpaperBlur"
+  | "chatGlass"
+  | "composerGlow"
+  | "chatWallpaperPhotoVersion"
+>;
+
 const valid: [string, (value: unknown) => unknown, unknown][] = [
   [
     "app behavior with a quit guard",
@@ -199,6 +235,7 @@ const valid: [string, (value: unknown) => unknown, unknown][] = [
     "appearance preference",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "light",
       transparentWindow: true,
       palette: null,
@@ -213,6 +250,7 @@ const valid: [string, (value: unknown) => unknown, unknown][] = [
     "appearance preference with a theme palette",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "dark",
       transparentWindow: false,
       palette: "omarchy",
@@ -227,6 +265,7 @@ const valid: [string, (value: unknown) => unknown, unknown][] = [
     "appearance preference with a chat background for each scheme",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "system",
       transparentWindow: false,
       palette: null,
@@ -241,6 +280,7 @@ const valid: [string, (value: unknown) => unknown, unknown][] = [
     "appearance preference with an interface font and a code font",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "dark",
       transparentWindow: false,
       palette: null,
@@ -251,6 +291,31 @@ const valid: [string, (value: unknown) => unknown, unknown][] = [
       codeFont: "JetBrains Mono",
     } satisfies AppAppearancePreference,
   ],
+  [
+    "appearance preference with a main color, a wallpaper photo, glass and a still glow",
+    decodeAppAppearancePreference,
+    {
+      appearance: "dark",
+      transparentWindow: false,
+      palette: null,
+      palettes: [],
+      chatBackgroundLight: null,
+      chatBackgroundDark: null,
+      interfaceFont: null,
+      codeFont: null,
+      accentColor: "#14b8c8",
+      chatWallpaper: "photo",
+      chatWallpaperStrength: 55,
+      chatWallpaperBlur: 12,
+      chatGlass: true,
+      composerGlow: "still",
+      composerGlowGradient: "ocean",
+      transparentWindowLevel: 72,
+      chatWallpaperPhotoVersion: 1_760_000_000_000,
+    } satisfies AppAppearancePreference,
+  ],
+  ["a wallpaper photo", decodeChatWallpaperPhoto, "data:image/jpeg;base64,/9j/4AAQSkZJRgAB+/=="],
+  ["no wallpaper photo", decodeChatWallpaperPhoto, null],
   ["installed fonts", decodeInstalledFonts, ["Al Bayan", "DejaVu Sans", "Noto Kufi Arabic"]],
   ["signed out", decodeCentralAuthState, { status: "signed_out" } satisfies CentralAuthState],
   [
@@ -445,6 +510,7 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
     "a theme palette color that is not hex",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "dark",
       transparentWindow: false,
       palette: null,
@@ -455,6 +521,7 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
     "a theme palette with a missing color",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "dark",
       transparentWindow: false,
       palette: null,
@@ -470,6 +537,7 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
     "appearance preference with no font",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "dark",
       transparentWindow: false,
       palette: null,
@@ -482,6 +550,7 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
     "a font name that ends the CSS string",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "dark",
       transparentWindow: false,
       palette: null,
@@ -498,6 +567,7 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
     "a chat background that is not a hex color",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "dark",
       transparentWindow: false,
       palette: null,
@@ -510,6 +580,7 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
     "a chat background with an alpha channel",
     decodeAppAppearancePreference,
     {
+      ...appearanceExtras,
       appearance: "light",
       transparentWindow: false,
       palette: null,
@@ -518,6 +589,60 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
       chatBackgroundDark: null,
     },
   ],
+  [
+    "a main color that is a CSS expression",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, accentColor: "red;x:url(a)" },
+  ],
+  [
+    "a main color with an alpha channel",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, accentColor: "#3b82f6ff" },
+  ],
+  [
+    "an unknown chat wallpaper",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, chatWallpaper: "video" },
+  ],
+  [
+    "a chat wallpaper strength that is text",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, chatWallpaperStrength: "80; x:y" },
+  ],
+  [
+    "a chat glass that is not a switch",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, chatGlass: "yes" },
+  ],
+  [
+    "an unknown composer glow",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, composerGlow: "strobe" },
+  ],
+  [
+    "an unknown composer glow gradient",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, composerGlowGradient: "#ff0000;x:y" },
+  ],
+  [
+    "a transparency that is text",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, transparentWindowLevel: "50; x:y" },
+  ],
+  [
+    "a wallpaper photo version that is text",
+    decodeAppAppearancePreference,
+    { ...appearanceExtras, ...basePreference, chatWallpaperPhotoVersion: "1" },
+  ],
+  ["a wallpaper photo that is a PNG", decodeChatWallpaperPhoto, "data:image/png;base64,AAAA"],
+  ["a wallpaper photo that is a web address", decodeChatWallpaperPhoto, "https://example.com/a.jpg"],
+  ["a wallpaper photo that is a file path", decodeChatWallpaperPhoto, "file:///etc/passwd"],
+  [
+    "a wallpaper photo that ends the CSS url",
+    decodeChatWallpaperPhoto,
+    'data:image/jpeg;base64,AAAA");background:url("https://x',
+  ],
+  ["a wallpaper photo that is not text", decodeChatWallpaperPhoto, 7],
   ["an unknown account status", decodeCentralAuthState, { status: "banned" }],
   ["signed out with an unknown reason", decodeCentralAuthState, { status: "signed_out", reason: "expired" }],
   ["signed in without a user", decodeCentralAuthState, { status: "signed_in" }],
@@ -579,6 +704,23 @@ const malformed: [string, (value: unknown) => unknown, unknown][] = [
     { addresses: [], folders: [], hiddenIds: [] },
   ],
 ];
+
+describe("appearance numbers", () => {
+  it("rounds and holds the wallpaper strength and blur inside their range", () => {
+    const decoded = decodeAppAppearancePreference({
+      ...appearanceExtras,
+      ...basePreference,
+      chatWallpaperStrength: 250.4,
+      chatWallpaperBlur: -3,
+    });
+    expect(decoded.chatWallpaperStrength).toBe(100);
+    expect(decoded.chatWallpaperBlur).toBe(0);
+    expect(
+      decodeAppAppearancePreference({ ...appearanceExtras, ...basePreference, chatWallpaperStrength: 12.6 })
+        .chatWallpaperStrength,
+    ).toBe(13);
+  });
+});
 
 describe("app decoding", () => {
   it.each(valid)("keeps %s unchanged", (_name, decode, value) => {

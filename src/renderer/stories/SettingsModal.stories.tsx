@@ -1,4 +1,6 @@
 import type {
+  AppAppearancePreference,
+  AppThemePalette,
   AvatarImageInput,
   CentralAuthUser,
   MobileConnectedDevice,
@@ -10,6 +12,7 @@ import { DEFAULT_GENERAL_SETTINGS, type GeneralSettingsValue } from "@openbot/ui
 import { createSignal, onCleanup } from "solid-js";
 import { fn } from "storybook/test";
 import type { Meta, StoryObj } from "storybook-solidjs-vite";
+import { syncAppearance } from "../src/appearance-choice";
 import { SettingsModal } from "../src/features/settings/SettingsModal";
 import type { SettingsTab } from "../src/features/settings/settings-tabs";
 import type { CodexLiveAccess } from "../src/features/speech/codex-live-access";
@@ -31,6 +34,86 @@ const storyGeneralSettings: GeneralSettingsValue = {
   keepAwakeOnBattery: false,
   quitGuard: "working",
 };
+
+/** A few of the palettes that main lists, so the Appearance page shows theme cards beside System, Dark and Light. */
+const storyPalettes: AppThemePalette[] = [
+  {
+    id: "midnight",
+    name: "Midnight",
+    scheme: "dark",
+    colors: {
+      canvas: "#0d1424",
+      frame: "#0a101d",
+      sidebar: "#0a101d",
+      surface: "#141d31",
+      text: "#e6ecf7",
+      textMuted: "#8a97b2",
+      border: "#24314d",
+      accent: "#4c8dff",
+      accentForeground: "#ffffff",
+      success: "#34d399",
+      warning: "#fbbf24",
+      danger: "#f87171",
+    },
+  },
+  {
+    id: "deep-teal",
+    name: "Deep Teal",
+    scheme: "dark",
+    colors: {
+      canvas: "#0b1a22",
+      frame: "#08141b",
+      sidebar: "#08141b",
+      surface: "#10242e",
+      text: "#e3f2f5",
+      textMuted: "#86a4ad",
+      border: "#1d3a46",
+      accent: "#1fb5cc",
+      accentForeground: "#04202a",
+      success: "#4ade80",
+      warning: "#fbbf24",
+      danger: "#f87171",
+    },
+  },
+  {
+    id: "forest",
+    name: "Forest",
+    scheme: "dark",
+    colors: {
+      canvas: "#0c1712",
+      frame: "#08110d",
+      sidebar: "#08110d",
+      surface: "#13221b",
+      text: "#e3f3ea",
+      textMuted: "#87a596",
+      border: "#21392d",
+      accent: "#22b573",
+      accentForeground: "#04150d",
+      success: "#4ade80",
+      warning: "#facc15",
+      danger: "#f87171",
+    },
+  },
+  {
+    id: "sky",
+    name: "Sky",
+    scheme: "light",
+    colors: {
+      canvas: "#eef2f8",
+      frame: "#e4e9f2",
+      sidebar: "#e4e9f2",
+      surface: "#ffffff",
+      text: "#0f172a",
+      textMuted: "#5b6478",
+      border: "#d3dbe8",
+      accent: "#2563eb",
+      accentForeground: "#ffffff",
+      success: "#16a34a",
+      warning: "#b45309",
+      danger: "#dc2626",
+    },
+  },
+];
 
 const storyAppInfo = { name: "OpenBot", version: "0.2.1", platform: "darwin", variant: "dev" } as const;
 const storyAccount: CentralAuthUser = {
@@ -94,11 +177,17 @@ function SettingsModalStory(props: {
   codexLiveAccess?: CodexLiveAccess;
   /** Adds the Agent dock tab with the agents of the first server. */
   agentDock?: boolean;
+  /** The appearance to start with. The page applies each change to this story, as the app does. */
+  appearance?: Partial<AppAppearancePreference>;
 }) {
   const previousApi = window.openbot;
   const billingApi = createMockBilling();
-  const mock = createMockOpenBot(props.voice);
+  const mock = createMockOpenBot({
+    ...props.voice,
+    appearancePreference: { palettes: storyPalettes, ...props.appearance },
+  });
   window.openbot = mock.api;
+  if (props.initialTab === "appearance") syncAppearance({ sweep: false });
   onCleanup(() => {
     mock.dispose();
     toast.dismiss();
@@ -315,6 +404,27 @@ export const Open: Story = {
 export const Narrow: Story = {
   render: () => <SettingsModalStory initialOpen />,
   parameters: { viewport: { defaultViewport: "settingsNarrow" } },
+};
+
+export const Appearance: Story = {
+  render: () => <SettingsModalStory initialOpen initialTab="appearance" />,
+};
+
+export const AppearanceWallpaper: Story = {
+  render: () => (
+    <SettingsModalStory
+      initialOpen
+      initialTab="appearance"
+      appearance={{
+        palette: "deep-teal",
+        chatWallpaper: "glyphs",
+        chatWallpaperBlur: 2,
+        chatGlass: true,
+        accentColor: "#e5508f",
+        composerGlowGradient: "aurora",
+      }}
+    />
+  ),
 };
 
 export const Profile: Story = {

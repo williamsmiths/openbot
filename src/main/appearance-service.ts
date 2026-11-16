@@ -1,18 +1,32 @@
 import {
   type AppAppearancePreference,
   type AppThemePalette,
+  clampChatWallpaperBlur,
+  clampChatWallpaperStrength,
+  clampTransparentWindowLevel,
   DEFAULT_APP_APPEARANCE,
+  DEFAULT_CHAT_GLASS,
+  DEFAULT_CHAT_WALLPAPER,
+  DEFAULT_CHAT_WALLPAPER_BLUR,
+  DEFAULT_CHAT_WALLPAPER_STRENGTH,
+  DEFAULT_COMPOSER_GLOW,
   DEFAULT_TRANSPARENT_WINDOW,
+  DEFAULT_TRANSPARENT_WINDOW_LEVEL,
   isAppAppearance,
   isAppFontFamily,
   isAppThemePaletteId,
   isChatBackgroundColor,
+  isChatWallpaper,
+  isComposerGlow,
+  isComposerGlowGradient,
   type SetAppAppearancePreferenceInput,
   sameThemePalettes,
 } from "@openbot/contracts/ipc";
 import { isDynamicRecord } from "@openbot/contracts/runtime-values";
 import { Effect, Exit, Result, Scope, Semaphore } from "effect";
 import { isMissingFileError } from "../backend/file-errors";
+import { withBuiltInThemePalettes } from "./built-in-theme-palettes";
+import { readChatWallpaperPhoto, saveChatWallpaperPhoto } from "./chat-wallpaper-photo";
 import { type PreferenceFileFailure, readPreferenceFile, writePreferenceFile } from "./preference-file";
 import { readThemePalettes, watchThemePalettes } from "./theme-palette-files";
 
@@ -26,6 +40,15 @@ type StoredAppearancePreference = Pick<
   | "chatBackgroundDark"
   | "interfaceFont"
   | "codeFont"
+  | "accentColor"
+  | "chatWallpaper"
+  | "chatWallpaperStrength"
+  | "chatWallpaperBlur"
+  | "chatGlass"
+  | "composerGlow"
+  | "chatWallpaperPhotoVersion"
+  | "transparentWindowLevel"
+  | "composerGlowGradient"
 > & {
   /**
    * False until the user picks a theme in Settings: a light, dark or system choice, or a palette.
@@ -45,6 +68,15 @@ const DEFAULT_PREFERENCE: StoredAppearancePreference = {
   chatBackgroundDark: null,
   interfaceFont: null,
   codeFont: null,
+  accentColor: null,
+  chatWallpaper: DEFAULT_CHAT_WALLPAPER,
+  chatWallpaperStrength: DEFAULT_CHAT_WALLPAPER_STRENGTH,
+  chatWallpaperBlur: DEFAULT_CHAT_WALLPAPER_BLUR,
+  chatGlass: DEFAULT_CHAT_GLASS,
+  composerGlow: DEFAULT_COMPOSER_GLOW,
+  chatWallpaperPhotoVersion: null,
+  transparentWindowLevel: DEFAULT_TRANSPARENT_WINDOW_LEVEL,
+  composerGlowGradient: null,
   themeChosen: false,
 };
 
@@ -56,7 +88,9 @@ const DEFAULT_PREFERENCE: StoredAppearancePreference = {
  * palette, and one with no `themeChosen` as a chosen theme: the user saved it. A file with no chat
  * background, or with a value that is not a color, reads as the color of the theme. A file with no
  * font, which every file before the font choice is, or with a name that cannot go into a CSS font
- * list, reads as the default font.
+ * list, reads as the default font. A file with none of the main color, wallpaper, glass and glow
+ * fields, which every file before the Appearance page is, or with a value out of range, reads as the
+ * default of each (AC-007). So does a file with no transparency level or glow gradient (AC-013).
  */
 const readAppearancePreference = Effect.fn("AppearancePreference.read")(function* (path: string) {
   const read = yield* Effect.result(
@@ -71,6 +105,17 @@ const readAppearancePreference = Effect.fn("AppearancePreference.read")(function
         chatBackgroundDark: isChatBackgroundColor(parsed.chatBackgroundDark) ? parsed.chatBackgroundDark : null,
         interfaceFont: isAppFontFamily(parsed.interfaceFont) ? parsed.interfaceFont : null,
         codeFont: isAppFontFamily(parsed.codeFont) ? parsed.codeFont : null,
+        accentColor: isChatBackgroundColor(parsed.accentColor) ? parsed.accentColor : null,
+        chatWallpaper: isChatWallpaper(parsed.chatWallpaper) ? parsed.chatWallpaper : DEFAULT_CHAT_WALLPAPER,
+        chatWallpaperStrength:
+          clampChatWallpaperStrength(parsed.chatWallpaperStrength) ?? DEFAULT_CHAT_WALLPAPER_STRENGTH,
+        chatWallpaperBlur: clampChatWallpaperBlur(parsed.chatWallpaperBlur) ?? DEFAULT_CHAT_WALLPAPER_BLUR,
+        chatGlass: parsed.chatGlass === true,
+        composerGlow: isComposerGlow(parsed.composerGlow) ? parsed.composerGlow : DEFAULT_COMPOSER_GLOW,
+        chatWallpaperPhotoVersion: wholeVersion(parsed.chatWallpaperPhotoVersion),
+        transparentWindowLevel:
+          clampTransparentWindowLevel(parsed.transparentWindowLevel) ?? DEFAULT_TRANSPARENT_WINDOW_LEVEL,
+        composerGlowGradient: isComposerGlowGradient(parsed.composerGlowGradient) ? parsed.composerGlowGradient : null,
         themeChosen: parsed.themeChosen !== false,
       };
     }),
@@ -80,6 +125,10 @@ const readAppearancePreference = Effect.fn("AppearancePreference.read")(function
     ? { ...DEFAULT_PREFERENCE }
     : { ...DEFAULT_PREFERENCE, themeChosen: true };
 });
+
+function wholeVersion(value: unknown): number | null {
+  return typeof value === "number" && Number.isSafeInteger(value) && value > 0 ? value : null;
+}
 
 /** The saved transparent window choice, read before the service exists, so the first window is built with it. */
 export const readSavedTransparentWindow = Effect.fn("AppearancePreference.readTransparentWindow")(function* (
@@ -105,8 +154,10 @@ export class AppearanceService {
   readonly #path: string;
   readonly #paletteDirectory: string;
   readonly #supportsTransparentWindow: boolean;
+  readonly #photoPath: string;
   readonly #listeners = new Set<(preference: AppAppearancePreference) => void>();
   #preference: StoredAppearancePreference = { ...DEFAULT_PREFERENCE };
+  /** The palette files. The palettes that ship with the app are added in `preference`. */
   #palettes: AppThemePalette[] = [];
   #writes = Semaphore.makeUnsafe(1);
   #paletteReads = Semaphore.makeUnsafe(1);
@@ -115,26 +166,44 @@ export class AppearanceService {
 
   /**
    * `supportsTransparentWindow` is false where the window cannot blur the desktop: there it reads as
-   * off. `paletteDirectory` is the folder of palette files.
+   * off. `paletteDirectory` is the folder of palette files. `photoPath` is the file of the wallpaper
+   * photo.
    */
-  constructor(input: { path: string; paletteDirectory: string; supportsTransparentWindow: boolean }) {
+  constructor(input: {
+    path: string;
+    paletteDirectory: string;
+    photoPath: string;
+    supportsTransparentWindow: boolean;
+  }) {
     this.#path = input.path;
+    this.#photoPath = input.photoPath;
     this.#paletteDirectory = input.paletteDirectory;
     this.#supportsTransparentWindow = input.supportsTransparentWindow;
   }
 
   get preference(): AppAppearancePreference {
     const wanted = this.#preference.palette;
-    const palette = this.#palettes.some((item) => item.id === wanted) ? wanted : null;
+    // The files and the palettes that ship with the app. `#palettes` holds the files only.
+    const palettes = withBuiltInThemePalettes(this.#palettes);
+    const palette = palettes.some((item) => item.id === wanted) ? wanted : null;
     return {
       appearance: this.#preference.appearance,
       transparentWindow: this.#supportsTransparentWindow && this.#preference.transparentWindow,
       palette,
-      palettes: this.#palettes.map((item) => ({ ...item, colors: { ...item.colors } })),
+      palettes: palettes.map((item) => ({ ...item, colors: { ...item.colors } })),
       chatBackgroundLight: this.#preference.chatBackgroundLight,
       chatBackgroundDark: this.#preference.chatBackgroundDark,
       interfaceFont: this.#preference.interfaceFont,
       codeFont: this.#preference.codeFont,
+      accentColor: this.#preference.accentColor,
+      chatWallpaper: this.#preference.chatWallpaper,
+      chatWallpaperStrength: this.#preference.chatWallpaperStrength,
+      chatWallpaperBlur: this.#preference.chatWallpaperBlur,
+      chatGlass: this.#preference.chatGlass,
+      composerGlow: this.#preference.composerGlow,
+      chatWallpaperPhotoVersion: this.#preference.chatWallpaperPhotoVersion,
+      transparentWindowLevel: this.#preference.transparentWindowLevel,
+      composerGlowGradient: this.#preference.composerGlowGradient,
     };
   }
 
@@ -202,11 +271,48 @@ export class AppearanceService {
     return this.#writes.withPermit(this.#write(change));
   }
 
-  #write(change: SetAppAppearancePreferenceInput): Effect.Effect<AppAppearancePreference, PreferenceFileFailure> {
+  /** The saved wallpaper photo as a data URL, or null when none is saved (AC-008). */
+  readPhoto() {
+    return readChatWallpaperPhoto(this.#photoPath);
+  }
+
+  /**
+   * Saves the picture at `sourcePath` as the wallpaper photo, shows it, and bumps the version so each
+   * window reads it again. Serialized with the other writes. A picture that cannot be read changes
+   * nothing (AC-008).
+   */
+  setPhoto(sourcePath: string): Effect.Effect<AppAppearancePreference, PreferenceFileFailure> {
+    return this.#writes.withPermit(
+      Effect.gen({ self: this }, function* () {
+        const version = Date.now();
+        yield* saveChatWallpaperPhoto(this.#photoPath, sourcePath);
+        return yield* this.#write({ chatWallpaper: "photo" }, { chatWallpaperPhotoVersion: version }).pipe(
+          // The file is new already. If the preference file cannot be written, the windows still
+          // show the new photo, and the next write saves the choice.
+          Effect.tapError(() =>
+            Effect.sync(() => {
+              this.#preference = { ...this.#preference, chatWallpaper: "photo", chatWallpaperPhotoVersion: version };
+              this.#notify();
+            }),
+          ),
+        );
+      }),
+    );
+  }
+
+  #write(
+    change: SetAppAppearancePreferenceInput,
+    extra: Partial<Pick<StoredAppearancePreference, "chatWallpaperPhotoVersion">> = {},
+  ): Effect.Effect<AppAppearancePreference, PreferenceFileFailure> {
     return Effect.gen({ self: this }, function* () {
       const themeChosen =
         this.#preference.themeChosen || change.appearance !== undefined || change.palette !== undefined;
-      this.#preference = yield* writeAppearancePreference(this.#path, { ...this.#preference, ...change, themeChosen });
+      this.#preference = yield* writeAppearancePreference(this.#path, {
+        ...this.#preference,
+        ...change,
+        ...extra,
+        themeChosen,
+      });
       this.#notify();
       return this.preference;
     }).pipe(Effect.uninterruptible);

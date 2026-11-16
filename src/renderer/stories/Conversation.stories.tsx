@@ -1268,6 +1268,30 @@ function RecordingConversation(props: { args: Parameters<typeof Conversation>[0]
   return <MockedConversation args={props.args} />;
 }
 
+/** Sets the root attributes that `chat-wallpaper.ts` sets in the app, and removes them on the way out. */
+function WallpaperConversation(props: { args: Parameters<typeof Conversation>[0]; inWindow?: boolean }) {
+  const root = document.documentElement;
+  const attributes = ["data-openbot-chat-wallpaper", "data-openbot-chat-glass"] as const;
+  root.setAttribute("data-openbot-chat-wallpaper", "glyphs");
+  root.setAttribute("data-openbot-chat-glass", "");
+  root.style.setProperty("--openbot-chat-wallpaper-strength", "0.8");
+  root.style.setProperty("--openbot-chat-wallpaper-blur", "2px");
+  onCleanup(() => {
+    for (const name of attributes) root.removeAttribute(name);
+    root.style.removeProperty("--openbot-chat-wallpaper-strength");
+    root.style.removeProperty("--openbot-chat-wallpaper-blur");
+  });
+  return props.inWindow ? (
+    <div class="app-window" style={{ height: "100vh" }}>
+      <div class="app-frame-edge" style={{ height: "100%" }}>
+        <MockedConversation args={props.args} />
+      </div>
+    </div>
+  ) : (
+    <MockedConversation args={props.args} />
+  );
+}
+
 const meta = {
   title: "Conversation/Conversation",
   component: Conversation,
@@ -1280,6 +1304,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const RichConversation: Story = {};
+
+/** The chat wallpaper and the frosted glass of Settings › Appearance, behind the real messages. */
+export const WallpaperGlass: Story = {
+  render: (storyArgs) => <WallpaperConversation args={storyArgs} />,
+};
+
+/** The same inside the window frame, where the wallpaper follows the card under the header. */
+export const WallpaperGlassInWindow: Story = {
+  render: (storyArgs) => <WallpaperConversation args={storyArgs} inWindow />,
+};
 
 const contextStoryAgent = requireFixture(args.agent, "Context story agent");
 

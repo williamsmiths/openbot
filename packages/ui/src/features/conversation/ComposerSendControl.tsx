@@ -39,7 +39,7 @@ export function ComposerSendControl(props: ComposerSendControlProps) {
         <Button
           variant="ghost"
           type={sendType()}
-          class="voice-button"
+          class="voice-button composer-send-button"
           aria-label={props.label}
           aria-keyshortcuts={props.keyShortcuts}
           title={props.title}

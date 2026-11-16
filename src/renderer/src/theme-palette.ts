@@ -1,4 +1,5 @@
-import type { AppThemePalette } from "@openbot/contracts/app-appearance";
+import type { AppThemePalette, ChatBackgroundColor } from "@openbot/contracts/app-appearance";
+import { accentTokens } from "./accent-color";
 
 /** `color-mix` of one palette color into transparency, as the base palettes use translucent ink. */
 function clear(color: string, percent: number): string {
@@ -98,13 +99,18 @@ let applied: string[] = [];
  * Sets the palette tokens on the root element, or removes them for null. Inline properties on the
  * root win over `tokens.css` and `tokens-light.css`, so the base palette shows again once they go.
  * The preload let only hex colors through, so each value is a color or a `color-mix` of colors.
+ * A main color adds the accent tokens over the base theme or the palette, and goes with it.
  */
-export function applyThemePalette(palette: AppThemePalette | null): void {
+export function applyThemePalette(palette: AppThemePalette | null, accentColor: ChatBackgroundColor | null): void {
   const style = document.documentElement.style;
   for (const name of applied) style.removeProperty(name);
   applied = [];
-  if (palette === null) return;
-  for (const [name, value] of Object.entries(paletteTokens(palette))) {
+  // The main color goes after the palette tokens, so it replaces their accent (AC-004).
+  const tokens = {
+    ...(palette === null ? {} : paletteTokens(palette)),
+    ...(accentColor === null ? {} : accentTokens(accentColor)),
+  };
+  for (const [name, value] of Object.entries(tokens)) {
     style.setProperty(name, value);
     applied.push(name);
   }

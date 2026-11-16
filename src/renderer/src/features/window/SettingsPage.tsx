@@ -141,8 +141,11 @@ export function SettingsPage(props: { kind: SettingsKind }) {
     for (const marked of content.querySelectorAll("[data-search-match]")) marked.removeAttribute("data-search-match");
     if (!row.anchor) return;
     // A row that the current state does not show has no anchor in the page; then only the tab opens.
+    // Plain strings: a template over the tab union and the key union is too large a union to check.
+    const tab: string = row.tab;
+    const rowKey: string = row.anchor;
     const anchor = content.querySelector(
-      `.settings-modal-tab-panel[data-tab="${row.tab}"] [data-settings-row="${row.anchor}"]`,
+      `.settings-modal-tab-panel[data-tab="${tab}"] [data-settings-row="${rowKey}"]`,
     );
     // A switch row puts the anchor on its switch, so the search marks the whole row of the card.
     const target = anchor?.closest(".settings-modal-card > *") ?? anchor;

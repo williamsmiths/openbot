@@ -1,14 +1,29 @@
 import {
   type AppAppearancePreference,
+  type AppChatWallpaper,
+  type AppComposerGlow,
+  type AppComposerGlowGradient,
   type AppFontFamily,
   type AppThemePalette,
   type ChatBackgroundColor,
+  clampChatWallpaperBlur,
+  clampChatWallpaperStrength,
+  clampTransparentWindowLevel,
   DEFAULT_APP_APPEARANCE,
+  DEFAULT_CHAT_GLASS,
+  DEFAULT_CHAT_WALLPAPER,
+  DEFAULT_CHAT_WALLPAPER_BLUR,
+  DEFAULT_CHAT_WALLPAPER_STRENGTH,
+  DEFAULT_COMPOSER_GLOW,
   DEFAULT_TRANSPARENT_WINDOW,
+  DEFAULT_TRANSPARENT_WINDOW_LEVEL,
   isAppAppearance,
   isAppFontFamily,
   isAppThemePalette,
   isChatBackgroundColor,
+  isChatWallpaper,
+  isComposerGlow,
+  isComposerGlowGradient,
   sameThemePalettes,
   selectedThemePalette,
 } from "@openbot/contracts/app-appearance";
@@ -21,12 +36,13 @@ import { createSignal, onSettled } from "solid-js";
 import { applyAppFonts } from "./app-fonts";
 import { appPort } from "./app-port";
 import { applyChatBackground } from "./chat-background";
+import { applyChatWallpaper } from "./chat-wallpaper";
 import { syncColorScheme } from "./color-scheme";
 import { applyThemePalette } from "./theme-palette";
 import { sweepTheme } from "./theme-sweep";
 
 /** One Settings control's value. Set optimistically, and reverted if main refuses the write. */
-function optimisticChoice<T extends string | boolean | null>(initial: T, save: (next: T) => Promise<T>) {
+function optimisticChoice<T extends string | number | boolean | null>(initial: T, save: (next: T) => Promise<T>) {
   const [value, setValue] = createSignal<T>(() => initial);
   let confirmed = initial;
   let latestRequest = 0;
@@ -93,8 +109,58 @@ export function useAppearanceChoice() {
       .setAppAppearancePreference({ codeFont: next })
       .then((preference) => preference.codeFont),
   );
+  const accentColor = optimisticChoice<ChatBackgroundColor | null>(null, (next) =>
+    appPort()
+      .setAppAppearancePreference({ accentColor: next })
+      .then((preference) => preference.accentColor),
+  );
+  const chatWallpaper = optimisticChoice<AppChatWallpaper>(DEFAULT_CHAT_WALLPAPER, (next) =>
+    appPort()
+      .setAppAppearancePreference({ chatWallpaper: next })
+      .then((preference) => preference.chatWallpaper),
+  );
+  const chatWallpaperStrength = optimisticChoice<number>(DEFAULT_CHAT_WALLPAPER_STRENGTH, (next) =>
+    appPort()
+      .setAppAppearancePreference({ chatWallpaperStrength: next })
+      .then((preference) => preference.chatWallpaperStrength),
+  );
+  const chatWallpaperBlur = optimisticChoice<number>(DEFAULT_CHAT_WALLPAPER_BLUR, (next) =>
+    appPort()
+      .setAppAppearancePreference({ chatWallpaperBlur: next })
+      .then((preference) => preference.chatWallpaperBlur),
+  );
+  const chatGlass = optimisticChoice<boolean>(DEFAULT_CHAT_GLASS, (next) =>
+    appPort()
+      .setAppAppearancePreference({ chatGlass: next })
+      .then((preference) => preference.chatGlass),
+  );
+  const composerGlow = optimisticChoice<AppComposerGlow>(DEFAULT_COMPOSER_GLOW, (next) =>
+    appPort()
+      .setAppAppearancePreference({ composerGlow: next })
+      .then((preference) => preference.composerGlow),
+  );
+  const composerGlowGradient = optimisticChoice<AppComposerGlowGradient | null>(null, (next) =>
+    appPort()
+      .setAppAppearancePreference({ composerGlowGradient: next })
+      .then((preference) => preference.composerGlowGradient),
+  );
+  const transparentWindowLevel = optimisticChoice<number>(DEFAULT_TRANSPARENT_WINDOW_LEVEL, (next) =>
+    appPort()
+      .setAppAppearancePreference({ transparentWindowLevel: next })
+      .then((preference) => preference.transparentWindowLevel),
+  );
+  const [hasPhoto, setHasPhoto] = createSignal(false);
   const confirm = (preference: AppAppearancePreference) => {
     setPalettes(() => preference.palettes);
+    accentColor.confirm(preference.accentColor);
+    chatWallpaper.confirm(preference.chatWallpaper);
+    chatWallpaperStrength.confirm(preference.chatWallpaperStrength);
+    chatWallpaperBlur.confirm(preference.chatWallpaperBlur);
+    chatGlass.confirm(preference.chatGlass);
+    composerGlow.confirm(preference.composerGlow);
+    composerGlowGradient.confirm(preference.composerGlowGradient);
+    transparentWindowLevel.confirm(preference.transparentWindowLevel);
+    setHasPhoto(preference.chatWallpaperPhotoVersion !== null);
     theme.confirm(appearanceSelectValue(preference));
     transparentWindow.confirm(preference.transparentWindow);
     chatBackgroundLight.confirm(preference.chatBackgroundLight);
@@ -125,6 +191,28 @@ export function useAppearanceChoice() {
     changeInterfaceFont: interfaceFont.change,
     codeFont: codeFont.value,
     changeCodeFont: codeFont.change,
+    accentColor: accentColor.value,
+    changeAccentColor: accentColor.change,
+    chatWallpaper: chatWallpaper.value,
+    changeChatWallpaper: chatWallpaper.change,
+    chatWallpaperStrength: chatWallpaperStrength.value,
+    changeChatWallpaperStrength: chatWallpaperStrength.change,
+    chatWallpaperBlur: chatWallpaperBlur.value,
+    changeChatWallpaperBlur: chatWallpaperBlur.change,
+    chatGlass: chatGlass.value,
+    changeChatGlass: chatGlass.change,
+    composerGlow: composerGlow.value,
+    changeComposerGlow: composerGlow.change,
+    composerGlowGradient: composerGlowGradient.value,
+    changeComposerGlowGradient: composerGlowGradient.change,
+    transparentWindowLevel: transparentWindowLevel.value,
+    changeTransparentWindowLevel: transparentWindowLevel.change,
+    /** True while main keeps a wallpaper photo. */
+    hasPhoto,
+    /** Opens the image dialog in main and saves the picture as the wallpaper. Rejects when main cannot use it. */
+    async pickPhoto(): Promise<void> {
+      confirm(await appPort().pickChatWallpaperPhoto());
+    },
   };
 }
 
@@ -137,6 +225,15 @@ const CACHED_CHAT_BACKGROUND_LIGHT_KEY = "openbot.chatBackgroundLight";
 const CACHED_CHAT_BACKGROUND_DARK_KEY = "openbot.chatBackgroundDark";
 const CACHED_INTERFACE_FONT_KEY = "openbot.interfaceFont";
 const CACHED_CODE_FONT_KEY = "openbot.codeFont";
+const CACHED_ACCENT_COLOR_KEY = "openbot.accentColor";
+const CACHED_CHAT_WALLPAPER_KEY = "openbot.chatWallpaper";
+const CACHED_CHAT_WALLPAPER_STRENGTH_KEY = "openbot.chatWallpaperStrength";
+const CACHED_CHAT_WALLPAPER_BLUR_KEY = "openbot.chatWallpaperBlur";
+const CACHED_CHAT_GLASS_KEY = "openbot.chatGlass";
+const CACHED_COMPOSER_GLOW_KEY = "openbot.composerGlow";
+const CACHED_CHAT_WALLPAPER_PHOTO_VERSION_KEY = "openbot.chatWallpaperPhotoVersion";
+const CACHED_COMPOSER_GLOW_GRADIENT_KEY = "openbot.composerGlowGradient";
+const CACHED_TRANSPARENT_WINDOW_LEVEL_KEY = "openbot.transparentWindowLevel";
 
 function cachedFont(key: string): AppFontFamily | null {
   const font = window.localStorage.getItem(key);
@@ -169,6 +266,77 @@ function cachedPalette(): AppThemePalette | null {
   }
 }
 
+type Look = Pick<
+  AppAppearancePreference,
+  | "accentColor"
+  | "chatWallpaper"
+  | "chatWallpaperStrength"
+  | "chatWallpaperBlur"
+  | "chatGlass"
+  | "composerGlow"
+  | "chatWallpaperPhotoVersion"
+  | "composerGlowGradient"
+  | "transparentWindowLevel"
+>;
+
+const DEFAULT_LOOK: Look = {
+  accentColor: null,
+  chatWallpaper: DEFAULT_CHAT_WALLPAPER,
+  chatWallpaperStrength: DEFAULT_CHAT_WALLPAPER_STRENGTH,
+  chatWallpaperBlur: DEFAULT_CHAT_WALLPAPER_BLUR,
+  chatGlass: DEFAULT_CHAT_GLASS,
+  composerGlow: DEFAULT_COMPOSER_GLOW,
+  chatWallpaperPhotoVersion: null,
+  composerGlowGradient: null,
+  transparentWindowLevel: DEFAULT_TRANSPARENT_WINDOW_LEVEL,
+};
+
+/** The main color, wallpaper and glow of the cache. A value that is missing or out of range reads as the default. */
+function cachedLook(): Look {
+  const storage = window.localStorage;
+  const accent = storage.getItem(CACHED_ACCENT_COLOR_KEY);
+  const wallpaper = storage.getItem(CACHED_CHAT_WALLPAPER_KEY);
+  const glow = storage.getItem(CACHED_COMPOSER_GLOW_KEY);
+  const gradient = storage.getItem(CACHED_COMPOSER_GLOW_GRADIENT_KEY);
+  const version = Number(storage.getItem(CACHED_CHAT_WALLPAPER_PHOTO_VERSION_KEY));
+  // `Number(null)` is 0, so a missing key must not reach the clamp.
+  const cachedNumber = (key: string) => {
+    const text = storage.getItem(key);
+    return text === null ? null : Number(text);
+  };
+  return {
+    accentColor: isChatBackgroundColor(accent) ? accent : null,
+    chatWallpaper: isChatWallpaper(wallpaper) ? wallpaper : DEFAULT_CHAT_WALLPAPER,
+    chatWallpaperStrength:
+      clampChatWallpaperStrength(cachedNumber(CACHED_CHAT_WALLPAPER_STRENGTH_KEY)) ?? DEFAULT_CHAT_WALLPAPER_STRENGTH,
+    chatWallpaperBlur:
+      clampChatWallpaperBlur(cachedNumber(CACHED_CHAT_WALLPAPER_BLUR_KEY)) ?? DEFAULT_CHAT_WALLPAPER_BLUR,
+    chatGlass: storage.getItem(CACHED_CHAT_GLASS_KEY) === "true",
+    composerGlow: isComposerGlow(glow) ? glow : DEFAULT_COMPOSER_GLOW,
+    chatWallpaperPhotoVersion: Number.isSafeInteger(version) && version > 0 ? version : null,
+    composerGlowGradient: isComposerGlowGradient(gradient) ? gradient : null,
+    transparentWindowLevel:
+      clampTransparentWindowLevel(cachedNumber(CACHED_TRANSPARENT_WINDOW_LEVEL_KEY)) ??
+      DEFAULT_TRANSPARENT_WINDOW_LEVEL,
+  };
+}
+
+function cacheLook(look: Look): void {
+  const storage = window.localStorage;
+  if (look.accentColor === null) storage.removeItem(CACHED_ACCENT_COLOR_KEY);
+  else storage.setItem(CACHED_ACCENT_COLOR_KEY, look.accentColor);
+  storage.setItem(CACHED_CHAT_WALLPAPER_KEY, look.chatWallpaper);
+  storage.setItem(CACHED_CHAT_WALLPAPER_STRENGTH_KEY, String(look.chatWallpaperStrength));
+  storage.setItem(CACHED_CHAT_WALLPAPER_BLUR_KEY, String(look.chatWallpaperBlur));
+  storage.setItem(CACHED_CHAT_GLASS_KEY, String(look.chatGlass));
+  storage.setItem(CACHED_COMPOSER_GLOW_KEY, look.composerGlow);
+  if (look.chatWallpaperPhotoVersion === null) storage.removeItem(CACHED_CHAT_WALLPAPER_PHOTO_VERSION_KEY);
+  else storage.setItem(CACHED_CHAT_WALLPAPER_PHOTO_VERSION_KEY, String(look.chatWallpaperPhotoVersion));
+  if (look.composerGlowGradient === null) storage.removeItem(CACHED_COMPOSER_GLOW_GRADIENT_KEY);
+  else storage.setItem(CACHED_COMPOSER_GLOW_GRADIENT_KEY, look.composerGlowGradient);
+  storage.setItem(CACHED_TRANSPARENT_WINDOW_LEVEL_KEY, String(look.transparentWindowLevel));
+}
+
 /** Reading `window.localStorage` throws when the browser blocks storage, so it is read inside the guard. */
 function cachedPreference(): AppAppearancePreference {
   try {
@@ -183,6 +351,7 @@ function cachedPreference(): AppAppearancePreference {
       chatBackgroundDark: cachedChatBackground(CACHED_CHAT_BACKGROUND_DARK_KEY),
       interfaceFont: cachedFont(CACHED_INTERFACE_FONT_KEY),
       codeFont: cachedFont(CACHED_CODE_FONT_KEY),
+      ...cachedLook(),
     };
   } catch {
     return {
@@ -194,6 +363,7 @@ function cachedPreference(): AppAppearancePreference {
       chatBackgroundDark: null,
       interfaceFont: null,
       codeFont: null,
+      ...DEFAULT_LOOK,
     };
   }
 }
@@ -209,6 +379,7 @@ function cachePreference(preference: AppAppearancePreference): void {
     cacheChatBackground(CACHED_CHAT_BACKGROUND_DARK_KEY, preference.chatBackgroundDark);
     cacheFont(CACHED_INTERFACE_FONT_KEY, preference.interfaceFont);
     cacheFont(CACHED_CODE_FONT_KEY, preference.codeFont);
+    cacheLook(preference);
   } catch {
     // Main's value still applies; only the next first paint can show the default.
   }
@@ -217,8 +388,9 @@ function cachePreference(preference: AppAppearancePreference): void {
 /**
  * Keeps a desktop window on the appearance that main keeps. The copy in browser storage gives the
  * first paint; main's value then replaces it. The Dynamic Island does not call this: it stays dark.
- * A selected theme palette gives the light or dark base, and its colors go over that base. The chat
- * background of each scheme goes over both, in conversations only. The chosen fonts go before the
+ * A selected theme palette gives the light or dark base, and its colors go over that base. The main
+ * color goes over the palette. The chat background of each scheme and the wallpaper go over both, in
+ * conversations only. The chosen fonts go before the
  * default fonts.
  *
  * Only the main window passes `windowGlass`: main gives the macOS blur to that window alone, so in
@@ -230,20 +402,25 @@ function cachePreference(preference: AppAppearancePreference): void {
 export function syncAppearance(options: { windowGlass?: boolean; sweep?: boolean } = {}): void {
   let preference = cachedPreference();
   const scheme = syncColorScheme(() => selectedThemePalette(preference)?.scheme ?? preference.appearance);
-  applyThemePalette(selectedThemePalette(preference));
+  applyThemePalette(selectedThemePalette(preference), preference.accentColor);
   applyChatBackground(preference);
+  applyChatWallpaper(preference);
   applyAppFonts(preference);
   const showGlass = () => {
-    if (options.windowGlass)
-      document.documentElement.toggleAttribute("data-openbot-window-glass", preference.transparentWindow);
+    if (!options.windowGlass) return;
+    const root = document.documentElement;
+    root.toggleAttribute("data-openbot-window-glass", preference.transparentWindow);
+    // `window-glass.css` scales each tint by this: 1 at the default level, less for a clearer window.
+    root.style.setProperty("--openbot-window-glass-tint", String(windowGlassTint(preference.transparentWindowLevel)));
   };
   showGlass();
   const apply = (next: AppAppearancePreference) => {
     preference = next;
     cachePreference(next);
     scheme.refresh();
-    applyThemePalette(selectedThemePalette(next));
+    applyThemePalette(selectedThemePalette(next), next.accentColor);
     applyChatBackground(next);
+    applyChatWallpaper(next);
     applyAppFonts(next);
     showGlass();
   };
@@ -265,6 +442,11 @@ export function syncAppearance(options: { windowGlass?: boolean; sweep?: boolean
     if (options.sweep === false || visibleLook(next) === visibleLook(before)) apply(next);
     else sweepTheme(() => apply(latest));
   });
+}
+
+/** The tint scale of a transparency level: 1 at 50 %, 1.8 at 10 % and 0.2 at 90 % (AC-012). */
+export function windowGlassTint(level: number): number {
+  return (100 - level) / 50;
 }
 
 /** What the window shows of a preference: the palette, or the light or dark scheme. */

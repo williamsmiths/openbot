@@ -1381,7 +1381,6 @@ body,
 }
 
 .search-field,
-.composer,
 .direct-composer,
 .settings-field input,
 .settings-field textarea,
@@ -1395,7 +1394,6 @@ body,
 }
 
 .search-field:focus-within,
-.composer:focus-within,
 .direct-composer:focus-within,
 .settings-field input:focus,
 .settings-field textarea:focus,

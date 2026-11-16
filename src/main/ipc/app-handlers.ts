@@ -7,6 +7,7 @@ import { HOSTED_SERVER_CONTACT_URL } from "@openbot/contracts/hosted-servers";
 import { INPUT_LIMITS } from "@openbot/contracts/input-limits";
 import {
   type AnalyticsPreference,
+  type AppAppearancePreference,
   type AppInfo,
   type AppSetupState,
   type AppVariant,
@@ -19,7 +20,7 @@ import {
 import { PRODUCT_NAME } from "@openbot/contracts/product-name";
 import type { AppTranslate } from "@openbot/i18n";
 import { analyticsOnByDefault } from "@openbot/telemetry";
-import { app, type BrowserWindow, dialog, type OpenDialogOptions, type WebContents } from "electron";
+import { app, BrowserWindow, dialog, type OpenDialogOptions, type WebContents } from "electron";
 import { version as developmentVersion } from "../../../package.json";
 import type { AgentService } from "../../backend/agent-service";
 import type { BrowserHost } from "../../backend/browser-host";
@@ -125,7 +126,7 @@ import { openHttpLink } from "../message-link-relay";
 import type { ResourceMonitor } from "../resource-monitor";
 import type { StartupTiming } from "../startup-timing";
 import type { TraceFile } from "../trace-file";
-import { eventPayloadHandler, handler, type IpcGroupHandlers, payloadHandler } from "./define-ipc-group";
+import { eventHandler, eventPayloadHandler, handler, type IpcGroupHandlers, payloadHandler } from "./define-ipc-group";
 
 export interface AppIpcDependencies {
   service: AgentService;
@@ -304,6 +305,24 @@ export function appIpcHandlers({
       setAppAppearancePreference: payloadHandler(parseAppAppearancePreference, (parsed) =>
         runCauseEffect(appearance.set(parsed)),
       ),
+      // Local only: the photo is a file on this computer, and the wallpaper is per computer (AC-008).
+      pickChatWallpaperPhoto: eventHandler(async (event): Promise<AppAppearancePreference> => {
+        const options: OpenDialogOptions = {
+          title: language.translate("dialog.chooseChatWallpaper"),
+          properties: ["openFile"],
+          filters: [
+            {
+              name: language.translate("dialog.filter.images"),
+              extensions: ["png", "jpg", "jpeg"],
+            },
+          ],
+        };
+        const parent = BrowserWindow.fromWebContents(event.sender);
+        const result = parent ? await dialog.showOpenDialog(parent, options) : await dialog.showOpenDialog(options);
+        const path = result.canceled ? undefined : result.filePaths[0];
+        return path ? runCauseEffect(appearance.setPhoto(path)) : appearance.preference;
+      }),
+      getChatWallpaperPhoto: handler(() => runCauseEffect(appearance.readPhoto())),
       // Local only: the list is the fonts of this computer, and the font choice is per computer.
       listInstalledFonts: handler(() => runCauseEffect(listInstalledFonts())),
       getAppInterfaceSizePreference: handler(() => interfaceSize.preference),

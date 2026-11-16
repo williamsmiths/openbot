@@ -1,7 +1,13 @@
 import {
   type AppAppearancePreference,
   DEFAULT_APP_APPEARANCE,
+  DEFAULT_CHAT_GLASS,
+  DEFAULT_CHAT_WALLPAPER,
+  DEFAULT_CHAT_WALLPAPER_BLUR,
+  DEFAULT_CHAT_WALLPAPER_STRENGTH,
+  DEFAULT_COMPOSER_GLOW,
   DEFAULT_TRANSPARENT_WINDOW,
+  DEFAULT_TRANSPARENT_WINDOW_LEVEL,
   selectedThemePalette,
 } from "@openbot/contracts/app-appearance";
 import { type BrowserWindow, nativeTheme } from "electron";
@@ -21,6 +27,15 @@ let current: AppAppearancePreference = {
   chatBackgroundDark: null,
   interfaceFont: null,
   codeFont: null,
+  accentColor: null,
+  chatWallpaper: DEFAULT_CHAT_WALLPAPER,
+  chatWallpaperStrength: DEFAULT_CHAT_WALLPAPER_STRENGTH,
+  chatWallpaperBlur: DEFAULT_CHAT_WALLPAPER_BLUR,
+  chatGlass: DEFAULT_CHAT_GLASS,
+  composerGlow: DEFAULT_COMPOSER_GLOW,
+  composerGlowGradient: null,
+  transparentWindowLevel: DEFAULT_TRANSPARENT_WINDOW_LEVEL,
+  chatWallpaperPhotoVersion: null,
 };
 const listeners = new Set<() => void>();
 

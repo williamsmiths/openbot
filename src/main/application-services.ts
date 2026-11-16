@@ -201,6 +201,7 @@ import {
   readMobileConnectApiUrl,
 } from "./central-auth-manager";
 import { ChatVisualPreviewer } from "./chat-visual-preview";
+import { CHAT_WALLPAPER_PHOTO_FILE } from "./chat-wallpaper-photo";
 import {
   type ClaudeCompactWindowControl,
   claudeCompactWindowControl,
@@ -1485,6 +1486,7 @@ export async function createApplicationServices({
   const appearance = new AppearanceService({
     path: join(app.getPath("userData"), APPEARANCE_PREFERENCE_FILE),
     paletteDirectory: join(app.getPath("userData"), THEME_PALETTE_DIRECTORY),
+    photoPath: join(app.getPath("userData"), CHAT_WALLPAPER_PHOTO_FILE),
     supportsTransparentWindow: process.platform === "darwin",
   });
   // Before the renderer loads, so its first navigation applies the saved size.

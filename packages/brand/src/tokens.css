@@ -251,6 +251,19 @@
   --openbot-beam-teal: var(--openbot-file-teal);
   --openbot-beam-blue: var(--openbot-accent-text);
   --openbot-beam-pink: var(--openbot-file-pink);
+  /* The glow message box takes the main color (the accent tokens). Only the strength of the
+     halo outside it is a token of its own. */
+  --openbot-glow-halo-opacity: 0.7;
+  /* The mini previews of the Dark and Light theme cards in Appearance settings. Each card shows its
+     own theme in either theme, so these do not change with the color scheme. */
+  --openbot-theme-card-dark-frame: #0d0d0d;
+  --openbot-theme-card-dark-canvas: #1a1a1a;
+  --openbot-theme-card-dark-surface: #212121;
+  --openbot-theme-card-dark-border: #333333;
+  --openbot-theme-card-light-frame: #e8e8eb;
+  --openbot-theme-card-light-canvas: #f5f5f6;
+  --openbot-theme-card-light-surface: #ffffff;
+  --openbot-theme-card-light-border: #dcdce0;
   --openbot-approval-badge-soft: rgba(255, 148, 18, 0.18);
   /* One red. The palette carried four families - danger (#e47d75), danger-strong
      (#ff4058), settings-danger (#eb4145) and button-destructive (oklch, #ff6467) -

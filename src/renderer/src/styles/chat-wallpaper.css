@@ -1,0 +1,119 @@
+/* The chat wallpaper and the frosted glass of Settings › Appearance (AC-005). `chat-wallpaper.ts`
+ * sets on the root `data-openbot-chat-wallpaper` (glow, glyphs, dots or photo; absent for none),
+ * `--openbot-chat-wallpaper-strength` (opacity), `--openbot-chat-wallpaper-blur` (a length),
+ * `--openbot-chat-wallpaper-photo` (a `url()` of the saved photo) and `data-openbot-chat-glass`.
+ *
+ * The layer is the `::after` of a conversation, behind the header, the messages and the message box,
+ * and in conversations only, not in the pages of the window. The conversation is its own stacking
+ * context, so the layer sits above the canvas and below its content. The layer is larger than the
+ * conversation by twice the blur, and the clip brings it back to the conversation, so the blur does
+ * not fade the edges. Every color is an accent token, so the main color gives the wallpaper its hue. */
+:root[data-openbot-chat-wallpaper]
+:is(.conversation-panel:not(.window-page), .direct-conversation, .appearance-preview) {
+  isolation: isolate;
+}
+
+:root[data-openbot-chat-wallpaper]
+  :is(.conversation-panel:not(.window-page), .direct-conversation, .appearance-preview)::after {
+  --wallpaper-bleed: calc(var(--openbot-chat-wallpaper-blur, 0px) * 2);
+  --wallpaper-top: 0px;
+  --wallpaper-corners: 0;
+
+  position: absolute;
+  z-index: -1;
+  inset: calc(var(--wallpaper-top) - var(--wallpaper-bleed)) calc(var(--wallpaper-bleed) * -1)
+    calc(var(--wallpaper-bleed) * -1);
+  clip-path: inset(var(--wallpaper-bleed) var(--wallpaper-bleed) var(--wallpaper-bleed) round var(--wallpaper-corners));
+  content: "";
+  filter: blur(var(--openbot-chat-wallpaper-blur, 0px));
+  opacity: var(--openbot-chat-wallpaper-strength, 0.8);
+  pointer-events: none;
+}
+
+/* In the window, the header is in the top row and the chat is a card with rounded right corners, as
+ * `chat-background.css` paints it: the layer starts under the header and follows the card corners. */
+@media (min-width: 721px) {
+  :root[data-openbot-chat-wallpaper]
+    .app-window
+    > .app-frame-edge
+    :is(.conversation-panel:not(.window-page), .direct-conversation)::after {
+    --wallpaper-top: var(--left-header-height, 38px);
+    --wallpaper-corners: 0 calc(var(--openbot-radius-card) - 1px) calc(var(--openbot-radius-card) - 1px) 0;
+  }
+
+  :root[data-openbot-chat-wallpaper]
+    .app-window
+    > .app-frame-edge
+    :is(.conversation-panel:not(.window-page), .direct-conversation):dir(rtl)::after {
+    --wallpaper-corners: calc(var(--openbot-radius-card) - 1px) 0 0 calc(var(--openbot-radius-card) - 1px);
+  }
+}
+
+/* Glow: two soft lights near the bottom, in the accent and the lighter accent text. */
+:root[data-openbot-chat-wallpaper="glow"]
+:is(.conversation-panel:not(.window-page), .direct-conversation, .appearance-preview)::after {
+  background:
+    radial-gradient(45% 40% at 18% 78%, color-mix(in srgb, var(--openbot-accent) 35%, transparent), transparent 70%),
+    radial-gradient(
+      45% 40% at 85% 80%,
+      color-mix(in srgb, var(--openbot-accent-text) 30%, transparent),
+      transparent 70%
+    );
+}
+
+/* Glyphs: the accent text, cut by a mask of monospace characters and faded to two areas. The mask is
+ * one inline SVG tile, so a conversation has no element for each character. */
+:root[data-openbot-chat-wallpaper="glyphs"]
+:is(.conversation-panel:not(.window-page), .direct-conversation, .appearance-preview)::after {
+  background: var(--openbot-accent-text);
+  mask-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='224' height='140'%3E%3Cg font-family='monospace' font-size='11' letter-spacing='3'%3E%3Ctext x='4' y='12'%3EA x 7 Q %23 k 3 + N u Z 0%3C/text%3E%3Ctext x='4' y='38'%3E0 = r M B + 9 h E %23 w 4%3C/text%3E%3Ctext x='4' y='64'%3Ev T 2 . L - y P 5 * C q%3C/text%3E%3Ctext x='4' y='90'%3E8 H + G n 1 = S %23 d K 6%3C/text%3E%3Ctext x='4' y='116'%3Ef 3 R x + U 7 . J m 0 W%3C/text%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(60% 55% at 20% 70%, oklch(0 0 0) 0, transparent 70%),
+    radial-gradient(55% 50% at 85% 75%, oklch(0 0 0) 0, transparent 70%);
+  mask-composite: intersect, add;
+  mask-size:
+    224px 140px,
+    auto,
+    auto;
+  mask-repeat: repeat, no-repeat, no-repeat;
+  opacity: var(--openbot-chat-wallpaper-strength, 0.8);
+}
+
+/* Dots: a grid of dots that fades up from the bottom. */
+:root[data-openbot-chat-wallpaper="dots"]
+:is(.conversation-panel:not(.window-page), .direct-conversation, .appearance-preview)::after {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--openbot-accent-text) 45%, transparent) 1px,
+    transparent 1.5px
+  );
+  background-size: 14px 14px;
+  mask-image: linear-gradient(transparent, oklch(0 0 0) 60%);
+}
+
+/* Photo: the picture, under a wash of the canvas so the text stays readable. */
+:root[data-openbot-chat-wallpaper="photo"]
+:is(.conversation-panel:not(.window-page), .direct-conversation, .appearance-preview)::after {
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--openbot-bg-canvas) 55%, transparent),
+      color-mix(in srgb, var(--openbot-bg-canvas) 80%, transparent)
+    ),
+    var(--openbot-chat-wallpaper-photo) center / cover;
+}
+
+/* Frosted glass: bubbles and the message box show the blurred wallpaper through them, in
+ * conversations only. The wallpaper attribute is part of the selector, so glass with no wallpaper
+ * changes nothing. The user's own bubble is listed apart because its rim rule has a higher
+ * specificity. */
+:root[data-openbot-chat-wallpaper][data-openbot-chat-glass]
+  :is(.conversation-panel:not(.window-page), .direct-conversation, .appearance-preview)
+  :is(.ui-bubble:not(.message-bubble-colored, .message-bubble-member) > .ui-bubble-content, .composer),
+:root[data-openbot-chat-wallpaper][data-openbot-chat-glass]
+  :is(.conversation-panel:not(.window-page), .direct-conversation)
+  .message-entry-user
+  .ui-bubble-variant-secondary:not(.message-bubble-colored, .message-bubble-member)
+  > .ui-bubble-content {
+  border-color: color-mix(in srgb, var(--openbot-accent) 28%, transparent);
+  background: color-mix(in srgb, var(--openbot-bg-surface) 45%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+}

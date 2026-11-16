@@ -74,6 +74,7 @@ import { attachmentTypeLabel, shareLocalAttachment } from "./attachment-preview"
 import { AttachmentPreviewSheet } from "./attachment-preview-sheet";
 import { ComposerAttachmentTile, localPreviewUri } from "./composer-attachment-tile";
 import { DictationMic, DictationStrip } from "./composer-dictation";
+import { ComposerGlowRing } from "./composer-glow-ring";
 import { ComposerPasteTarget, type PastedFiles } from "./composer-paste-target";
 import type { ComposerVoice } from "./composer-voice";
 import type { ChatAttachments } from "./use-chat-attachments";
@@ -1174,6 +1175,8 @@ export const ChatComposer = memo(function ChatComposer({
               cardStyle,
             ]}
           >
+            {/* The turning light on the rim. The voice mode reshapes the card into a round button, so it leaves. */}
+            {voiceOpen ? null : <ComposerGlowRing radius={CARD_RADIUS} dimmed={disabled} />}
             {voiceFilled && voiceAccent ? (
               <Animated.View
                 pointerEvents="none"

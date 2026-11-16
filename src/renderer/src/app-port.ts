@@ -8,6 +8,8 @@ import type { CompanySignInCalls } from "./features/servers/ServerCompanySignInS
 export interface AppPort {
   getAppInfo: OpenBotDesktopApi["getAppInfo"];
   getAppAppearancePreference: OpenBotDesktopApi["getAppAppearancePreference"];
+  getChatWallpaperPhoto: OpenBotDesktopApi["getChatWallpaperPhoto"];
+  pickChatWallpaperPhoto: OpenBotDesktopApi["pickChatWallpaperPhoto"];
   getAppInterfaceSizePreference: OpenBotDesktopApi["getAppInterfaceSizePreference"];
   getAppLanguagePreference: OpenBotDesktopApi["getAppLanguagePreference"];
   getAppLogoColorPreference: OpenBotDesktopApi["getAppLogoColorPreference"];

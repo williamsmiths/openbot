@@ -47,6 +47,9 @@ import {
   type CustomAgentUsage,
   type CustomProviderResult,
   type CustomProviderSummary,
+  clampChatWallpaperBlur,
+  clampChatWallpaperStrength,
+  clampTransparentWindowLevel,
   DEFAULT_AGENT_DEFAULTS,
   type DetectedAcpAgent,
   type DetectedModelServer,
@@ -79,7 +82,11 @@ import {
   isAvatarColor,
   isBusyMessageMode,
   isChatBackgroundColor,
+  isChatWallpaper,
+  isChatWallpaperPhotoUrl,
   isCodexLiveVoice,
+  isComposerGlow,
+  isComposerGlowGradient,
   isCustomAgentCheckResult,
   isCustomAgentResult,
   isCustomAgentSummary,
@@ -276,6 +283,23 @@ export function decodeInstalledFonts(value: unknown): AppFontFamily[] {
   return [...value];
 }
 
+/** The wallpaper photo goes into a CSS `url()`, so only a base64 JPEG data URL or null passes (AC-008). */
+export function decodeChatWallpaperPhoto(value: unknown): string | null {
+  if (value !== null && !isChatWallpaperPhotoUrl(value)) throw new Error("Invalid chat wallpaper photo.");
+  return value;
+}
+
+function decodeAccentColor(value: unknown): ChatBackgroundColor | null {
+  if (value !== null && !isChatBackgroundColor(value)) throw new Error("Invalid accent color.");
+  return value;
+}
+
+function decodePhotoVersion(value: unknown): number | null {
+  if (value !== null && !(typeof value === "number" && Number.isSafeInteger(value) && value > 0))
+    throw new Error("Invalid chat wallpaper photo version.");
+  return value;
+}
+
 export function decodeAppAppearancePreference(value: unknown): AppAppearancePreference {
   const preference = decodeRecord(value, "appearance preference");
   if (!isAppAppearance(preference.appearance)) throw new Error("Invalid appearance.");
@@ -283,15 +307,35 @@ export function decodeAppAppearancePreference(value: unknown): AppAppearancePref
   if (preference.palette !== null && !isAppThemePaletteId(preference.palette))
     throw new Error("Invalid theme palette.");
   const palettes = decodeList(preference.palettes, "theme palettes", decodeThemePalette);
+  // The numbers go into CSS, so each is rounded and held inside its range rather than trusted.
+  const strength = clampChatWallpaperStrength(preference.chatWallpaperStrength);
+  const blur = clampChatWallpaperBlur(preference.chatWallpaperBlur);
+  if (!isChatWallpaper(preference.chatWallpaper)) throw new Error("Invalid chat wallpaper.");
+  if (strength === null || blur === null) throw new Error("Invalid chat wallpaper strength.");
+  if (typeof preference.chatGlass !== "boolean") throw new Error("Invalid chat glass.");
+  if (!isComposerGlow(preference.composerGlow)) throw new Error("Invalid composer glow.");
+  const windowLevel = clampTransparentWindowLevel(preference.transparentWindowLevel);
+  if (windowLevel === null) throw new Error("Invalid transparency.");
+  const gradient = preference.composerGlowGradient;
+  if (gradient !== null && !isComposerGlowGradient(gradient)) throw new Error("Invalid composer glow gradient.");
   return {
     appearance: preference.appearance,
     transparentWindow: preference.transparentWindow,
+    transparentWindowLevel: windowLevel,
     palette: preference.palette,
     palettes,
     chatBackgroundLight: decodeChatBackground(preference.chatBackgroundLight),
     chatBackgroundDark: decodeChatBackground(preference.chatBackgroundDark),
     interfaceFont: decodeFontFamily(preference.interfaceFont),
     codeFont: decodeFontFamily(preference.codeFont),
+    accentColor: decodeAccentColor(preference.accentColor),
+    chatWallpaper: preference.chatWallpaper,
+    chatWallpaperStrength: strength,
+    chatWallpaperBlur: blur,
+    chatGlass: preference.chatGlass,
+    composerGlow: preference.composerGlow,
+    composerGlowGradient: gradient,
+    chatWallpaperPhotoVersion: decodePhotoVersion(preference.chatWallpaperPhotoVersion),
   };
 }
 

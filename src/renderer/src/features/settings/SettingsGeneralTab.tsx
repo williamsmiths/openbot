@@ -23,10 +23,7 @@ import {
   SwitchField,
   toast,
 } from "@openbot/ui";
-import { documentColorScheme } from "@openbot/ui/document-color-scheme";
-import { AppearanceSelect } from "@openbot/ui/features/settings/AppearanceSelect";
 import type { GeneralSettingsValue } from "@openbot/ui/features/settings/app-settings";
-import { ChatBackgroundSetting } from "@openbot/ui/features/settings/ChatBackgroundSetting";
 import { OwnChatColorTrigger } from "@openbot/ui/features/settings/ChatColorSetting";
 import { FontSelect } from "@openbot/ui/features/settings/FontSelect";
 import { LanguageSelect } from "@openbot/ui/features/settings/LanguageSelect";
@@ -93,29 +90,6 @@ export function SettingsGeneralTab(props: SettingsGeneralTabProps) {
     <>
       <SettingsSection title={i18n.t("settings.appearance.title")}>
         <ItemGroup class="settings-modal-card">
-          <Item data-settings-row="settings.appearance.theme.title" class="settings-modal-row">
-            <ItemContent>
-              <ItemTitle>{i18n.t("settings.appearance.theme.title")}</ItemTitle>
-              <ItemDescription>{i18n.t("settings.appearance.theme.description")}</ItemDescription>
-            </ItemContent>
-            <ItemActions>
-              <AppearanceSelect
-                value={appearance.theme()}
-                onChange={appearance.changeTheme}
-                palettes={appearance.palettes()}
-                mount={props.selectMount}
-              />
-            </ItemActions>
-          </Item>
-          <Show when={props.platform === "darwin"}>
-            <SwitchField
-              data-settings-row="settings.appearance.transparentWindow.title"
-              checked={appearance.transparentWindow()}
-              onChange={appearance.changeTransparentWindow}
-              label={i18n.t("settings.appearance.transparentWindow.title")}
-              description={i18n.t("settings.appearance.transparentWindow.description")}
-            />
-          </Show>
           <Item data-settings-row="settings.language.title" class="settings-modal-row">
             <ItemContent>
               <ItemTitle>{i18n.t("settings.language.title")}</ItemTitle>
@@ -198,24 +172,6 @@ export function SettingsGeneralTab(props: SettingsGeneralTabProps) {
             </ItemContent>
             <ItemActions>
               <OwnChatColorTrigger value={props.chatColor} onChange={saveChatColor} />
-            </ItemActions>
-          </Item>
-          <Item data-settings-row="settings.chatBackground.title" class="settings-modal-row">
-            <ItemContent>
-              <ItemTitle>{i18n.t("settings.chatBackground.title")}</ItemTitle>
-              <ItemDescription>{i18n.t("settings.chatBackground.description")}</ItemDescription>
-            </ItemContent>
-            <ItemActions>
-              <ChatBackgroundSetting
-                scheme={documentColorScheme()}
-                light={appearance.chatBackgroundLight()}
-                dark={appearance.chatBackgroundDark()}
-                onChange={(scheme, value) =>
-                  scheme === "light"
-                    ? appearance.changeChatBackgroundLight(value)
-                    : appearance.changeChatBackgroundDark(value)
-                }
-              />
             </ItemActions>
           </Item>
         </ItemGroup>

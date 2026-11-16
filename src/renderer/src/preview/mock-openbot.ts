@@ -86,8 +86,13 @@ import {
   DEFAULT_APPROVAL_AUTOMATION_PREFERENCE,
   DEFAULT_BROWSING_MEMORY_PREFERENCE,
   DEFAULT_BUSY_MESSAGE_MODE,
+  DEFAULT_CHAT_GLASS,
+  DEFAULT_CHAT_WALLPAPER,
+  DEFAULT_CHAT_WALLPAPER_BLUR,
+  DEFAULT_CHAT_WALLPAPER_STRENGTH,
   DEFAULT_CLAUDE_COMPACT_WINDOW,
   DEFAULT_CLAUDE_USER_SETUP,
+  DEFAULT_COMPOSER_GLOW,
   DEFAULT_CUSTOM_PROVIDER_HARNESS,
   DEFAULT_DYNAMIC_ISLAND_PREFERENCE,
   DEFAULT_EXTERNAL_LINK_PREFERENCE,
@@ -100,6 +105,7 @@ import {
   DEFAULT_REMOTE_SESSION_REUSE_PREFERENCE,
   DEFAULT_SKILL_LEARNING_MODE,
   DEFAULT_TRANSPARENT_WINDOW,
+  DEFAULT_TRANSPARENT_WINDOW_LEVEL,
   type DirectConversationSnapshot,
   type DirectMessageRealtimeEvent,
   type DirectTypingRealtimeEvent,
@@ -267,6 +273,8 @@ export interface MockOpenBotOptions
   /** The first value of the first-run analytics box. Clear, as in a region that asks for consent. */
   analyticsDefault?: boolean;
   languagePreference?: AppLanguagePreference;
+  /** Fields of the appearance preference to start with, such as the theme palettes main would list. */
+  appearancePreference?: Partial<AppAppearancePreference>;
   setupState?: AppSetupState;
   agentStatus?: AgentStatus;
   usage?: AccountUsage;
@@ -440,6 +448,10 @@ function mockWorkspaceDirectory(path: string): WorkspaceDirectory {
   };
 }
 
+/** A 1 by 1 JPEG, the picture that the preview "picks" in place of a file dialog. */
+const PREVIEW_WALLPAPER_PHOTO =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=";
+
 /** Fonts that most Macs have, so the preview draws each choice in its real font. */
 const STORY_INSTALLED_FONTS = [
   "Al Bayan",
@@ -552,6 +564,16 @@ export function createMockOpenBot(options: MockOpenBotOptions = {}): MockOpenBot
     chatBackgroundDark: null,
     interfaceFont: null,
     codeFont: null,
+    accentColor: null,
+    chatWallpaper: DEFAULT_CHAT_WALLPAPER,
+    chatWallpaperStrength: DEFAULT_CHAT_WALLPAPER_STRENGTH,
+    chatWallpaperBlur: DEFAULT_CHAT_WALLPAPER_BLUR,
+    chatGlass: DEFAULT_CHAT_GLASS,
+    composerGlow: DEFAULT_COMPOSER_GLOW,
+    composerGlowGradient: null,
+    transparentWindowLevel: DEFAULT_TRANSPARENT_WINDOW_LEVEL,
+    chatWallpaperPhotoVersion: null,
+    ...clone(options.appearancePreference ?? {}),
   };
   const appearanceListeners = new Set<(preference: AppAppearancePreference) => void>();
   let interfaceSizePreference: AppInterfaceSizePreference = { percent: DEFAULT_APP_INTERFACE_SIZE };
@@ -1398,6 +1420,18 @@ export function createMockOpenBot(options: MockOpenBotOptions = {}): MockOpenBot
     onAppLogoColorPreference: (listener) => {
       logoColorListeners.add(listener);
       return () => logoColorListeners.delete(listener);
+    },
+    getChatWallpaperPhoto: async () =>
+      appearancePreference.chatWallpaperPhotoVersion === null ? null : PREVIEW_WALLPAPER_PHOTO,
+    // The preview has no file dialog: picking saves a sample picture, as the dialog would a file.
+    pickChatWallpaperPhoto: async () => {
+      appearancePreference = {
+        ...appearancePreference,
+        chatWallpaper: "photo",
+        chatWallpaperPhotoVersion: Date.now(),
+      };
+      for (const listener of appearanceListeners) listener(clone(appearancePreference));
+      return clone(appearancePreference);
     },
     // The preview has no main process to set `prefers-color-scheme`, so the choice is saved only.
     // The Storybook toolbar sets the colors of a story.
