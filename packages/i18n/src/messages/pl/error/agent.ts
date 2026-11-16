@@ -86,6 +86,8 @@ export const messages = {
   "error.agent.endpointRemoved": "Endpoint używany przez tego agenta został usunięty. Wybierz dla niego inny model.",
   "error.agent.turnStalled":
     "{provider} przestał odpowiadać, więc kongCowork zakończył tę turę. Wyślij wiadomość ponownie albo wybierz inny model.",
+  "error.agent.toolLoopStopped":
+    "{provider} wiele razy powtórzył nieudany krok, więc kongCowork zatrzymał tę turę. Wyślij wiadomość ponownie lub wybierz inny model.",
   "error.agent.compactionConnectionLost":
     "Połączenie przerwało się, gdy agent kompaktował kontekst, więc zadanie się zatrzymało. Sprawdź połączenie z internetem, a potem wyślij wiadomość, aby kontynuować.",
   "error.agent.selectedGone": "Wybrany agent już nie istnieje.",

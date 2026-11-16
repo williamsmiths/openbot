@@ -179,6 +179,8 @@ export const messages = {
   "error.provider.cliBusyUpdate": "{provider} CLI обрабатывает ход. Дождитесь его завершения, затем обновите.",
   "error.provider.cliSelectFailed": "kongCowork не смог выбрать установленный управляемый CLI.",
   "error.provider.noAuthenticatedAccount": "{provider} не вернул аккаунт с выполненным входом.",
+  "error.provider.codexModelProvider":
+    "Codex на этом компьютере использует другого поставщика моделей, и этот поставщик не использует вход в ChatGPT или ключ API OpenAI. Агенты ChatGPT уже могут использовать этого поставщика. Чтобы использовать аккаунт ChatGPT, снова выберите OpenAI как поставщика моделей Codex.",
   "error.provider.signInExpired": "Срок входа в {provider} истёк. Войдите снова, чтобы продолжить.",
   "error.provider.cliActivateFailed": "kongCowork не смог активировать управляемый CLI.",
   "error.provider.noMainlandChinaSignIn": "У {provider} нет входа для материкового Китая.",
@@ -209,13 +211,17 @@ export const messages = {
   "error.provider.opencodeInvalidUpload":
     "Провайдер моделей OpenCode сообщил о некорректном запросе на загрузку. Выберите другую модель и продолжайте. Проверьте сохранённые регулярные задачи, прежде чем создавать их заново.\n{detail}",
   "error.provider.opencodeUnreadableContent":
-    "Эта модель не может прочитать файл или изображение в этом чате. Выберите модель, которая читает файлы, затем отправьте сообщение ещё раз.",
+    "Эта модель не может прочитать файл или изображение в этом чате. kongCowork начал новый сеанс OpenCode с историей чата. Отправьте сообщение ещё раз без файла или выберите модель, которая читает файлы. Если вы добавили эту модель в своего провайдера, снимите отметку «Изображения» в разделе «Принимает» в его настройках.",
+  "error.provider.opencodeContextTooSmall":
+    "Этот чат не помещается в контекстное окно модели. В Ollama или LM Studio загрузите модель с большей длиной контекста и укажите такое же окно в настройках её провайдера в kongCowork. Или выберите модель побольше.",
   "error.provider.opencodeFreeLimit":
     "Бесплатные модели OpenCode исчерпали лимит использования. Этот лимит общий для всех бесплатных моделей. Чтобы продолжить, вставьте ключ OpenCode Go в настройках OpenCode или выберите модель другого провайдера.",
   "error.provider.opencodeProviderFailed":
     "У провайдера моделей произошёл сбой на его стороне. Дело не в вашем соединении. Повторите попытку позже или выберите другую модель.\n{detail}",
   "error.provider.opencodeIncompleteReply":
     "Ответ модели оборвался или был некорректным. Отправьте сообщение ещё раз или выберите другую модель.\n{detail}",
+  "error.provider.opencodeReasoningOverlap":
+    "OpenCode не смог прочитать рассуждения этой модели при этом уровне усилий. Выберите меньший уровень усилий или другую модель, затем отправьте сообщение снова.",
   "error.provider.opencodeNetwork":
     "OpenCode не смог подключиться к провайдеру моделей. Проверьте сетевое подключение компьютера, где работает kongCowork, и повторите попытку.\n{detail}",
   "error.provider.codexStateBusy":
@@ -249,6 +255,8 @@ export const messages = {
     "Сервер Gemini из OPENBOT_ANTIGRAVITY_PATH не найден или не является исполняемым. Исправьте путь или удалите переменную, затем перезапустите kongCowork.",
   "error.provider.antigravityVersionUnreadable": "Не удалось прочитать версию сервера Gemini.",
   "error.provider.antigravitySignIn": "Войдите через Google, чтобы использовать Gemini.",
+  "error.provider.antigravityModelAtCapacity":
+    "Сейчас у Google нет свободных мощностей для этой модели Gemini. Квота тарифа здесь ни при чём. Повторите попытку через несколько минут или выберите другую модель.\n{detail}",
   "error.provider.antigravityRateLimited":
     "Gemini отклонил запрос: достигнут лимит частоты запросов или квота тарифа. Подождите несколько минут или выберите другую модель и повторите попытку.\n{detail}",
   "error.provider.antigravityQuotaReached":
@@ -296,6 +304,10 @@ export const messages = {
   "error.provider.hermesVersionUnreadable": "Не удаётся прочитать версию Hermes Agent.",
   "error.provider.hermesSignIn":
     "Войдите через Nous Portal или выполните `hermes setup` в терминале, чтобы использовать Hermes.",
+  "error.provider.hermesTurnFailed":
+    "Hermes не смог завершить этот ход. Если в его ответе указана причина, следуйте ему. Если нет, возможно, MCP-сервер этого агента недоступен: проверьте его в разделе Настройки сервера › MCP и отправьте сообщение ещё раз.",
+  "error.provider.copilotThinkingRejected":
+    "GitHub Copilot не смог использовать эту модель: модель не приняла его настройку размышлений. Выберите другую модель для этого агента и отправьте сообщение ещё раз.",
   "error.provider.usageLimitReached": "Аккаунт достиг лимита использования.",
   "error.provider.claudeContextFull":
     "Этот чат стал слишком длинным для Claude. kongCowork начал новую сессию Claude Code с историей чата. Повторите попытку.",
@@ -311,6 +323,8 @@ export const messages = {
     "Модель не приняла этот чат, потому что в нем слишком много изображений. kongCowork начал новый сеанс {provider} с историей чата. Попробуйте снова.",
   "error.provider.opencodeSessionRejected":
     "OpenCode отклонил запрос и не указал причину. Это может произойти в длинном чате или после смены модели. kongCowork начал новый сеанс OpenCode с историей чата. Повторите попытку. Если ошибка не исчезнет, выберите другую модель или меньший уровень усилий.",
+  "error.provider.opencodeCompactionFailed":
+    "Модель не смогла сжать этот длинный чат, чтобы освободить место в окне контекста. kongCowork начал новый сеанс OpenCode с историей чата. Повторите попытку. Если ошибка не исчезнет, выберите более сильную модель.",
   "error.provider.museMcpStartupFault":
     "Muse не удалось запустить сервер MCP, и он заблокировал MCP в этом сеансе. kongCowork начал новый сеанс Muse с историей чата. Повторите попытку. Если ошибка повторяется, отключите Управление компьютером или неисправный сервер MCP для этого агента.",
   "error.provider.claudeSessionMissing":
@@ -331,12 +345,18 @@ export const messages = {
   "error.provider.httpsSignInLinkOnly": "В браузере можно открыть только ссылки для входа по HTTPS.",
   "error.provider.geminiKeyRefused":
     "Gemini отклонил сохранённый ключ API. Замените или удалите ключ в настройках, затем подключитесь снова.",
+  "error.provider.geminiAccountSettingsUnreadable":
+    "Gemini не может открыть файл настроек этого аккаунта, поэтому не может войти. Удалите этот аккаунт и добавьте его снова.",
+  "error.provider.geminiSettingsUnreadable":
+    "Gemini не может открыть свой файл настроек на этом компьютере, поэтому не может войти. Закройте другие приложения, которые используют Gemini, затем закройте и снова откройте kongCowork.",
   "error.provider.geminiVerificationRequired":
     "Google нужно подтвердить ваш аккаунт, прежде чем Gemini сможет ответить. Подтвердите аккаунт Google в браузере, затем отправьте сообщение снова.",
   "error.provider.keyProviderRefused":
     "{provider} отклонил сохранённый ключ API. Замените или удалите ключ в настройках, затем повторите попытку.",
   "error.provider.keyProviderNoBalance":
     "На аккаунте {provider} для сохранённого ключа API нет средств. Пополните баланс аккаунта, затем повторите попытку.",
+  "error.provider.keyProviderLowCredit":
+    "На аккаунте {provider} для сохранённого ключа API недостаточно средств для ответа этой модели. Пополните баланс аккаунта или выберите другую модель, затем повторите попытку.",
   "error.provider.modelServiceRefused":
     "Сервис модели отклонил запрос. Выберите другую модель или проверьте свой доступ к этой модели в сервисе.",
   "error.provider.modelServiceRefusedReason":
@@ -393,6 +413,13 @@ export const messages = {
   "error.provider.accountDefault": "Первый аккаунт {provider} нельзя удалить.",
   "error.provider.accountUsesKey":
     "Этот аккаунт {provider} использует сохранённый API-ключ и не имеет входа. Измените ключ в Настройки сервера → Провайдеры.",
+  "error.provider.accountNeedsKey":
+    "Новому аккаунту {provider} нужен API-ключ. Обновите kongCowork на этом устройстве, затем добавьте аккаунт ещё раз.",
+  "error.provider.accountKeyRefused": "{provider} не принял этот API-ключ. Проверьте ключ и попробуйте ещё раз.",
+  "error.provider.accountKeyUnreachable":
+    "kongCowork не смог связаться с {provider}, чтобы проверить API-ключ. Проверьте подключение к интернету и попробуйте ещё раз.",
+  "error.provider.accountKeySignedOut":
+    "{provider} больше не принимает API-ключ этого аккаунта. Укажите для аккаунта новый ключ.",
   "error.provider.accountInUse": "Агент с этим аккаунтом сейчас работает. Попробуйте ещё раз, когда агент остановится.",
   "error.provider.accountsReadOnly":
     "Не удаётся прочитать сохранённые аккаунты провайдеров. Обновите kongCowork, прежде чем их менять.",

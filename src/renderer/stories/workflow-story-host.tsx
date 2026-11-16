@@ -15,6 +15,7 @@ import {
   type WorkflowRunPage,
   type WorkflowVersion,
 } from "@openbot/contracts/ipc";
+import { accountUsageProviderRows } from "@openbot/ui/features/account/account-usage-view";
 import { Sidebar } from "@openbot/ui/features/sidebar/Sidebar";
 import type { SidebarView } from "@openbot/ui/features/sidebar/sidebar-types";
 import { PageRail, type PageRailPage } from "@openbot/ui/features/window/PageRail";
@@ -26,7 +27,7 @@ import { createSignal, Show, untrack } from "solid-js";
 import { fn } from "storybook/test";
 import { defaultSidebarLayout } from "../src/features/sidebar/sidebar-sections";
 import { createWorkflowsController } from "../src/features/workflows/workflows-controller";
-import type { WorkflowHost } from "../src/features/workflows/workflows-port";
+import { keptPicture, type WorkflowHost } from "../src/features/workflows/workflows-port";
 import { createMockGitHubConnector } from "../src/preview/mock-github-connector";
 import { mockWorkflows } from "../src/preview/mock-workflows";
 import { STORY_AGENTS } from "./fixtures";
@@ -154,6 +155,14 @@ function storyWorkflowHost(workflows: readonly StoryWorkflow[]): WorkflowHost {
     slackWorkspaces: async () => [],
     agentLevels: async () => null,
     githubSupported: () => true,
+    mediaSupported: () => true,
+    mediaAccountSupported: () => true,
+    mediaTransparentSupported: () => true,
+    pictures: async () => [],
+    // A story keeps the picture only in the page: its preview is a blob address.
+    uploadPicture: async (file) => keptPicture(crypto.randomUUID(), file, URL.createObjectURL(file)),
+    // A story makes no files.
+    mediaUrl: () => undefined,
     githubConnector: createMockGitHubConnector(),
     hostName: () => undefined,
     // A story opens no browser.
@@ -185,6 +194,8 @@ export function WorkflowStory(props: {
   );
 }
 
+const usageRows = accountUsageProviderRows(null);
+
 /**
  * The workflow canvas in the desktop window: the page rail and the server menu are the real app
  * components. The canvas is a page that covers the agent list, as the schedule, usage and Marketplace
@@ -202,6 +213,7 @@ export function WorkflowInAppStory(props: { workflows: readonly StoryWorkflow[];
         current={page()}
         pinned={["routines", "workflows", "usage"]}
         onPinChange={fn()}
+        usageRows={usageRows}
         onAgents={() => setPage("agents")}
         onRoutines={() => setPage("routines")}
         onSchedule={() => setPage("schedule")}

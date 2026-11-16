@@ -15,6 +15,10 @@ export const messages = {
   "menu.quitConfirmBody": "Agents en routines stoppen tot je kongCowork weer opent.",
   "menu.quitConfirm": "Stop",
   "menu.quitHint": "Houd ⌘Q ingedrukt of druk twee keer om te stoppen",
+  "menu.closeWorkingTitle": { one: "{count} agent werkt nog", other: "{count} agents werken nog" },
+  "menu.closeWorkingBody":
+    "Als je kongCowork stopt, stoppen de agents. Laat kongCowork draaien, zodat ze klaar worden. Open kongCowork om het venster weer te tonen.",
+  "menu.closeKeepRunning": "Laat draaien",
   "menu.trayOpen": "Open kongCowork",
   "menu.trayQuit": "Stop kongCowork",
   "menu.trayTooltip": "kongCowork",

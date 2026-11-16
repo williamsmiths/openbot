@@ -15,6 +15,10 @@ export const messages = {
   "menu.quitConfirmBody": "kongCowork'u yeniden açana kadar ajanlar ve rutinler durur.",
   "menu.quitConfirm": "Çık",
   "menu.quitHint": "Çıkmak için ⌘Q'yu basılı tutun veya iki kez basın",
+  "menu.closeWorkingTitle": { one: "{count} ajan hâlâ çalışıyor", other: "{count} ajan hâlâ çalışıyor" },
+  "menu.closeWorkingBody":
+    "kongCowork'tan çıkarsanız ajanlar durur. Bitirmeleri için çalışır bırakın. Pencereyi yeniden göstermek için kongCowork'u açın.",
+  "menu.closeKeepRunning": "Çalışsın",
   "menu.trayOpen": "kongCowork'u aç",
   "menu.trayQuit": "kongCowork'tan çık",
   "menu.trayTooltip": "kongCowork",

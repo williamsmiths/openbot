@@ -84,6 +84,8 @@ export const messages = defineMessages("error.agent", {
   "error.agent.endpointRemoved": "The endpoint this agent used was removed. Choose another model for it.",
   "error.agent.turnStalled":
     "{provider} stopped responding, so kongCowork ended this turn. Send the message again, or choose another model.",
+  "error.agent.toolLoopStopped":
+    "{provider} repeated a failed step many times, so kongCowork stopped this turn. Send the message again, or choose another model.",
   "error.agent.compactionConnectionLost":
     "The connection stopped while the agent compacted its context, so the task stopped. Check your internet connection, then send a message to continue.",
   "error.agent.selectedGone": "The selected agent no longer exists.",

@@ -202,7 +202,8 @@ export interface ThreadLifecycleOptions {
   /** Whether a password vault is connected, read at each start and resume of a session. */
   passwordVaultConnected?: () => boolean;
   /** What the Vault holds, read at each start and resume of a session. */
-  vaultItems?: () => VaultContents;
+  /** What the Vault holds for the agent with this id. */
+  vaultItems?: (agentId: string) => VaultContents;
   /** OpenBot runs on a server. The prompt then names the sign-in on the user's computer. */
   serverHost?: boolean;
   /** The plan storage in GB of a hosted server, read at each start and resume of a session. */
@@ -253,7 +254,7 @@ export class ThreadLifecycle {
   ) => Effect.Effect<string | null, McpOperationError>;
   readonly #agentEnvironment: () => Readonly<Record<string, string>>;
   readonly #passwordVaultConnected: () => boolean;
-  readonly #vaultItems: () => VaultContents;
+  readonly #vaultItems: (agentId: string) => VaultContents;
   readonly #serverHost: boolean;
   readonly #hostedStorageGb: () => number | null;
   readonly #agentCursorDrawn: boolean;
@@ -624,7 +625,7 @@ export class ThreadLifecycle {
   ): "idle" | "held" | "gone" {
     if (this.#conversation.loadedClientFor(externalThreadId) !== client) return "gone";
     const agentId = this.#conversation.agentForThread(externalThreadId);
-    // A routine session is ephemeral: no rollout is kept to resume it from.
+    // A routine session ends with its run, and nothing resumes it.
     if (!agentId || this.#conversation.isRoutineSession(externalThreadId)) return "gone";
     const publicThreadId = this.#conversation.publicThreadId(agentId, externalThreadId);
     const session = this.#store.database.activeProviderSession(publicThreadId, client.provider);
@@ -660,6 +661,9 @@ export class ThreadLifecycle {
    * read a whole session again. Its items go to `routineThreadId`, the routine's own side thread, or
    * with no such thread to the agent's chat. Its first turn reads the newest messages of the chat
    * and of the routine's thread.
+   *
+   * Codex still saves the session: a subagent that forks the run's context reads it from the saved
+   * history, and an ephemeral session fails that with `no rollout found` (#8743).
    */
   readonly startRoutineThread = Effect.fn("ThreadLifecycle.startRoutineThread")(function* (
     this: ThreadLifecycle,
@@ -679,7 +683,7 @@ export class ThreadLifecycle {
     });
     const { params } = yield* this.#startParams(owner, client, publicThreadId);
     const response = yield* client
-      .request("thread/start", { ...params, ephemeral: true, persistSession: false }, decodeThreadResponse)
+      .request("thread/start", { ...params, ephemeral: false, persistSession: false }, decodeThreadResponse)
       .pipe(toThreadOperationFailed);
     const externalThreadId = response.thread.id;
     this.#conversation.bindThread(externalThreadId, owner.id, publicThreadId);
@@ -690,14 +694,21 @@ export class ThreadLifecycle {
     return externalThreadId;
   }, Effect.uninterruptible).bind(this);
 
-  /** Ends the provider session of a routine run. A second call does nothing. */
+  /**
+   * Ends the provider session of a routine run. A second call does nothing. `archive`: no subagent of
+   * the run still works, so the saved session also leaves the provider's own thread list, as a
+   * replaced session does. An archive would stop a subagent that still works.
+   */
   readonly closeRoutineThread = Effect.fn("ThreadLifecycle.closeRoutineThread")(function* (
     this: ThreadLifecycle,
     externalThreadId: string,
+    archive = false,
   ) {
     if (!this.#conversation.isRoutineSession(externalThreadId)) return;
     this.#conversation.forgetRoutineSession(externalThreadId);
-    yield* this.#releaseProviderSession(externalThreadId);
+    const client = this.#conversation.openClientFor(externalThreadId);
+    yield* this.#releaseProviderSession(externalThreadId, client);
+    if (archive && client) yield* this.#archiveSession(client, externalThreadId);
     this.#conversation.unbindThread(externalThreadId);
     this.#conversation.unloadThread(externalThreadId);
     this.#givenTurnContext.delete(externalThreadId);
@@ -1408,7 +1419,7 @@ export class ThreadLifecycle {
         agentComputerUseEnabled(agent) && !mcpServers.some((config) => config.id === COMPUTER_USE_MCP_SERVER_ID),
       sideThread,
       passwordVault: this.#passwordVaultConnected(),
-      vaultItems: this.#vaultItems(),
+      vaultItems: this.#vaultItems(agent.id),
       serverHost: this.#serverHost,
       hostedStorageGb: this.#hostedStorageGb(),
       agentCursorDrawn: this.#agentCursorDrawn,
@@ -1612,6 +1623,39 @@ export class ThreadLifecycle {
       this.#store.database.activeProviderSession(publicThreadId, agent.provider)?.externalSessionId === externalThreadId
     );
   }
+
+  /**
+   * Loads a Codex session in `client` before a compaction of it. Codex compacts only a thread that its
+   * process holds, and answers `thread not found` for one that an idle release or a process restart
+   * unloaded (#7894). A turn resumes it in `ensureThread`; a compaction before the turn did not.
+   * False when the next turn replaces the session, so a compaction of it has no use: its tools
+   * changed, or Codex has no rollout to resume it from.
+   */
+  readonly loadSessionForCompaction = Effect.fn("ThreadLifecycle.loadSessionForCompaction")(function* (
+    this: ThreadLifecycle,
+    agentId: string,
+    client: AgentClient,
+    externalThreadId: string,
+  ) {
+    // Only Codex: the other clients load their sessions themselves. A session marked for reload is
+    // still loaded in Codex, and its next turn resumes it.
+    if (client.provider !== "codex" || this.#conversation.openClientFor(externalThreadId) === client) return true;
+    const agent = this.#store.list().find((candidate) => candidate.id === agentId);
+    if (!agent) return false;
+    const publicThreadId = this.#conversation.publicThreadId(agentId, externalThreadId);
+    if (!(yield* this.hasCurrentToolsEffect(this.#sessionAgent(agent, publicThreadId), client, externalThreadId)))
+      return false;
+    const resumed = yield* Effect.result(
+      Effect.acquireUseRelease(
+        Effect.sync(() => this.holdRuntimeRefresh(agentId, this.#conversation.isSideThread(publicThreadId))),
+        () => this.resumeThread(agent, client, externalThreadId),
+        (release) => Effect.sync(release),
+      ),
+    );
+    if (Result.isSuccess(resumed)) return true;
+    if (isMissingProviderSessionError(resumed.failure.cause, client.provider)) return false;
+    return yield* resumed.failure;
+  }, Effect.uninterruptible).bind(this);
 
   /**
    * Compacts the context of a provider that cannot compact on request: the session ends, and a new

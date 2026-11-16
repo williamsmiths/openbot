@@ -15,6 +15,15 @@ export const messages = {
   "menu.quitConfirmBody": "Agenci i rutyny zatrzymają się, dopóki nie otworzysz kongCowork ponownie.",
   "menu.quitConfirm": "Zamknij",
   "menu.quitHint": "Przytrzymaj ⌘Q lub naciśnij dwa razy, aby zamknąć",
+  "menu.closeWorkingTitle": {
+    one: "{count} agent nadal pracuje",
+    few: "{count} agenci nadal pracują",
+    many: "{count} agentów nadal pracuje",
+    other: "{count} agenta nadal pracuje",
+  },
+  "menu.closeWorkingBody":
+    "Jeśli zamkniesz kongCowork, agenci się zatrzymają. Zostaw go uruchomionego, aby skończyli. Aby znowu pokazać okno, otwórz kongCowork.",
+  "menu.closeKeepRunning": "Nie zamykaj",
   "menu.trayOpen": "Otwórz kongCowork",
   "menu.trayQuit": "Zamknij kongCowork",
   "menu.trayTooltip": "kongCowork",

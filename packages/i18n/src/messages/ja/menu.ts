@@ -15,6 +15,10 @@ export const messages = {
   "menu.quitConfirmBody": "kongCowork を再び開くまで、エージェントとルーティンは停止します。",
   "menu.quitConfirm": "終了",
   "menu.quitHint": "終了するには ⌘Q を長押しするか、2 回押します",
+  "menu.closeWorkingTitle": { other: "{count} 個のエージェントがまだ作業中です" },
+  "menu.closeWorkingBody":
+    "kongCowork を終了すると、エージェントは止まります。終わるまで kongCowork を実行したままにしてください。ウィンドウをもう一度表示するには、kongCowork を開きます。",
+  "menu.closeKeepRunning": "実行を続ける",
   "menu.trayOpen": "kongCowork を開く",
   "menu.trayQuit": "kongCowork を終了",
   "menu.trayTooltip": "kongCowork",

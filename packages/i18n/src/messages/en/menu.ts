@@ -17,6 +17,11 @@ export const messages = defineMessages("menu", {
   "menu.quitConfirmBody": "Agents and routines stop until you open kongCowork again.",
   "menu.quitConfirm": "Quit",
   "menu.quitHint": "Hold ⌘Q or press it twice to quit",
+  // Windows and Linux, when the user closes the main window while agents work.
+  "menu.closeWorkingTitle": { one: "{count} agent is still working", other: "{count} agents are still working" },
+  "menu.closeWorkingBody":
+    "If you quit kongCowork, the agents stop. Keep it running to let them finish. To show the window again, open kongCowork.",
+  "menu.closeKeepRunning": "Keep Running",
   "menu.trayOpen": "Open kongCowork",
   "menu.trayQuit": "Quit kongCowork",
   "menu.trayTooltip": "kongCowork",

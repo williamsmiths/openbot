@@ -140,7 +140,7 @@ export interface MessagingAdapter {
   identify(): Effect.Effect<ConnectionIdentity, MessagingAdapterError>;
   post(target: MessageTarget, body: MessageBody): Effect.Effect<string, MessagingAdapterError>;
   edit(target: MessageTarget, messageId: string, body: MessageBody): Effect.Effect<void, MessagingAdapterError>;
-  /** Deletes one of OpenBot's posts, for a platform where a quiet answer takes back its status post (Slack). */
+  /** Deletes one of OpenBot's posts, for a platform where a quiet answer takes back its status post (Slack, WhatsApp). */
   remove?(target: MessageTarget, messageId: string): Effect.Effect<void, MessagingAdapterError>;
   /** A post that only `userId` sees. `replyHandle` is the one of the press that it answers, if any. */
   postPrivate(
@@ -202,6 +202,11 @@ export interface MessagingAdapter {
   placeName(platformChannelId: string): Effect.Effect<string, MessagingAdapterError>;
   /** The places of this connection that OpenBot can post in now. */
   places(): Effect.Effect<MessagingPlace[], MessagingAdapterError>;
+  /**
+   * The id of a place that an agent named, as `places` lists it, for a platform where one place has
+   * more than one written form (a WhatsApp phone number). The id as it is when no listed place matches.
+   */
+  placeId?(placeId: string): string;
   /** The roles a person can have in this workspace, highest first, for a platform with role lists. */
   roles?(): Effect.Effect<Array<{ id: string; name: string }>, MessagingAdapterError>;
   mention(userId: string): string;
@@ -305,6 +310,14 @@ export class WhatsAppRefusedError extends Error {
     super(`WhatsApp refused the message: ${errorCode}`);
     this.name = "WhatsAppRefusedError";
     this.code = `whatsapp_${errorCode}`;
+  }
+}
+
+/** An answer that failed after its first part replaced the status post: that post now holds the part. */
+export class WhatsAppAnswerPartlySent extends Error {
+  constructor(cause: unknown) {
+    super("A part of the WhatsApp answer was sent.", { cause });
+    this.name = "WhatsAppAnswerPartlySent";
   }
 }
 

@@ -92,6 +92,8 @@ export const messages = {
     "このエージェントが使用していたエンドポイントは削除されました。別のモデルを選択してください。",
   "error.agent.turnStalled":
     "{provider} が応答しなくなったため、kongCowork はこのターンを終了しました。メッセージをもう一度送信するか、別のモデルを選択してください。",
+  "error.agent.toolLoopStopped":
+    "{provider} が失敗した手順を何度も繰り返したため、kongCowork はこのターンを停止しました。メッセージをもう一度送信するか、別のモデルを選択してください。",
   "error.agent.compactionConnectionLost":
     "エージェントがコンテキストを圧縮している間に接続が切れたため、タスクが停止しました。インターネット接続を確認してから、メッセージを送って続けてください。",
   "error.agent.selectedGone": "選択したエージェントはもう存在しません。",

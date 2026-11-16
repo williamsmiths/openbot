@@ -1,9 +1,11 @@
-import type {
-  AccountUsage,
-  AccountUsageLimit,
-  AvatarColor,
-  AvatarImageInput,
-  CentralAuthState,
+import {
+  type AccountUsage,
+  type AccountUsageLimit,
+  type AvatarColor,
+  type AvatarImageInput,
+  type CentralAuthState,
+  keepUsageCredits,
+  withReadCredits,
 } from "@openbot/contracts/ipc";
 import { withKeptUsageTertiary } from "@openbot/team-client/plan-limits";
 import { currentText } from "@openbot/ui/text";
@@ -242,9 +244,13 @@ const Auth = createSimpleContext({
       for (const limit of usage.limits) accountUsageEventIds.add(usageLimitKey(limit));
       setAccountUsageState((state) => {
         const byId = new Map((state.data?.limits ?? []).map((limit) => [usageLimitKey(limit), limit]));
-        // A joined host's event carries no third window, so a reading keeps the one the last read gave.
-        for (const limit of usage.limits)
-          byId.set(usageLimitKey(limit), withKeptUsageTertiary(byId.get(usageLimitKey(limit)), limit));
+        // A joined server's event carries no third window and does not say whether an account works on
+        // credits: a reading keeps the ones the last read gave.
+        for (const limit of usage.limits) {
+          const key = usageLimitKey(limit);
+          const previous = byId.get(key);
+          byId.set(key, keepUsageCredits(previous, withKeptUsageTertiary(previous, limit)));
+        }
         state.data = { limits: [...byId.values()] };
       });
     }
@@ -256,14 +262,19 @@ const Auth = createSimpleContext({
       const usage = await accountPort().agent.getUsage();
       if (generation === accountUsageRequestGeneration && accountUsageState.targetKey === targetKey) {
         // The refresh reads every provider, so a row it omits has stopped reporting, such as a revoked
-        // OpenCode Go key. It keeps only the rows an event updated after it started.
+        // OpenCode Go key. It keeps only the rows an event updated after it started. A joined server's
+        // event does not say whether an account works on credits, so such a row takes it from the refresh:
+        // the flag the row has is only the one it kept from an older reading.
         setAccountUsageState((state) => {
           const byId = new Map(usage.limits.map((limit) => [usageLimitKey(limit), limit]));
           for (const limit of state.data?.limits ?? []) {
             const key = usageLimitKey(limit);
-            // The read itself sends these events, and a joined host's event has no third window, so
-            // the event row takes the one that this read gave.
-            if (accountUsageEventIds.has(key)) byId.set(key, withKeptUsageTertiary(byId.get(key), limit));
+            // The read itself sends these events. A joined host's event has no third window and does not say
+            // whether an account works on credits, so the event row takes both from this read.
+            if (accountUsageEventIds.has(key)) {
+              const read = byId.get(key);
+              byId.set(key, withReadCredits(read, withKeptUsageTertiary(read, limit)));
+            }
           }
           state.data = { limits: [...byId.values()] };
         });

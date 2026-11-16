@@ -15,6 +15,10 @@ export const messages = {
   "menu.quitConfirmBody": "Los agentes y las rutinas se detienen hasta que vuelvas a abrir kongCowork.",
   "menu.quitConfirm": "Salir",
   "menu.quitHint": "Mantén pulsado ⌘Q o púlsalo dos veces para salir",
+  "menu.closeWorkingTitle": { one: "{count} agente sigue trabajando", other: "{count} agentes siguen trabajando" },
+  "menu.closeWorkingBody":
+    "Si sales de kongCowork, los agentes se detienen. Déjalo abierto para que terminen. Para ver la ventana de nuevo, abre kongCowork.",
+  "menu.closeKeepRunning": "Seguir",
   "menu.trayOpen": "Abrir kongCowork",
   "menu.trayQuit": "Salir de kongCowork",
   "menu.trayTooltip": "kongCowork",

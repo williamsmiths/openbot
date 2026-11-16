@@ -15,6 +15,17 @@ export const messages = {
   "menu.quitConfirmBody": "يتوقف الوكلاء والمهام الدورية حتى تفتح kongCowork مرة أخرى.",
   "menu.quitConfirm": "إنهاء",
   "menu.quitHint": "اضغط ⌘Q مطولًا أو مرتين للإنهاء",
+  "menu.closeWorkingTitle": {
+    zero: "لا يعمل أي وكيل",
+    one: "وكيل واحد لا يزال يعمل",
+    two: "وكيلان لا يزالان يعملان",
+    few: "{count} وكلاء لا يزالون يعملون",
+    many: "{count} وكيلًا لا يزالون يعملون",
+    other: "{count} وكيل لا يزالون يعملون",
+  },
+  "menu.closeWorkingBody":
+    "إذا أنهيت kongCowork، يتوقف الوكلاء. أبقه قيد التشغيل ليُكملوا عملهم. لإظهار النافذة مرة أخرى، افتح kongCowork.",
+  "menu.closeKeepRunning": "إبقاء التشغيل",
   "menu.trayOpen": "فتح kongCowork",
   "menu.trayQuit": "إنهاء kongCowork",
   "menu.trayTooltip": "kongCowork",

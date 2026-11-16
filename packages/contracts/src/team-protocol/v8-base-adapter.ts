@@ -4,6 +4,7 @@ import { type AgentEvent, isAgentEvent } from "../ipc-agent-events";
 import { isTeamRealtimeEvent, type TeamRealtimeEvent } from "../ipc-team-host";
 import { isBoolean, isDynamicRecord, isNumber, isString } from "../runtime-values";
 import { withRuntimeSnapshotLaneTurns } from "./agent-lane-turns-v1";
+import { withEventAgentPendingRuntimes } from "./agent-pending-runtime-v1";
 import { restoreBrowserSecretMetadata } from "./browser-secret-v1";
 import { restoreBrowserTakeoverReason } from "./browser-sign-in-v1";
 import { withRuntimeSnapshotContextUsage } from "./context-usage-v1";
@@ -18,6 +19,7 @@ import {
 import { eventHasPromptQuestions, withEventPromptMultiSelect } from "./prompt-multi-select-v1";
 import { withConversationSubagents } from "./subagents-v1";
 import { withConversationUiBlocks } from "./ui-blocks-v1";
+import { withUsageEventTertiary } from "./usage-tertiary-v1";
 import {
   decodeTeamProtocolV8BaseEvent,
   decodeTeamProtocolV8BaseHttpRequest,
@@ -27,6 +29,7 @@ import {
   type TeamProtocolV8BaseJsonObject,
   type TeamProtocolV8BaseJsonValue,
 } from "./v8-base";
+import { withConversationVideoGeneration } from "./video-generation-v1";
 
 export type TeamProtocolV8BaseCurrentEventDecodeResult =
   | { kind: "known"; event: AgentEvent | TeamRealtimeEvent }
@@ -49,7 +52,13 @@ export function decodeTeamProtocolV8BaseCurrentEvent(value: unknown): TeamProtoc
         restoreBrowserTakeoverReason(
           restoreBrowserSecretMetadata(
             toCurrentAgentKeys(
-              withRuntimeSnapshotLaneTurns(withRuntimeSnapshotContextUsage(decodedValue, value), value),
+              withRuntimeSnapshotLaneTurns(
+                withEventAgentPendingRuntimes(
+                  withUsageEventTertiary(withRuntimeSnapshotContextUsage(decodedValue, value), value),
+                  value,
+                ),
+                value,
+              ),
             ),
             value,
           ),
@@ -57,9 +66,12 @@ export function decodeTeamProtocolV8BaseCurrentEvent(value: unknown): TeamProtoc
         ),
         value,
         // A host sends a UI block only under ui-blocks-v1, the subagents only under subagents-v1, a
-        // multi-select flag only under prompt-multi-select-v1, a takeover reason only under
-        // browser-sign-in, context states only under context-usage-v1, and lane turns only under
-        // agent-lane-turns-v1, so a present one is always kept.
+        // video request only under video-generation-v1, a multi-select flag only under
+        // prompt-multi-select-v1, a takeover reason only under browser-sign-in, context states only
+        // under context-usage-v1, a third usage window only under usage-tertiary-v1, a pending runtime
+        // only under agent-pending-runtime-v1, and lane turns only under agent-lane-turns-v1, so a
+        // present one is always kept.
+        value,
         value,
         value,
       ),
@@ -82,7 +94,10 @@ export function encodeTeamProtocolV8BaseCurrentEvent(
     uiBlocks?: boolean;
     subagents?: boolean;
     promptMultiSelect?: boolean;
+    videoGeneration?: boolean;
     contextUsage?: boolean;
+    usageTertiary?: boolean;
+    agentPendingRuntime?: boolean;
     laneTurns?: boolean;
   } = {},
 ): string | null {
@@ -100,6 +115,8 @@ export function encodeTeamProtocolV8BaseCurrentEvent(
   const encoded = encodeTeamProtocolV8BaseEvent(decoded.event);
   const promptMultiSelect = options.promptMultiSelect === true && eventHasPromptQuestions(event.type);
   const contextUsage = options.contextUsage === true && event.type === "runtime-snapshot";
+  const usageTertiary = options.usageTertiary === true && event.type === "usage-changed";
+  const pendingRuntime = options.agentPendingRuntime === true && event.type === "agents-changed";
   const laneTurns = options.laneTurns === true && event.type === "runtime-snapshot";
   if (
     !encoded ||
@@ -108,37 +125,44 @@ export function encodeTeamProtocolV8BaseCurrentEvent(
       !eventConversationKey(event.type) &&
       !promptMultiSelect &&
       !contextUsage &&
+      !usageTertiary &&
+      !pendingRuntime &&
       !laneTurns)
   )
     return encoded;
-  // The block and the subagents go as written: the key swap would rename a response value under a
-  // field id such as `agentId`.
+  // The block, the subagents and the video request go as written: the key swap would rename a
+  // response value under a field id such as `agentId`.
   const withPlans = withEventConversationPlans(
     JSON.parse(encoded),
     wireValue,
     options.uiBlocks ? currentValue : null,
     options.subagents ? currentValue : null,
+    options.videoGeneration ? currentValue : null,
   );
   const withMultiSelect = promptMultiSelect ? withEventPromptMultiSelect(withPlans, currentValue) : withPlans;
   const withContext = contextUsage
     ? withRuntimeSnapshotContextUsage(withMultiSelect, wireValue, true)
     : withMultiSelect;
-  const output = laneTurns ? withRuntimeSnapshotLaneTurns(withContext, wireValue, true) : withContext;
+  const withUsage = usageTertiary ? withUsageEventTertiary(withContext, wireValue, true) : withContext;
+  const withPending = pendingRuntime ? withEventAgentPendingRuntimes(withUsage, wireValue, true) : withUsage;
+  const output = laneTurns ? withRuntimeSnapshotLaneTurns(withPending, wireValue, true) : withPending;
   const withSecrets = options.preserveBrowserSecrets ? restoreBrowserSecretMetadata(output, wireValue) : output;
   return JSON.stringify(options.browserSignIn ? restoreBrowserTakeoverReason(withSecrets, wireValue) : withSecrets);
 }
 
 /**
  * Puts the plans and the senders of a conversation event beside its frozen projection, the UI blocks
- * of `uiBlockSource` when it is not null, and the subagents of `subagentSource` when it is not null.
- * See `withConversationPlans`, `withConversationSenders`, `withConversationUiBlocks` and
- * `withConversationSubagents`.
+ * of `uiBlockSource` when it is not null, the subagents of `subagentSource` when it is not null, and
+ * the video requests of `videoSource` when it is not null. See `withConversationPlans`,
+ * `withConversationSenders`, `withConversationUiBlocks`, `withConversationSubagents` and
+ * `withConversationVideoGeneration`.
  */
 function withEventConversationPlans(
   projected: TeamProtocolV8BaseJsonValue,
   source: unknown,
   uiBlockSource: unknown,
   subagentSource: unknown,
+  videoSource: unknown,
 ): TeamProtocolV8BaseJsonValue {
   if (projected === null || Array.isArray(projected) || typeof projected !== "object") return projected;
   if (!isDynamicRecord(source)) return projected;
@@ -149,9 +173,14 @@ function withEventConversationPlans(
   const withBlocks = isDynamicRecord(uiBlockSource)
     ? withConversationUiBlocks(withPlans, uiBlockSource[key])
     : withPlans;
+  const withSubagents = isDynamicRecord(subagentSource)
+    ? withConversationSubagents(withBlocks, subagentSource[key])
+    : withBlocks;
   return {
     ...projected,
-    [key]: isDynamicRecord(subagentSource) ? withConversationSubagents(withBlocks, subagentSource[key]) : withBlocks,
+    [key]: isDynamicRecord(videoSource)
+      ? withConversationVideoGeneration(withSubagents, videoSource[key])
+      : withSubagents,
   };
 }
 

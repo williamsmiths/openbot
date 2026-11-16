@@ -91,7 +91,7 @@ export type ReportContext = Pick<Report, "surface" | "app_version" | "platform" 
  * Change a value only together with ANALYTICS.md.
  */
 export const ANALYTICS_GENERATIONS = {
-  desktop_host: 18,
+  desktop_host: 19,
   desktop: 13,
   web: 2,
   mobile: 4,
@@ -243,7 +243,7 @@ export function classifyFailure(error: unknown): CauseCode {
   )
     return "rate_limit";
   if (
-    /\b(?:insufficient[ _](?:funds|balance|quota|credits?)|payment required|credits? (?:exhausted|depleted)|out of credits)\b/iu.test(
+    /\b(?:insufficient[ _](?:funds|balance|quota|credits?)|payment required|payment (?:is )?past due|credits? (?:exhausted|depleted)|out of credits)\b/iu.test(
       message,
     )
   )

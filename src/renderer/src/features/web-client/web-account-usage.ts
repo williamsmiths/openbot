@@ -1,4 +1,4 @@
-import type { AccountUsage, AgentStatus } from "@openbot/contracts/ipc";
+import { type AccountUsage, type AgentStatus, keepUsageCredits, withReadCredits } from "@openbot/contracts/ipc";
 import { withKeptTertiary } from "@openbot/team-client/plan-limits";
 import type { TextValue } from "@openbot/ui/text";
 import { type Accessor, createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js";
@@ -16,6 +16,10 @@ export function createWebAccountUsage(options: {
   const { workspace, status } = options;
   const [accountUsage, setAccountUsage] = createSignal<AccountUsage | null>(null);
   let usageGeneration = 0;
+  /** Counts the resets, so a read that ends after one adds nothing to the next host's reading. */
+  let usageResets = 0;
+  /** Counts the reads only, so an older read does not write its credit flag over a newer read's. */
+  let usageReads = 0;
   /** The host that the reading is for, while it is online. */
   const usageHostId = createMemo(() => {
     const hostId = workspace.state.host?.hostId;
@@ -76,25 +80,54 @@ export function createWebAccountUsage(options: {
       // As on desktop: the host sends a new reading when a provider reports usage.
       if (event.type === "usage-changed" && untrack(usageTargetKey)) {
         usageGeneration += 1;
-        // The event carries no third window, so a reading keeps the one the last read gave.
-        setAccountUsage((current) => withKeptTertiary(current, event.usage));
+        // The event carries no third window and does not say whether an account works on credits, so
+        // each limit keeps the last reading's.
+        setAccountUsage((current) =>
+          withKeptTertiary(current, {
+            limits: event.usage.limits.map((limit) =>
+              keepUsageCredits(
+                current?.limits.find((kept) => kept.id === limit.id && kept.accountId === limit.accountId),
+                limit,
+              ),
+            ),
+          }),
+        );
       }
+      // The usage event does not say whether an account works on credits, so this one reads it again.
+      if (event.type === "usage-credits-changed" && untrack(usageTargetKey)) void refreshUsage().catch(() => undefined);
     }),
   );
   async function refreshUsage(): Promise<AccountUsage> {
     const readUsage = workspace.runtime.accountUsage;
     if (!readUsage || workspace.state.status !== "online") throw new Error(options.t("webClient.error.usageOffline"));
     const generation = ++usageGeneration;
+    const resets = usageResets;
+    const read = ++usageReads;
     const usage = await readUsage();
     // The read itself makes the host send events, which have no third window: when an event came
     // first, its reading takes the third windows that this read gave.
     if (generation === usageGeneration) setAccountUsage(usage);
-    else setAccountUsage((current) => (current ? withKeptTertiary(usage, current) : current));
+    // An event during the read is newer, but it has no third window and does not say whether an account
+    // works on credits: the values its rows have are only the ones they kept from an older reading.
+    else if (resets === usageResets && read === usageReads)
+      setAccountUsage((current) =>
+        current
+          ? withKeptTertiary(usage, {
+              limits: current.limits.map((limit) =>
+                withReadCredits(
+                  usage.limits.find((read) => read.id === limit.id && read.accountId === limit.accountId),
+                  limit,
+                ),
+              ),
+            })
+          : current,
+      );
     return usage;
   }
   /** Drops the reading and any read in flight. */
   function reset(): void {
     usageGeneration += 1;
+    usageResets += 1;
     setAccountUsage(null);
   }
   return { accountUsage, usageTargetKey, usageReady, refreshUsage, reset };
