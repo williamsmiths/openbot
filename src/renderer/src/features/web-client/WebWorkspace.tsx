@@ -168,6 +168,7 @@ import {
   sidebarChannelWaits,
 } from "@openbot/ui/features/sidebar/sidebar-agent-states";
 import type { SidebarView } from "@openbot/ui/features/sidebar/sidebar-types";
+import { CursorUsageHud } from "@openbot/ui/features/usage/CursorUsageHud";
 import { PageRail, type PageRailPage } from "@openbot/ui/features/window/PageRail";
 import { useText } from "@openbot/ui/text";
 import { Effect } from "effect";
@@ -986,7 +987,7 @@ function WebWorkspaceFrame(props: WebWorkspaceProps) {
   function agentAccountUsage() {
     return agentAccountChoice() ? accountUsage() : undefined;
   }
-  /** The plan limits of each provider account, for the rings of the rail. */
+  /** The plan limits of each provider account, for the Cursor HUD at the bottom of the agent list. */
   const usageRows = createMemo(() => accountUsageProviderRows(accountUsage(), providerAdmin.status().providers, text));
   // As on desktop. The first reading for a target comes from `createWebAccountUsage`.
   createUsageRefreshPoll({
@@ -2790,7 +2791,6 @@ function WebWorkspaceFrame(props: WebWorkspaceProps) {
               current={railPage()}
               pinned={layout.railPinned()}
               onPinChange={layout.setRailPinned}
-              usageRows={usageRows()}
               onAgents={() => showSidebarView("agents")}
               onRoutines={routinesSupported() ? () => showSidebarView("routines") : undefined}
               onTasks={
@@ -3184,6 +3184,9 @@ function WebWorkspaceFrame(props: WebWorkspaceProps) {
                             onDismiss={communityCard.dismiss}
                           />
                         </Show>
+                        {/* The Cursor plan, always at the bottom of the agent list. The web client does not
+                         * read the machine, so the reactor stays dark. */}
+                        <CursorUsageHud rows={usageRows()} />
                       </>
                     }
                     emptyAction={

@@ -78,4 +78,8 @@ export const messages = {
   "usage.panel.loadFailed": "לא ניתן לטעון את השימוש. יש לבדוק את החיבור ואת טווח התאריכים.",
   "usage.machine.label": "שימוש במחשב. מעבד: {cpu}, זיכרון: {memory}",
   "usage.machine.openStorage": "פתיחת האחסון. דיסק: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "אוטומטי",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "איפוס {time}",
 } as const satisfies PartialTranslation<typeof source>;

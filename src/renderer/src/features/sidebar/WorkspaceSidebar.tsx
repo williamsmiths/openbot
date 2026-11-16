@@ -35,6 +35,7 @@ import { usePresence } from "../team/team-context";
 import { SidebarUpdateIsland } from "../updates/SidebarUpdateIsland";
 import { createCommunityCardVisibility } from "./community-card";
 import { createSidebarAlertCards, SidebarAlertCards } from "./SidebarAlertCards";
+import { SidebarCursorHud } from "./SidebarCursorHud";
 import { ServerUpgradeOffer } from "./server-upgrade-offer";
 import { useSidebar } from "./sidebar-context";
 
@@ -351,6 +352,8 @@ export function WorkspaceSidebar(props: { peopleEnabled: boolean }) {
               />
             </Show>
             <SidebarUpdateIsland />
+            {/* The Cursor plan and this server's load, always at the bottom of the agent list. */}
+            <SidebarCursorHud />
           </>
         }
         onOpenMarketplace={() => setSkillsMarketplaceOpen(true)}

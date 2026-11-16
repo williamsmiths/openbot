@@ -85,4 +85,8 @@ export const messages = {
   "usage.panel.loadFailed": "تعذّر تحميل الاستخدام. تحقّق من الاتصال ونطاق التاريخ.",
   "usage.machine.label": "استخدام الجهاز. المعالج: {cpu}، الذاكرة: {memory}",
   "usage.machine.openStorage": "فتح التخزين. القرص: {percent}، {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "تلقائي",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "إعادة الضبط {time}",
 } as const satisfies PartialTranslation<typeof source>;

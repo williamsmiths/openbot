@@ -476,6 +476,22 @@
   /* A tooltip names the control under the pointer. It shows above every other layer, also above
      a dialog or a menu that holds the control. */
   --openbot-layer-tooltip: 240;
+  /* A gauge fills slower than a control moves, so the reading reads as a change of level. */
+  --openbot-duration-gauge: 900ms;
+  /* The Cursor HUD at the bottom of the agent list: the text over the GPT skin, in the skin's own
+     neon. The skin is a dark instrument in both themes, so tokens-light.css does not change these. */
+  --openbot-hud-total: #8cff3a;
+  --openbot-hud-auto: #b6ff3d;
+  --openbot-hud-api: #3dff6e;
+  --openbot-hud-low: #ffc531;
+  --openbot-hud-critical: #ff4b2b;
+  --openbot-hud-text: #c8dde4;
+  --openbot-hud-core: #e8fbff;
+  --openbot-hud-panel: #06121a;
+  --openbot-hud-edge: #1f8aa3;
+  --openbot-hud-slot: #0d2c36;
+  --openbot-text-hud: clamp(7px, 3.4cqi, 13px);
+  --openbot-text-hud-small: clamp(7px, 2.8cqi, 11px);
 }
 
 /* Every surface that paints a provider - the picker mark, the update toast and its progress bar,

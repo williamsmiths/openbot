@@ -79,4 +79,8 @@ export const messages = {
   "usage.panel.loadFailed": "Impossible de charger l’utilisation. Vérifiez la connexion et la période.",
   "usage.machine.label": "Utilisation de la machine. CPU : {cpu}, mémoire : {memory}",
   "usage.machine.openStorage": "Ouvrir Stockage. Disque : {percent}, {detail}",
+  "usage.hud.hp": "PV",
+  "usage.hud.auto": "Auto",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "réinit. {time}",
 } as const satisfies PartialTranslation<typeof source>;

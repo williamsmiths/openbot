@@ -30,6 +30,10 @@ import {
   BROWSER_SECRET_VAULT_CAPABILITY,
   BROWSER_SECRET_VAULT_ROUTES,
 } from "@openbot/contracts/team-protocol/browser-secret-vault-v1";
+import {
+  PROVIDER_USAGE_TERTIARY_CAPABILITY,
+  PROVIDER_USAGE_TERTIARY_ROUTES,
+} from "@openbot/contracts/team-protocol/provider-usage-tertiary-v1";
 import { V5_AGENT_MODEL } from "@openbot/contracts/team-protocol/v5-adapter";
 import { V6_AGENT_MODEL } from "@openbot/contracts/team-protocol/v6-adapter";
 import { WORKFLOWS_CAPABILITY } from "@openbot/contracts/team-protocol/workflows-v1";
@@ -200,6 +204,30 @@ export async function routeAgents(
     // `provider-accounts-v1` gives the accounts after it.
     const usage = await runCauseEffect(agents.getUsage());
     return json(200, { ...usage, limits: usage.limits.filter((limit) => limit.accountId === undefined) });
+  }
+  if (method === "POST" && url.pathname === PROVIDER_USAGE_TERTIARY_ROUTES.list) {
+    // `provider-usage-tertiary-v1`: the third window that the released usage route leaves out, with
+    // the same access and the same readings (the provider's own sign-in only).
+    if (!capabilities.has(PROVIDER_USAGE_TERTIARY_CAPABILITY))
+      throw new HttpError(400, sourceText("error.team.providersUnsupported"));
+    // Runs the body through the route codec, as the sibling optional routes do.
+    await readJson(request);
+    const usage = await runCauseEffect(agents.getUsage());
+    const limits = usage.limits.flatMap(({ id, accountId, tertiary }) =>
+      accountId === undefined && tertiary
+        ? [
+            {
+              id,
+              tertiary: {
+                usedPercent: tertiary.usedPercent,
+                windowDurationMins: tertiary.windowDurationMins,
+                resetsAt: tertiary.resetsAt,
+              },
+            },
+          ]
+        : [],
+    );
+    return json(200, { limits });
   }
   if (method === "GET" && url.pathname === TEAM_API_ROUTES.agents.models) {
     // Only ids the peer's protocol accepts: its model list decoder fails closed on the whole array, and

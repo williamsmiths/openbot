@@ -15,7 +15,6 @@ import { serverSupportsCapability } from "../servers/server-capabilities";
 import { useServers } from "../servers/servers-context";
 import { useSettings } from "../settings/settings-context";
 import { useUpdates } from "../updates/updates-context";
-import { usePlanLimitRows } from "../usage/plan-limit-rows";
 import { useWindowPage } from "./window-page-context";
 
 /**
@@ -45,7 +44,6 @@ export function WorkspacePageRail(props: { hidden: boolean }) {
     if (view === "routines") channels.close();
     layout.setSidebarView(view);
   }
-  const usageRows = usePlanLimitRows();
   const { customAgentUsage } = useCustomAgents();
   /** The custom agents run on this computer, so a joined server does not show their usage. */
   const localAgentUsage = () => (activeServer()?.kind === "local" ? customAgentUsage() : []);
@@ -71,7 +69,6 @@ export function WorkspacePageRail(props: { hidden: boolean }) {
       current={current()}
       pinned={layout.railPinned()}
       onPinChange={layout.setRailPinned}
-      usageRows={usageRows()}
       customAgentUsage={localAgentUsage()}
       onAgents={() => showSidebarView("agents")}
       onRoutines={() => showSidebarView("routines")}

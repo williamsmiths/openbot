@@ -79,4 +79,8 @@ export const messages = {
   "usage.panel.loadFailed": "使用量を読み込めませんでした。接続と期間を確認してください。",
   "usage.machine.label": "マシンの使用状況。CPU: {cpu}、メモリ: {memory}",
   "usage.machine.openStorage": "ストレージを開く。ディスク: {percent}、{detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "オート",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "リセット {time}",
 } as const satisfies PartialTranslation<typeof source>;

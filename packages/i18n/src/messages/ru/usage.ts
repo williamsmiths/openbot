@@ -84,4 +84,8 @@ export const messages = {
   "usage.panel.loadFailed": "Не удалось загрузить использование. Проверьте подключение и диапазон дат.",
   "usage.machine.label": "Нагрузка на машину. ЦП: {cpu}, память: {memory}",
   "usage.machine.openStorage": "Открыть хранилище. Диск: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "Авто",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "сброс {time}",
 } as const satisfies PartialTranslation<typeof source>;

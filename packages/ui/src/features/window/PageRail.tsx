@@ -15,8 +15,6 @@ import {
   Waypoints,
   Workflow,
 } from "@openbot/ui";
-import { AccountUsageDetails } from "@openbot/ui/features/account/AccountUsageDetails";
-import { type AccountUsageProviderRow, accountUsageRowKey } from "@openbot/ui/features/account/account-usage-view";
 import { useText } from "@openbot/ui/text";
 import { Dynamic, type JSX } from "@solidjs/web";
 import { createMemo, createSignal, For, Show } from "solid-js";
@@ -57,85 +55,6 @@ function RailButton(props: {
         </MotionTooltip>
       )}
     </Show>
-  );
-}
-
-/** Two tracks in a 34px box, with 4.5px between their centers. */
-const RING = { size: 34, stroke: 2.25, spacing: 4.5 };
-
-/**
- * The limits of one provider as concentric rings: the outer ring is the longest window, the inner
- * ring the shortest. Each arc shows how much is left, in the tone of that window. The hover card
- * shows the windows with their reset times. `shared` are the readings that count the same quota, such
- * as Cursor on a merged Grok plan: the card lists them, with no ring of their own. The ring draws the
- * reading with the least left, so a shared reading that runs out first still shows.
- */
-function UsageRings(props: {
-  row: AccountUsageProviderRow;
-  shared: readonly AccountUsageProviderRow[];
-  onOpen: (button: HTMLElement) => void;
-}) {
-  const { t, format } = useText();
-  const rows = () => [props.row, ...props.shared];
-  const label = () =>
-    t("app.rail.usageRings", {
-      name: format.list(rows().map((row) => row.name)),
-      windows: rows()
-        .flatMap((row) => row.windows)
-        .map((window) => t("account.usage.row.window", { window: window.label, percent: window.remainingPercent }))
-        .join(", "),
-    });
-  const ringRow = () =>
-    rows().reduce((lowest, row) => ((row.remainingPercent ?? 100) < (lowest.remainingPercent ?? 100) ? row : lowest));
-  const windows = () => [...ringRow().ringWindows].reverse().slice(0, 2);
-  const outerRadius = (RING.size - RING.stroke) / 2;
-  return (
-    <RailButton
-      label={label()}
-      card={() => (
-        <AccountUsageDetails
-          rows={rows()}
-          loading={false}
-          error={null}
-          refreshActive={false}
-          refreshDisabled
-          onRefresh={() => undefined}
-          title={<h2 class="account-usage-popover-title">{t("account.usage.title")}</h2>}
-        />
-      )}
-      class="window-rail-usage"
-      onClick={props.onOpen}
-    >
-      <svg class="window-rail-usage-ring" viewBox={`0 0 ${RING.size} ${RING.size}`} fill="none" aria-hidden="true">
-        <For each={windows()} keyed={false}>
-          {(window, index) => (
-            <g>
-              <circle
-                class="window-rail-usage-track"
-                cx={RING.size / 2}
-                cy={RING.size / 2}
-                r={outerRadius - index * RING.spacing}
-                stroke-width={RING.stroke}
-              />
-              <Show when={window().remainingPercent > 0}>
-                <circle
-                  class="window-rail-usage-arc"
-                  data-usage-tone={window().tone}
-                  cx={RING.size / 2}
-                  cy={RING.size / 2}
-                  r={outerRadius - index * RING.spacing}
-                  stroke-width={RING.stroke}
-                  stroke-linecap="round"
-                  pathLength={100}
-                  stroke-dasharray={`${window().remainingPercent} 100`}
-                />
-              </Show>
-            </g>
-          )}
-        </For>
-      </svg>
-      <ProviderLogo provider={props.row.provider} class="window-rail-usage-logo" />
-    </RailButton>
   );
 }
 
@@ -199,8 +118,6 @@ export interface PageRailProps {
   /** The pages that show as rail buttons. The More menu has all pages, with a pin for each one. */
   pinned: readonly PageRailPinnablePage[];
   onPinChange: (page: PageRailPinnablePage, pinned: boolean) => void;
-  /** The plan limits of each provider account. Each one with a reported window shows as rings. */
-  usageRows: readonly AccountUsageProviderRow[];
   /** The answers of the custom agents on this computer that have a usage prompt. Absent on the web. */
   customAgentUsage?: readonly CustomAgentUsageRailRow[] | undefined;
   onAgents: () => void;
@@ -333,22 +250,10 @@ function RailLogo(props: { variant: AppLogoVariant; href: string | undefined }) 
 
 /**
  * The page rail at the left of the window, on desktop and on the web. Its buttons change the page in
- * the card. A usage ring shows the plan limits of one provider and opens the usage page.
+ * the card. The plan limits show in the Cursor HUD at the bottom of the agent list, not here.
  */
 export function PageRail(props: PageRailProps) {
   const { t } = useText();
-  /**
-   * One ring per reading, except a reading that counts the quota of another provider's own sign-in,
-   * such as Cursor on a merged Grok plan: that ring's card lists it instead.
-   */
-  const rings = createMemo(() => {
-    const rows = props.usageRows.filter((row) => row.reportsUsage && row.windows.length > 0);
-    const owner = (row: AccountUsageProviderRow) =>
-      rows.find((other) => other.accountId === null && other.provider === row.sharedQuotaWith);
-    return rows
-      .filter((row) => !owner(row))
-      .map((row) => ({ row, shared: rows.filter((other) => owner(other) === row) }));
-  });
   /** The pages that this server has, in rail order. */
   const pages = createMemo((): RailPage[] => {
     const list: RailPage[] = [];
@@ -405,10 +310,6 @@ export function PageRail(props: PageRailProps) {
       </div>
       <div class="window-rail-end">
         <div class="window-rail-group">
-          {/* A status update builds new rows. The key keeps each ring, and its open hover card, mounted. */}
-          <For each={rings()} keyed={(ring) => accountUsageRowKey(ring.row)}>
-            {(ring) => <UsageRings row={ring().row} shared={ring().shared} onOpen={props.onUsage} />}
-          </For>
           <For each={props.customAgentUsage ?? []} keyed={(row) => row.id}>
             {(row) => <CustomAgentUsageButton row={row()} onOpen={props.onUsage} />}
           </For>

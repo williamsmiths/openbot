@@ -81,4 +81,8 @@ export const messages = {
   "usage.panel.loadFailed": "No se pudieron cargar los datos de uso. Comprueba la conexión y el intervalo de fechas.",
   "usage.machine.label": "Uso de la máquina. CPU: {cpu}, memoria: {memory}",
   "usage.machine.openStorage": "Abrir Almacenamiento. Disco: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "Auto",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "reinicio {time}",
 } as const satisfies PartialTranslation<typeof source>;

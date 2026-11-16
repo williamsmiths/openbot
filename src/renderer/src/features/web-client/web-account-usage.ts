@@ -1,4 +1,5 @@
 import type { AccountUsage, AgentStatus } from "@openbot/contracts/ipc";
+import { withKeptTertiary } from "@openbot/team-client/plan-limits";
 import type { TextValue } from "@openbot/ui/text";
 import { type Accessor, createEffect, createMemo, createSignal, onCleanup, untrack } from "solid-js";
 import type { WebWorkspace } from "./web-client-context";
@@ -75,7 +76,8 @@ export function createWebAccountUsage(options: {
       // As on desktop: the host sends a new reading when a provider reports usage.
       if (event.type === "usage-changed" && untrack(usageTargetKey)) {
         usageGeneration += 1;
-        setAccountUsage(event.usage);
+        // The event carries no third window, so a reading keeps the one the last read gave.
+        setAccountUsage((current) => withKeptTertiary(current, event.usage));
       }
     }),
   );
@@ -84,7 +86,10 @@ export function createWebAccountUsage(options: {
     if (!readUsage || workspace.state.status !== "online") throw new Error(options.t("webClient.error.usageOffline"));
     const generation = ++usageGeneration;
     const usage = await readUsage();
+    // The read itself makes the host send events, which have no third window: when an event came
+    // first, its reading takes the third windows that this read gave.
     if (generation === usageGeneration) setAccountUsage(usage);
+    else setAccountUsage((current) => (current ? withKeptTertiary(usage, current) : current));
     return usage;
   }
   /** Drops the reading and any read in flight. */

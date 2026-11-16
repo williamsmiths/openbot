@@ -5,6 +5,7 @@ import type {
   AvatarImageInput,
   CentralAuthState,
 } from "@openbot/contracts/ipc";
+import { withKeptUsageTertiary } from "@openbot/team-client/plan-limits";
 import { currentText } from "@openbot/ui/text";
 import { createMemo, createSignal, createStore, flush, onCleanup, onSettled } from "solid-js";
 import { type DesktopAnalyticsProperties, desktopAnalytics } from "../../analytics";
@@ -241,7 +242,9 @@ const Auth = createSimpleContext({
       for (const limit of usage.limits) accountUsageEventIds.add(usageLimitKey(limit));
       setAccountUsageState((state) => {
         const byId = new Map((state.data?.limits ?? []).map((limit) => [usageLimitKey(limit), limit]));
-        for (const limit of usage.limits) byId.set(usageLimitKey(limit), limit);
+        // A joined host's event carries no third window, so a reading keeps the one the last read gave.
+        for (const limit of usage.limits)
+          byId.set(usageLimitKey(limit), withKeptUsageTertiary(byId.get(usageLimitKey(limit)), limit));
         state.data = { limits: [...byId.values()] };
       });
     }
@@ -258,7 +261,9 @@ const Auth = createSimpleContext({
           const byId = new Map(usage.limits.map((limit) => [usageLimitKey(limit), limit]));
           for (const limit of state.data?.limits ?? []) {
             const key = usageLimitKey(limit);
-            if (accountUsageEventIds.has(key)) byId.set(key, limit);
+            // The read itself sends these events, and a joined host's event has no third window, so
+            // the event row takes the one that this read gave.
+            if (accountUsageEventIds.has(key)) byId.set(key, withKeptUsageTertiary(byId.get(key), limit));
           }
           state.data = { limits: [...byId.values()] };
         });

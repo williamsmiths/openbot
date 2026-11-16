@@ -15,7 +15,6 @@ import {
   type WorkflowRunPage,
   type WorkflowVersion,
 } from "@openbot/contracts/ipc";
-import { accountUsageProviderRows } from "@openbot/ui/features/account/account-usage-view";
 import { Sidebar } from "@openbot/ui/features/sidebar/Sidebar";
 import type { SidebarView } from "@openbot/ui/features/sidebar/sidebar-types";
 import { PageRail, type PageRailPage } from "@openbot/ui/features/window/PageRail";
@@ -186,8 +185,6 @@ export function WorkflowStory(props: {
   );
 }
 
-const usageRows = accountUsageProviderRows(null);
-
 /**
  * The workflow canvas in the desktop window: the page rail and the server menu are the real app
  * components. The canvas is a page that covers the agent list, as the schedule, usage and Marketplace
@@ -205,7 +202,6 @@ export function WorkflowInAppStory(props: { workflows: readonly StoryWorkflow[];
         current={page()}
         pinned={["routines", "workflows", "usage"]}
         onPinChange={fn()}
-        usageRows={usageRows}
         onAgents={() => setPage("agents")}
         onRoutines={() => setPage("routines")}
         onSchedule={() => setPage("schedule")}

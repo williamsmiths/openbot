@@ -501,6 +501,16 @@ released `agent-tasks-changed` event. That event has no full queue, so a client 
 when the waiting messages of a thread change. `src/main/team-api/route-agent-thread-queue.ts` owns
 them. Without the capability a client shows the waiting messages of a thread without their actions.
 
+The optional `provider-usage-tertiary-v1` capability (protocol 9 only) adds
+`POST /v1/provider-usage-tertiary/list` (empty body). The released `GET /v1/agents/usage` route and
+the `usage-changed` event carry two windows per provider and leave out the third (`tertiary`): the
+total of a Cursor plan split into Cursor's own models and the others, and OpenCode's long window. The
+list gives that window for each provider's own sign-in that has one, with the access of the released
+usage route (every member). `src/main/team-api/route-agents.ts` owns it. The desktop main process, the
+web client and `readUsageTertiary` in `packages/team-client/src/plan-limits.ts` add it to the reading;
+a `usage-changed` event keeps the last third window while the reading still has both windows. Without
+the capability the Usage HUD shows the pool that runs out first as HP, with that pool's name.
+
 The optional `agent-usage-limit-v1` capability (protocol 9 only) adds `POST /v1/agent-usage-limit/list`
 (empty body) and `POST /v1/agent-usage-limit/switch` (`agentId`, `provider`, `model`,
 `reasoningEffort`, optional `providerAccountId`). The released `runtime-snapshot` event does not carry

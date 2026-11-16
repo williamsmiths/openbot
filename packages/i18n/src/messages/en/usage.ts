@@ -77,4 +77,8 @@ export const messages = defineMessages("usage", {
   "usage.panel.loadFailed": "Could not load usage. Check the connection and date range.",
   "usage.machine.label": "Machine use. CPU: {cpu}, memory: {memory}",
   "usage.machine.openStorage": "Open Storage. Disk: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "Auto",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "reset {time}",
 });

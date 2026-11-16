@@ -281,6 +281,10 @@ import {
   PROVIDER_USAGE_RESET_ROUTES,
 } from "@openbot/contracts/team-protocol/provider-usage-reset-v1";
 import {
+  PROVIDER_USAGE_TERTIARY_CAPABILITY,
+  PROVIDER_USAGE_TERTIARY_ROUTES,
+} from "@openbot/contracts/team-protocol/provider-usage-tertiary-v1";
+import {
   PROVIDER_USE_CAPABILITY,
   PROVIDER_USE_CODECS,
   PROVIDER_USE_ROUTES,
@@ -1095,7 +1099,26 @@ const fakeAgents: TeamApiAgents = {
     ],
     failedModels: [{ provider: "codex", model: "gpt-5", providerAccountId: "a0123456789abcdef" }],
   }),
-  getUsage: unused("getUsage"),
+  // Only `provider-usage-tertiary-v1` reads the usage in this run: Cursor has a plan total on its own
+  // sign-in and on an account after it, and Claude has none.
+  getUsage: () =>
+    Effect.sync(() => {
+      record("getUsage");
+      const window = (usedPercent: number) => ({ usedPercent, windowDurationMins: 43_200, resetsAt: 1_900_000_000 });
+      return {
+        limits: [
+          { id: "cursor", primary: window(25), secondary: window(1), tertiary: window(23) },
+          {
+            id: "cursor",
+            accountId: "a0123456789abcdef",
+            primary: window(5),
+            secondary: window(5),
+            tertiary: window(9),
+          },
+          { id: "claude", primary: window(40), secondary: window(60) },
+        ],
+      };
+    }),
   getAnalytics: unused("getAnalytics"),
   getHostAnalytics: unused("getHostAnalytics"),
   listModels: unused("listModels"),
@@ -7255,6 +7278,44 @@ try {
           },
         ]),
       [harnesses, store.list()],
+    );
+  }
+
+  // ---- Third usage windows (provider-usage-tertiary-v1) ----
+  {
+    const unsupported = await call("POST", PROVIDER_USAGE_TERTIARY_ROUTES.list, { token: bobToken, json: {} });
+    check(
+      "the third usage window route without the capability gets 400 providersUnsupported",
+      errorIs(unsupported, 400, sourceText("error.team.providersUnsupported")),
+      summary(unsupported),
+    );
+    const memberList = await call("POST", PROVIDER_USAGE_TERTIARY_ROUTES.list, {
+      token: bobToken,
+      json: {},
+      capabilities: [PROVIDER_USAGE_TERTIARY_CAPABILITY],
+    });
+    check(
+      "a member reads the third window of each provider's own sign-in, as on the released usage route",
+      memberList.status === 200 &&
+        isDeepStrictEqual(memberList.body, {
+          limits: [
+            { id: "cursor", tertiary: { usedPercent: 23, windowDurationMins: 43_200, resetsAt: 1_900_000_000 } },
+          ],
+        }),
+      summary(memberList),
+    );
+    const released = await call("GET", TEAM_API_ROUTES.agents.usage, { token: bobToken });
+    const releasedLimits =
+      typeof released.body === "object" && released.body !== null && "limits" in released.body
+        ? released.body.limits
+        : null;
+    check(
+      "the released usage route still sends two windows and no third one",
+      released.status === 200 &&
+        Array.isArray(releasedLimits) &&
+        releasedLimits.length === 2 &&
+        releasedLimits.every((limit) => typeof limit === "object" && limit !== null && !("tertiary" in limit)),
+      summary(released),
     );
   }
 

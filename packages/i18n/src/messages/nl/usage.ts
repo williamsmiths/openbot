@@ -79,4 +79,8 @@ export const messages = {
   "usage.panel.loadFailed": "Kan gebruik niet laden. Controleer de verbinding en de periode.",
   "usage.machine.label": "Machinegebruik. CPU: {cpu}, geheugen: {memory}",
   "usage.machine.openStorage": "Opslag openen. Schijf: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "Auto",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "reset {time}",
 } as const satisfies PartialTranslation<typeof source>;

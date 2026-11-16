@@ -49,6 +49,7 @@
 @import "@openbot/ui/features/workflows/workflows.css";
 @import "@openbot/ui/features/usage/agent-usage-report.css";
 @import "@openbot/ui/features/usage/usage-machine-meter.css";
+@import "@openbot/ui/features/usage/cursor-usage-hud.css";
 @import "./features/usage/usage.css";
 @import "./features/schedule/schedule.css";
 @import "@openbot/ui/features/tasks/tasks.css";

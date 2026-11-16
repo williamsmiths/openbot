@@ -45,6 +45,7 @@ import { PROMPT_CACHE_TTL_ROUTES } from "@openbot/contracts/team-protocol/prompt
 import { PROVIDER_ACCOUNT_MODELS_ROUTES } from "@openbot/contracts/team-protocol/provider-account-models-v1";
 import { PROVIDER_ACCOUNT_POOL_ROUTES } from "@openbot/contracts/team-protocol/provider-account-pool-v1";
 import { PROVIDER_DEFAULT_ROUTES } from "@openbot/contracts/team-protocol/provider-default-v1";
+import { PROVIDER_USAGE_TERTIARY_ROUTES } from "@openbot/contracts/team-protocol/provider-usage-tertiary-v1";
 import { PROVIDER_USE_ROUTES } from "@openbot/contracts/team-protocol/provider-use-v1";
 import { PROVIDERS_ADMIN_ROUTES } from "@openbot/contracts/team-protocol/providers-v1";
 import { PROVIDERS_RUNTIMES_V2_ROUTES } from "@openbot/contracts/team-protocol/providers-v2";
@@ -126,6 +127,7 @@ const PASSIVE_ROUTES: ReadonlySet<string> = new Set([
   STORAGE_CHANNEL_ROUTES.files,
   MACHINE_RESOURCES_ROUTES.metrics,
   MACHINE_RESOURCES_ROUTES.alerts,
+  PROVIDER_USAGE_TERTIARY_ROUTES.list,
   BACKGROUND_PROCESSES_ROUTES.list,
   AGENT_WAITS_ROUTES.list,
   MESSAGE_PINS_ROUTES.list,

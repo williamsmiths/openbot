@@ -122,6 +122,7 @@ import { PROVIDER_DETECTION_CAPABILITY } from "./provider-detection-v1";
 import { PROVIDER_HOST_SIGN_IN_CAPABILITY } from "./provider-host-sign-in-v1";
 import { PROVIDER_SIGN_OUT_CAPABILITY } from "./provider-sign-out-v1";
 import { PROVIDER_USAGE_RESET_CAPABILITY } from "./provider-usage-reset-v1";
+import { PROVIDER_USAGE_TERTIARY_CAPABILITY } from "./provider-usage-tertiary-v1";
 import { PROVIDER_USE_CAPABILITY } from "./provider-use-v1";
 import { PROVIDERS_ADMIN_CAPABILITY } from "./providers-v1";
 import { PROVIDERS_RUNTIMES_V2_CAPABILITY } from "./providers-v2";
@@ -331,6 +332,7 @@ export {
   PROVIDER_HOST_SIGN_IN_CAPABILITY,
   PROVIDER_SIGN_OUT_CAPABILITY,
   PROVIDER_USAGE_RESET_CAPABILITY,
+  PROVIDER_USAGE_TERTIARY_CAPABILITY,
   PROVIDER_USE_CAPABILITY,
   PROVIDERS_ADMIN_CAPABILITY,
   PROVIDERS_RUNTIMES_V2_CAPABILITY,
@@ -585,6 +587,7 @@ export const TEAM_CURRENT_CAPABILITIES = [
   WHATSAPP_WORKING_MESSAGE_CAPABILITY,
   LIBRARY_FOLDERS_CAPABILITY,
   PROVIDER_ACCOUNT_POOL_CAPABILITY,
+  PROVIDER_USAGE_TERTIARY_CAPABILITY,
   TEAM_AGENT_LANE_TURNS_CAPABILITY,
 ] as const;
 
@@ -702,6 +705,7 @@ export const TEAM_BOOTSTRAP_CAPABILITIES = TEAM_CURRENT_CAPABILITIES.filter(
     capability !== PROVIDER_ACCOUNT_RELAY_V2_CAPABILITY &&
     capability !== STORAGE_DISK_CAPABILITY &&
     capability !== MACHINE_RESOURCES_CAPABILITY &&
+    capability !== PROVIDER_USAGE_TERTIARY_CAPABILITY &&
     capability !== TEAM_AGENT_LANE_TURNS_CAPABILITY &&
     capability !== PROMPT_CACHE_TTL_CAPABILITY &&
     capability !== PROVIDER_DEFAULT_CAPABILITY &&
@@ -884,6 +888,7 @@ export const TEAM_PROTOCOL_V9_ONLY_CAPABILITIES: ReadonlySet<string> = new Set<T
   WHATSAPP_WORKING_MESSAGE_CAPABILITY,
   LIBRARY_FOLDERS_CAPABILITY,
   PROVIDER_ACCOUNT_POOL_CAPABILITY,
+  PROVIDER_USAGE_TERTIARY_CAPABILITY,
   TEAM_AGENT_LANE_TURNS_CAPABILITY,
 ]);
 // A v8 host reads at most 128 capabilities, so a client sends the protocol 9 ones only after it
@@ -959,6 +964,7 @@ export function legacyTeamCapabilities(capabilities: readonly string[]): string[
       capability !== PROVIDER_ACCOUNT_RELAY_V2_CAPABILITY &&
       capability !== STORAGE_DISK_CAPABILITY &&
       capability !== MACHINE_RESOURCES_CAPABILITY &&
+      capability !== PROVIDER_USAGE_TERTIARY_CAPABILITY &&
       capability !== TEAM_AGENT_LANE_TURNS_CAPABILITY &&
       capability !== PROMPT_CACHE_TTL_CAPABILITY &&
       capability !== PROVIDER_DEFAULT_CAPABILITY &&

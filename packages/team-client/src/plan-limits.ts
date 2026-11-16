@@ -12,6 +12,10 @@ import {
   usageQuotaForModel,
 } from "@openbot/contracts/ipc";
 import { TEAM_API_ROUTES } from "@openbot/contracts/team-api-routes";
+import {
+  PROVIDER_USAGE_TERTIARY_CAPABILITY,
+  PROVIDER_USAGE_TERTIARY_ROUTES,
+} from "@openbot/contracts/team-protocol/provider-usage-tertiary-v1";
 import { Effect, Schema } from "effect";
 import { listProviderAccounts, providerAccountUsage } from "./team-admin-requests";
 import type { TeamApiRequest } from "./team-api-requests";
@@ -160,6 +164,80 @@ export function withUsageEvent(current: AccountUsage | null | undefined, event: 
     );
   }
   return { limits: [...limits.values()] };
+}
+
+/** The third window of one provider's own sign-in, as `provider-usage-tertiary-v1` gives it. */
+export interface UsageTertiary {
+  id: string;
+  tertiary: AccountUsageWindow;
+}
+
+const UsageTertiaryAnswer = Schema.Struct({
+  limits: Schema.Array(
+    Schema.Struct({
+      id: Schema.String,
+      tertiary: Schema.Struct({
+        usedPercent: Schema.Finite,
+        windowDurationMins: Schema.NullOr(Schema.Finite),
+        resetsAt: Schema.NullOr(Schema.Finite),
+      }),
+    }),
+  ),
+});
+
+/** Decodes the answer of `provider-usage-tertiary-v1`; an invalid one fails closed. */
+export function decodeUsageTertiary(value: unknown): UsageTertiary[] {
+  return [...Schema.decodeUnknownSync(UsageTertiaryAnswer)(value).limits];
+}
+
+/**
+ * Reads the third windows of a host that has `provider-usage-tertiary-v1`; an older host gives none.
+ * The read is optional: when it fails, the two released windows still show.
+ */
+export function readUsageTertiary(request: TeamApiRequest, capabilities: readonly string[]): Promise<UsageTertiary[]> {
+  if (!capabilities.includes(PROVIDER_USAGE_TERTIARY_CAPABILITY)) return Promise.resolve([]);
+  return request("POST", PROVIDER_USAGE_TERTIARY_ROUTES.list, decodeUsageTertiary, {}).catch(() => []);
+}
+
+/** Puts each third window on the reading of the provider's own sign-in, as the host holds it. */
+export function withUsageTertiary(usage: AccountUsage, windows: readonly UsageTertiary[]): AccountUsage {
+  if (windows.length === 0) return usage;
+  const byProvider = new Map(windows.map((window) => [window.id, window.tertiary]));
+  return {
+    limits: usage.limits.map((limit) => {
+      const tertiary = limit.accountId === undefined ? byProvider.get(limit.id) : undefined;
+      return tertiary ? { ...limit, tertiary } : limit;
+    }),
+  };
+}
+
+/** The windows a reading has, their lengths and their resets, without the amounts used. */
+function usageShape(limit: AccountUsageLimit): string {
+  const shape = (window: AccountUsageWindow | null) => (window ? [window.windowDurationMins, window.resetsAt] : null);
+  return JSON.stringify([shape(limit.primary), shape(limit.secondary)]);
+}
+
+/**
+ * A `usage-changed` event of a joined host carries no third window, and each read of the host sends
+ * such events while it runs. A reading keeps the third window it had while its two windows keep their
+ * shape: the same windows, lengths and resets, so only the amounts used moved. A new billing cycle, a
+ * reading whose binding window changed (OpenCode's weekly or monthly window) or a Cursor plan that
+ * became a merged plan drops it: a missing window is better than a wrong one. A local event carries
+ * the third window itself.
+ */
+export function withKeptUsageTertiary(
+  previous: AccountUsageLimit | undefined,
+  next: AccountUsageLimit,
+): AccountUsageLimit {
+  return next.tertiary || !previous?.tertiary || usageShape(previous) !== usageShape(next)
+    ? next
+    : { ...next, tertiary: { ...previous.tertiary } };
+}
+
+/** `withKeptUsageTertiary` for each limit of a whole reading that an event replaces. */
+export function withKeptTertiary(current: AccountUsage | null | undefined, next: AccountUsage): AccountUsage {
+  const previous = new Map((current?.limits ?? []).map((limit) => [usageLimitKey(limit), limit]));
+  return { limits: next.limits.map((limit) => withKeptUsageTertiary(previous.get(usageLimitKey(limit)), limit)) };
 }
 
 function decodeAccountUsage(value: unknown): AccountUsage {

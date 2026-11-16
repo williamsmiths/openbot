@@ -138,6 +138,10 @@ import {
   PROVIDER_ACCOUNTS_ROUTES,
 } from "@openbot/contracts/team-protocol/provider-accounts-v1";
 import {
+  PROVIDER_USAGE_TERTIARY_CAPABILITY,
+  PROVIDER_USAGE_TERTIARY_ROUTES,
+} from "@openbot/contracts/team-protocol/provider-usage-tertiary-v1";
+import {
   decodeSideQuestionResponse,
   SIDE_QUESTION_CAPABILITY,
   SIDE_QUESTION_ROUTES,
@@ -145,6 +149,7 @@ import {
 import { SKILL_LEARNING_CAPABILITY, SKILL_LEARNING_ROUTES } from "@openbot/contracts/team-protocol/skill-learning-v1";
 import { sourceText } from "@openbot/i18n/source";
 import { createOpenBotLogger } from "@openbot/logging";
+import { decodeUsageTertiary, withUsageTertiary } from "@openbot/team-client/plan-limits";
 import { Effect } from "effect";
 import { duplicateAgentIntoLayout } from "../../backend/agent/duplication-gate";
 import type { AgentService } from "../../backend/agent-service";
@@ -452,7 +457,27 @@ export function agentIpcHandlers({
                   remoteServers.request(serverId, TEAM_API_ROUTES.agent.usage(agentId), decodeAccountUsageFromHost),
                 )
               : { limits: [] }
-            : runCauseEffect(remoteServers.request(serverId, TEAM_API_ROUTES.agents.usage, decodeAccountUsageFromHost)),
+            : runCauseEffect(
+                Effect.gen(function* () {
+                  const usage = remoteServers.request(
+                    serverId,
+                    TEAM_API_ROUTES.agents.usage,
+                    decodeAccountUsageFromHost,
+                  );
+                  // The released route leaves the third window out, such as a Cursor plan total; a host
+                  // with `provider-usage-tertiary-v1` gives it on its own route. That read is optional.
+                  const tertiary = remoteServers.supportsCapability(serverId, PROVIDER_USAGE_TERTIARY_CAPABILITY)
+                    ? remoteServers
+                        .request(serverId, PROVIDER_USAGE_TERTIARY_ROUTES.list, decodeUsageTertiary, {
+                          method: "POST",
+                          body: {},
+                        })
+                        .pipe(Effect.orElseSucceed(() => []))
+                    : Effect.succeed([]);
+                  const [reading, windows] = yield* Effect.all([usage, tertiary], { concurrency: "unbounded" });
+                  return withUsageTertiary(reading, windows);
+                }),
+              ),
       }),
       listModels: scopedQueryHandler({
         local: () => runCauseEffect(modelVisibility.picker(logRejectedModels(service.listModels(), "local"))),

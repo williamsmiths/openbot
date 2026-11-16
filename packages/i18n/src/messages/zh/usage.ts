@@ -76,4 +76,8 @@ export const messages = {
   "usage.panel.loadFailed": "无法加载用量，请检查连接和日期范围。",
   "usage.machine.label": "机器使用情况。CPU：{cpu}，内存：{memory}",
   "usage.machine.openStorage": "打开存储。磁盘：{percent}，{detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "自动",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "重置 {time}",
 } as const satisfies PartialTranslation<typeof source>;

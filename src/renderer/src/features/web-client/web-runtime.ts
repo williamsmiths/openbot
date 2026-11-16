@@ -179,6 +179,7 @@ import { runTeamEffect } from "@openbot/team-client";
 import { bytesToBase64 } from "@openbot/team-client/base64";
 import { createRemoteBrowserView, type RemoteBrowserView } from "@openbot/team-client/browser-view";
 import { verifyEd25519Base64Url } from "@openbot/team-client/ed25519";
+import { readUsageTertiary, withUsageTertiary } from "@openbot/team-client/plan-limits";
 import {
   RemoteDirectoryError,
   RemoteTeamDirectoryClient,
@@ -1698,9 +1699,14 @@ export function createWebWorkspaceRuntime(
       return value;
     },
     async accountUsage() {
-      const value = await request("GET", TEAM_API_ROUTES.agents.usage);
+      // The released route leaves the third window out, such as a Cursor plan total; a host with
+      // `provider-usage-tertiary-v1` gives it on its own route, as on the desktop.
+      const [value, tertiary] = await Promise.all([
+        request("GET", TEAM_API_ROUTES.agents.usage),
+        readUsageTertiary(teamApi, capabilities),
+      ]);
       if (!isAccountUsage(value)) throw new Error(currentText().t("error.remote.invalidData"));
-      return value;
+      return withUsageTertiary(value, tertiary);
     },
     async createAgent(input) {
       // The released route keeps the nearest hue. The exact colour goes on `agent-colors-v1` after it.

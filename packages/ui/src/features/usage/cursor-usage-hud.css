@@ -1,0 +1,297 @@
+/* The Cursor HUD at the bottom of the agent list. See CursorUsageHud.tsx. The GPT skin is the HUD:
+ * this file only sizes it, lays the text on the spots the skin left for it, and tones a low gauge. */
+
+/* The HUD is one button: a click lists the providers. The skin's panel is transparent, so on the
+ * dark sidebar the neon sits on the sidebar; the light theme gives it a dark card. No blend mode and
+ * no clipping here: in the macOS glass window either one makes Chromium paint the HUD on its own layer,
+ * which hides the window blur behind it and shows as a dark box. */
+.usage-hud {
+  container-type: inline-size;
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  inline-size: calc(100% - 2 * var(--openbot-space-3));
+  margin: var(--openbot-space-2) var(--openbot-space-3);
+  padding: 0;
+  aspect-ratio: 1650 / 624;
+  border: 0;
+  border-radius: var(--openbot-radius-md);
+  background: none;
+  cursor: pointer;
+}
+:root[data-openbot-color-scheme="light"] .usage-hud {
+  background: var(--openbot-hud-panel);
+}
+.usage-hud:focus-visible {
+  outline: 2px solid var(--openbot-hud-total);
+  outline-offset: 2px;
+}
+.usage-hud-provider {
+  position: absolute;
+  top: 16%;
+  left: 30.6%;
+  inline-size: var(--openbot-text-hud);
+  block-size: var(--openbot-text-hud);
+  transform: translateY(-50%);
+  fill: var(--openbot-hud-text);
+  pointer-events: none;
+}
+.usage-hud-skin,
+.usage-hud-cover {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  user-select: none;
+  pointer-events: none;
+}
+/* A low gauge shifts the hue of its lit part toward amber, then toward the critical tone. */
+.usage-hud-tone[data-usage-tone="warning"] {
+  filter: hue-rotate(-45deg) saturate(1.4);
+}
+.usage-hud-tone[data-usage-tone="critical"] {
+  filter: hue-rotate(-95deg) saturate(1.6);
+}
+
+/* The reactor works with the server: a light sweeps its outer arc, faster as the CPU works harder,
+ * the core beats at the same pace, and a new reading slides the ticks instead of jumping. */
+.usage-hud-ticks-cover {
+  transition: d var(--openbot-duration-gauge) var(--openbot-ease-out);
+}
+.usage-hud-sweep {
+  position: absolute;
+  border-radius: var(--openbot-radius-pill);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 50%,
+    color-mix(in srgb, var(--openbot-hud-total) 12%, transparent) 75%,
+    color-mix(in srgb, var(--openbot-hud-total) 75%, transparent) 99%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle closest-side,
+    transparent 86%,
+    var(--openbot-hud-panel) 87%,
+    var(--openbot-hud-panel) 99%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle closest-side,
+    transparent 86%,
+    var(--openbot-hud-panel) 87%,
+    var(--openbot-hud-panel) 99%,
+    transparent 100%
+  );
+  pointer-events: none;
+  will-change: transform;
+  animation: usage-hud-spin var(--usage-hud-spin, 6s) linear infinite;
+}
+@keyframes usage-hud-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes usage-hud-beat {
+  50% {
+    text-shadow:
+      0 0 10px var(--openbot-hud-total),
+      0 0 2px var(--openbot-hud-core);
+  }
+}
+
+/* Text on the skin */
+.usage-hud-text {
+  position: absolute;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+  line-height: 1;
+}
+.usage-hud-row {
+  --usage-hud-tone: var(--openbot-hud-total);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+  color: var(--usage-hud-tone);
+  text-shadow: 0 0 6px var(--usage-hud-tone);
+}
+.usage-hud-row[data-hud-slot="auto"] {
+  --usage-hud-tone: var(--openbot-hud-auto);
+}
+.usage-hud-row[data-hud-slot="api"] {
+  --usage-hud-tone: var(--openbot-hud-api);
+}
+.usage-hud-row[data-usage-tone="warning"] {
+  --usage-hud-tone: var(--openbot-hud-low);
+}
+.usage-hud-row[data-usage-tone="critical"] {
+  --usage-hud-tone: var(--openbot-hud-critical);
+}
+.usage-hud-label {
+  font-family: var(--openbot-font-sans);
+  font-size: var(--openbot-text-hud);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.usage-hud-value {
+  font-family: var(--openbot-font-mono);
+  font-size: var(--openbot-text-hud);
+  font-variant-numeric: tabular-nums;
+}
+.usage-hud-reset {
+  font-family: var(--openbot-font-mono);
+  font-size: var(--openbot-text-hud-small);
+  color: var(--openbot-hud-text);
+}
+.usage-hud-core {
+  animation: usage-hud-beat var(--usage-hud-spin, 6s) ease-in-out infinite;
+  transform: translate(-50%, -50%);
+  font-family: var(--openbot-font-mono);
+  font-size: var(--openbot-text-hud-small);
+  color: var(--openbot-hud-core);
+}
+
+/* A narrow agent list has no room for the reset beside HP; its hover card shows the reset. */
+@container (max-width: 250px) {
+  .usage-hud-reset {
+    display: none;
+  }
+}
+
+/* Hover areas */
+.usage-hud-zone {
+  position: absolute;
+}
+.usage-hud-zone > .ui-motion-tooltip-trigger,
+.usage-hud-zone-area {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+.usage-hud-zone-area {
+  cursor: help;
+}
+.usage-hud-tip {
+  display: grid;
+  gap: 2px;
+}
+.usage-hud-tip > :first-child {
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--openbot-hud-total);
+  text-shadow: 0 0 6px var(--openbot-hud-total);
+}
+
+/* The provider list that a click on the HUD opens, and the hover cards: the HUD's own neon on its
+ * dark panel, with its cyan frame, so they read as part of the instrument. */
+.usage-hud-picker,
+.ui-motion-tooltip.usage-hud-tip-card {
+  border: 1px solid var(--openbot-hud-edge);
+  border-radius: var(--openbot-radius-md);
+  background: var(--openbot-hud-panel);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--openbot-hud-edge) 45%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--openbot-hud-edge) 18%, transparent);
+  color: var(--openbot-hud-text);
+}
+.usage-hud-picker {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 240px;
+  padding: var(--openbot-space-2);
+}
+.usage-hud-picker-title {
+  padding: var(--openbot-space-1) var(--openbot-space-2) var(--openbot-space-2);
+  font-family: var(--openbot-font-mono);
+  font-size: var(--openbot-text-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--openbot-hud-total);
+  text-shadow: 0 0 6px var(--openbot-hud-total);
+}
+.usage-hud-picker-row {
+  --usage-hud-tone: var(--openbot-hud-total);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 56px 3.2em auto;
+  align-items: center;
+  gap: var(--openbot-space-2);
+  justify-content: stretch;
+  inline-size: 100%;
+  border: 1px solid transparent;
+  border-radius: var(--openbot-radius-sm);
+  color: var(--openbot-hud-text);
+  text-align: start;
+}
+.usage-hud-picker-row:hover {
+  background: color-mix(in srgb, var(--openbot-hud-edge) 18%, transparent);
+}
+.usage-hud-picker-row[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--openbot-hud-total) 55%, transparent);
+  background: color-mix(in srgb, var(--openbot-hud-total) 10%, transparent);
+}
+.usage-hud-picker-logo,
+.usage-hud-picker-check {
+  inline-size: var(--openbot-icon-xs);
+  block-size: var(--openbot-icon-xs);
+}
+.usage-hud-picker-logo {
+  fill: var(--openbot-hud-text);
+}
+.usage-hud-picker-check {
+  color: var(--openbot-hud-total);
+}
+.usage-hud-picker-name {
+  overflow: hidden;
+  font-family: var(--openbot-font-mono);
+  font-size: var(--openbot-text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.usage-hud-picker-bar {
+  position: relative;
+  block-size: 6px;
+  transform: skewX(-28deg);
+  background: var(--openbot-hud-slot);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--openbot-hud-edge) 60%, transparent);
+}
+.usage-hud-picker-fill {
+  position: absolute;
+  inset-block: 1px;
+  inset-inline-start: 1px;
+  max-inline-size: calc(100% - 2px);
+  background: var(--usage-hud-tone);
+  box-shadow: 0 0 6px var(--usage-hud-tone);
+}
+.usage-hud-picker-percent {
+  font-family: var(--openbot-font-mono);
+  font-size: var(--openbot-text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  color: var(--usage-hud-tone);
+  text-shadow: 0 0 5px var(--usage-hud-tone);
+}
+.usage-hud-picker-row [data-usage-tone="warning"] {
+  --usage-hud-tone: var(--openbot-hud-low);
+}
+.usage-hud-picker-row [data-usage-tone="critical"] {
+  --usage-hud-tone: var(--openbot-hud-critical);
+}
+.ui-motion-tooltip.usage-hud-tip-card {
+  padding: var(--openbot-space-2) var(--openbot-space-3);
+  font-family: var(--openbot-font-mono);
+  font-size: var(--openbot-text-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .usage-hud-sweep,
+  .usage-hud-core {
+    animation: none;
+  }
+  .usage-hud-ticks-cover {
+    transition: none;
+  }
+}

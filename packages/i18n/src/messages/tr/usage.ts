@@ -79,4 +79,8 @@ export const messages = {
   "usage.panel.loadFailed": "Kullanım yüklenemedi. Bağlantıyı ve tarih aralığını kontrol edin.",
   "usage.machine.label": "Makine kullanımı. CPU: {cpu}, bellek: {memory}",
   "usage.machine.openStorage": "Depolamayı aç. Disk: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "Otomatik",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "sıfırlama {time}",
 } as const satisfies PartialTranslation<typeof source>;

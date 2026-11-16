@@ -84,4 +84,8 @@ export const messages = {
   "usage.panel.loadFailed": "Nie udało się wczytać użycia. Sprawdź połączenie i zakres dat.",
   "usage.machine.label": "Użycie maszyny. CPU: {cpu}, pamięć: {memory}",
   "usage.machine.openStorage": "Otwórz Pamięć dyskową. Dysk: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "Auto",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "reset {time}",
 } as const satisfies PartialTranslation<typeof source>;

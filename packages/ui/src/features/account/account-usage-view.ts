@@ -31,7 +31,14 @@ export interface AccountUsageWindowRow {
   /** Unix seconds. */
   resetsAt: number | null;
   resetsAtLabel: string | null;
+  /**
+   * The part of a Cursor plan that the window holds: its total, Cursor's own models (`auto`) or every
+   * other model (`api`). Absent for other providers, and for a model limit that the app adds.
+   */
+  cursorSlot?: CursorUsageSlot;
 }
+
+export type CursorUsageSlot = "total" | "auto" | "api";
 
 export interface AccountUsageProviderRow {
   provider: AgentProviderId;
@@ -133,18 +140,31 @@ function usageRow(
       ? [cursorTotal, ...reportedUsageWindows({ primary: limit.primary, secondary: limit.secondary })]
       : reportedUsageWindows(limit)
     : [];
-  const ownWindows = reported.map((window) =>
-    windowRow(
+  // Cursor's two windows share one billing cycle and differ by the models they cover. One window
+  // alone, with no total, is the whole plan.
+  const cursorSplit = provider === "cursor" && Boolean(cursorTotal || (limit?.primary && limit.secondary));
+  const cursorSlot = (window: AccountUsageWindow): CursorUsageSlot | undefined =>
+    provider !== "cursor"
+      ? undefined
+      : window === cursorTotal || !cursorSplit
+        ? "total"
+        : window === limit?.primary
+          ? "auto"
+          : "api";
+  const ownWindows = reported.map((window) => {
+    const slot = cursorSlot(window);
+    const row = windowRow(
       window,
-      // Cursor's two windows share one billing cycle and differ by the models they cover. One
-      // window alone, with no total, is the whole plan.
-      window === cursorTotal
+      slot === "total" && cursorTotal
         ? text.t("account.usage.window.total")
-        : provider === "cursor" && (cursorTotal || (limit?.primary && limit.secondary))
-          ? text.t(window === limit?.primary ? "account.usage.window.cursorModels" : "account.usage.window.otherModels")
-          : usageWindowLabel(window.windowDurationMins, text),
-    ),
-  );
+        : slot === "auto"
+          ? text.t("account.usage.window.cursorModels")
+          : slot === "api"
+            ? text.t("account.usage.window.otherModels")
+            : usageWindowLabel(window.windowDurationMins, text),
+    );
+    return slot ? { ...row, cursorSlot: slot } : row;
+  });
   // Antigravity limits each group of models apart, such as Gemini 4 Argon: one line per group, by
   // Google's name. The ring stays on the reading's own windows, the "Gemini Models" group. One group
   // alone also shows its name: on a plan with no Gemini group, it is "Claude and GPT models".

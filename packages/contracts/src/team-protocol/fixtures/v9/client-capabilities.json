@@ -128,5 +128,8 @@
   "memory-review-v1",
   "agent-notification-levels-v1",
   "provider-sign-out-v1",
-  "custom-provider-harness-v1"
+  "custom-provider-harness-v1",
+  "machine-resources-v2",
+  "kong-github-v1",
+  "provider-usage-tertiary-v1"
 ]

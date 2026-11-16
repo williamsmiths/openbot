@@ -83,4 +83,8 @@ export const messages = {
     "Die Nutzungsdaten konnten nicht geladen werden. Prüfe die Verbindung und den Datumsbereich.",
   "usage.machine.label": "Maschinenauslastung. CPU: {cpu}, Arbeitsspeicher: {memory}",
   "usage.machine.openStorage": "Speicher öffnen. Datenträger: {percent}, {detail}",
+  "usage.hud.hp": "HP",
+  "usage.hud.auto": "Auto",
+  "usage.hud.api": "API",
+  "usage.hud.reset": "Reset {time}",
 } as const satisfies PartialTranslation<typeof source>;
