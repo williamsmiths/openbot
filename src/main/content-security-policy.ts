@@ -40,8 +40,13 @@ export function readSelfHostedSignalOrigin(
   if (!signalUrl) return null;
   if (!authApiUrl) throw new Error("OPENBOT_REMOTE_SIGNAL_URL needs OPENBOT_AUTH_API_URL.");
   const url = new URL(signalUrl);
-  if (url.protocol !== "wss:" || url.username !== "" || url.password !== "") {
-    throw new Error("OPENBOT_REMOTE_SIGNAL_URL must be a wss: URL without credentials.");
+  // `ws:` is for a Signal on this computer or on a private network, as for the account service
+  // (see `readCentralAuthApiUrl`).
+  const privateSignal = url.protocol === "ws:" && isMobileConnectDevelopmentHost(url.hostname);
+  if ((url.protocol !== "wss:" && !privateSignal) || url.username !== "" || url.password !== "") {
+    throw new Error(
+      "OPENBOT_REMOTE_SIGNAL_URL must be a wss: URL without credentials, or a ws: URL on a private network address.",
+    );
   }
   return url.origin;
 }

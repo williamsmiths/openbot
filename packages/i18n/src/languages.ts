@@ -1,4 +1,5 @@
 import { APP_LANGUAGES, type AppLanguage } from "@openbot/contracts/app-language";
+import { OFFERED_LOCALES } from "./locale";
 
 /**
  * The rows of the language selector.
@@ -41,7 +42,9 @@ const LABELS: Record<AppLanguage, AppLanguageOption> = {
  * System first, then the languages in the order of their own alphabet. English is not promoted
  * above the rest: it is one translation of the interface among the others.
  */
-export const APP_LANGUAGE_OPTIONS: readonly AppLanguageOption[] = APP_LANGUAGES.map((id) => LABELS[id]);
+export const APP_LANGUAGE_OPTIONS: readonly AppLanguageOption[] = APP_LANGUAGES.filter(
+  (id) => id === "system" || OFFERED_LOCALES.some((locale) => locale === id),
+).map((id) => LABELS[id]);
 
 /**
  * The option for a saved identifier, or the system row when the saved setting names a language this

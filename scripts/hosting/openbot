@@ -197,7 +197,11 @@ login_command() {
     control POST /v1/login/start "email=$email" ${name:+"name=$name"}
     check_answer || exit 1
     challenge=$(value challenge)
-    echo "OpenBot sent a sign-in code to $email."
+    if [ -n "$(value development_code)" ]; then
+      echo "The local account service sends no email. The sign-in code is: $(value development_code)"
+    else
+      echo "OpenBot sent a sign-in code to $email."
+    fi
     for attempt in 1 2 3; do
       read -rp "Code: " code
       control POST /v1/login/verify "challenge=$challenge" "code=$code" ${name:+"name=$name"}

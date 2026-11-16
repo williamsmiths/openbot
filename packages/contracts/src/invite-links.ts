@@ -1,3 +1,4 @@
+import { isMobileConnectDevelopmentHost } from "./mobile-connect";
 import { isOpenBotTeamApiHostname } from "./validation";
 
 export const OPENBOT_INVITE_ORIGIN = "https://openbot.run";
@@ -68,8 +69,10 @@ export interface InviteLinkOptions {
 export function selfHostedApiOrigin(apiUrl: string | undefined): string | undefined {
   if (!apiUrl) return undefined;
   try {
-    const { protocol, origin } = new URL(apiUrl);
-    return protocol === "https:" && origin !== OPENBOT_INVITE_ORIGIN && !isValidRemoteApiUrl(`${origin}/`)
+    const { protocol, hostname, origin } = new URL(apiUrl);
+    return isSelfHostedProtocol(protocol, hostname) &&
+      origin !== OPENBOT_INVITE_ORIGIN &&
+      !isValidRemoteApiUrl(`${origin}/`)
       ? origin
       : undefined;
   } catch {
@@ -197,7 +200,21 @@ export function isValidRemoteApiUrl(value: string, options: InviteLinkOptions = 
 }
 
 function isSelfHostedApiUrl(url: URL, options: InviteLinkOptions): boolean {
-  return url.protocol === "https:" && url.origin === options.selfHostedApiOrigin;
+  return isSelfHostedProtocol(url.protocol, url.hostname) && url.origin === options.selfHostedApiOrigin;
+}
+
+/**
+ * HTTPS, or HTTP on a private network address (10/8, 172.16/12, 192.168/16), such as a WireGuard
+ * one. Loopback HTTP is local development, which `allowLocalDevelopmentApiUrl` covers.
+ */
+function isSelfHostedProtocol(protocol: string, hostname: string): boolean {
+  if (protocol === "https:") return true;
+  return (
+    protocol === "http:" &&
+    hostname !== "localhost" &&
+    hostname !== "127.0.0.1" &&
+    isMobileConnectDevelopmentHost(hostname)
+  );
 }
 
 function validatePayload(payload: InviteLinkPayload, options: InviteLinkOptions): void {

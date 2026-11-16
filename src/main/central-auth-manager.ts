@@ -27,6 +27,7 @@ import { decodeRecord, requiredString } from "@openbot/contracts/ipc-decoding";
 import type { LiveActivityRelayPush } from "@openbot/contracts/live-activity-relay";
 import {
   createMobileConnectUrl,
+  isMobileConnectDevelopmentHost,
   isMobileConnectHostBinding,
   type MobileConnectHostBinding,
 } from "@openbot/contracts/mobile-connect";
@@ -2440,9 +2441,12 @@ export class CentralAuthManager extends EventEmitter<CentralAuthEvents> {
 
 export function readCentralAuthApiUrl(value: string | undefined, fallback = "http://127.0.0.1:3100"): string {
   const url = new URL(value ?? fallback);
-  const loopback = url.hostname === "127.0.0.1" || url.hostname === "localhost";
-  if ((url.protocol !== "https:" && !(url.protocol === "http:" && loopback)) || url.pathname !== "/") {
-    throw new Error("OPENBOT_AUTH_API_URL must be HTTPS or an HTTP loopback origin.");
+  // HTTP is for an account service on this computer or on a private network (10/8, 172.16/12,
+  // 192.168/16), such as a WireGuard address. A public host must use HTTPS: the session token is in
+  // each request.
+  const privateHost = isMobileConnectDevelopmentHost(url.hostname);
+  if ((url.protocol !== "https:" && !(url.protocol === "http:" && privateHost)) || url.pathname !== "/") {
+    throw new Error("OPENBOT_AUTH_API_URL must be HTTPS, or HTTP on a loopback or private network address.");
   }
   return url.origin;
 }

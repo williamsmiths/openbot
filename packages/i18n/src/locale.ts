@@ -22,8 +22,14 @@ export const TRANSLATED_LOCALES = [
 
 export type TranslatedLocale = (typeof TRANSLATED_LOCALES)[number];
 
-function isTranslatedLocale(value: string): value is TranslatedLocale {
-  return TRANSLATED_LOCALES.some((locale) => locale === value);
+/**
+ * kongCowork: the languages the app offers and draws in. The other catalogs stay in the build so
+ * upstream merges stay small, but the selectors do not show them and no preference resolves to them.
+ */
+export const OFFERED_LOCALES: readonly TranslatedLocale[] = ["en"];
+
+function isOfferedLocale(value: string): value is TranslatedLocale {
+  return OFFERED_LOCALES.some((locale) => locale === value);
 }
 
 /**
@@ -34,10 +40,10 @@ function isTranslatedLocale(value: string): value is TranslatedLocale {
  */
 export function resolveLocale(language: AppLanguage, systemLocale: string): TranslatedLocale {
   if (language !== "system") {
-    return isTranslatedLocale(language) ? language : "en";
+    return isOfferedLocale(language) ? language : "en";
   }
   const subtag = systemLocale.split("-")[0]?.toLowerCase() ?? "";
-  return isTranslatedLocale(subtag) ? subtag : "en";
+  return isOfferedLocale(subtag) ? subtag : "en";
 }
 
 /**

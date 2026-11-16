@@ -54,3 +54,34 @@ Gmail SMTP for sign-in codes, VPS changes allowed.
   `max-allocate-lifetime=600`; ufw allows only 49160:49359/udp (backup
   `turnserver.conf.bak-ports`). Paperclip (`paperclip.service`) is stopped: its agents filled the
   kong-lab disk with `/tmp/paperclip-ai-*` folders.
+- 2026-11-16: public site had no CSS/JS. `vite dev` made the page load `/@fs`, `/@id`, `/src` paths,
+  which nginx blocks (404). Fix: the account API now serves a build with `vite preview`:
+  `scripts/fork/account-api-production.ts` (`build` | `preview`), new `run-account-stack.sh` modes
+  `api-build` / `api-production`, and `openbot-account-api.service` runs `api-production`. Each start
+  writes the local vars (`readLocalRuntimeVars`) into `apps/auth-api/dist/server/wrangler.json` (from
+  `wrangler.build.json`, mode 600) and the declared secrets into `dist/server/.dev.vars`, and drops the
+  `EMAIL_RELAY` service, as `vite dev` does. Same D1/KV/DO state (`apps/auth-api/.wrangler/state/v3`).
+  **After a source update:** `systemctl --user stop openbot-account-api.service`, then
+  `~/.local/share/openbot-server/run-account-stack.sh api-build`, then `systemctl --user start ...`
+  (the build empties `dist/` under a running server; a restart alone serves the old build).
+  Checked: `/` 200 with `/assets/*` CSS/JS 200, screenshots at 1440 px and 390 px with no console
+  errors, `/v1/me` 401 (public and WireGuard), `/v1/signal` WebSocket 101.
+  Rollback: `cp ~/.config/systemd/user/openbot-account-api.service.bak-before-production-build` over the
+  unit (ExecStart `api`), `systemctl --user daemon-reload && systemctl --user restart openbot-account-api`.
+- 2026-11-16 (security): Miniflare (dev and preview) serves `/cdn-cgi/local/explorer/api`, which runs
+  raw SQL on D1 (`POST /d1/database/{id}/raw`) and writes KV/R2. It was public through nginx. nginx now
+  returns 404 for `cdn-cgi/` in the deny regex (backup `/root/lab.codanang.com.conf.bak-before-cdn-cgi-block`).
+  The access logs since 2026-11-03 show no explorer request except our own tests (only `/cdn-cgi/trace`
+  scanners). Not checked: logs older than the oldest rotated file.
+- 2026-11-16 (review REV `code-reviewer-261116-0100-account-api-production-build.md`, BLOCKED → fixed):
+  a raw backslash got past the `cdn-cgi/` location (`/cdn-cgi\local/explorer/api` → 200), because nginx
+  matches the decoded URI and the Worker reads `\` as `/`. Fixes: nginx returns 400 for `\x5c|%5[cC]` in
+  `$request_uri` and 404 for `cdn-cgi|__cf_local` (backup `/root/lab.codanang.com.conf.bak-before-raw-uri-check`);
+  `run-account-stack.sh` exports `X_LOCAL_EXPLORER=false X_LOCAL_OBSERVABILITY=false` (local
+  `/cdn-cgi/local/explorer/api` now 404). Script: `umask 077`, no raw JSON parse errors in output.
+  Checked: backslash, `%5c`, upper case, `//`, `%63`, `%2563` variants → 400/404.
+- 2026-11-16: host is API only (user request). nginx: `/` returns `{"service":"kongCowork API"}`;
+  marketing pages (`/pl`, `/pt`, news, guides, compare, providers, changelog, pricing, teams, contact,
+  privacy, terms, dpa, cla, commercial-license, branding, download, sitemap.xml, llms.txt) → 404.
+  App paths stay: `/v1`, `/v2`, `/api`, `/oauth`, `/join`, `/plugins`, `/marketplace`, `/assets`, `/health`.
+  Backup `/root/lab.codanang.com.conf.bak-before-api-only`.

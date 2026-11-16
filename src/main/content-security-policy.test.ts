@@ -54,7 +54,19 @@ describe("buildContentSecurityPolicy", () => {
     expect(readSelfHostedSignalOrigin(undefined, undefined)).toBeNull();
   });
 
+  it("accepts a ws: Signal on a private network address", () => {
+    const origin = readSelfHostedSignalOrigin("http://10.77.77.2:3110", "ws://10.77.77.2:8091/v1/signal");
+    const connect = buildContentSecurityPolicy(true, undefined, origin)
+      .split("; ")
+      .find((directive) => directive.startsWith("connect-src "));
+
+    expect(origin).toBe("ws://10.77.77.2:8091");
+    expect(connect).toContain(" ws://10.77.77.2:8091");
+  });
+
   it.each([
+    ["https://api.example.com", "ws://8.8.8.8/v1/signal", "must be a wss: URL"],
+    ["https://api.example.com", "ws://user:pass@10.77.77.2/v1/signal", "must be a wss: URL"],
     [undefined, "wss://signal.example.com/v1/signal", "OPENBOT_REMOTE_SIGNAL_URL needs OPENBOT_AUTH_API_URL."],
     ["https://api.example.com", "ws://signal.example.com/v1/signal", "must be a wss: URL"],
     ["https://api.example.com", "https://signal.example.com/v1/signal", "must be a wss: URL"],
