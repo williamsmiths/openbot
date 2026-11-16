@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useReducedMotion as useSystemReducedMotion } from "react-native-reanimated";
 import { useUniwind } from "uniwind";
 import { SettingsContent, SettingsRow, SettingsSection } from "@/features/settings/components/settings-content";
 import { SettingsSwitch } from "@/features/settings/components/settings-controls";
-import { type MotionPreference, useMotionPreferences } from "@/features/settings/model/motion";
+import { followsAllAnimations, type MotionPreference, useMotionPreferences } from "@/features/settings/model/motion";
 import { saveMotionPreference } from "@/features/settings/model/motion-storage";
 import { haptics } from "@/shared/lib/haptics";
 import { useReducedMotion } from "@/shared/lib/motion";
@@ -14,6 +15,7 @@ export function AnimationsSettingsScreen() {
   const preferences = useMotionPreferences();
   // Reduced motion, from the device or from the first switch, holds the other animations off.
   const reduced = useReducedMotion();
+  const systemReduced = useSystemReducedMotion();
   const [error, setError] = useState<string | null>(null);
   function save(name: MotionPreference, enabled: boolean) {
     setError(null);
@@ -57,19 +59,22 @@ export function AnimationsSettingsScreen() {
           />
         </SettingsRow>
       </SettingsSection>
-      {animations.map((animation) => (
-        <SettingsSection key={animation.name} footer={animation.footer}>
-          <SettingsRow>
-            <SettingsSwitch
-              value={preferences[animation.name] && !reduced}
-              disabled={!preferences.ready || reduced}
-              label={animation.label}
-              dark={theme === "dark"}
-              onValueChange={(enabled) => save(animation.name, enabled)}
-            />
-          </SettingsRow>
-        </SettingsSection>
-      ))}
+      {animations.map((animation) => {
+        const off = followsAllAnimations(animation.name) ? reduced : systemReduced;
+        return (
+          <SettingsSection key={animation.name} footer={animation.footer}>
+            <SettingsRow>
+              <SettingsSwitch
+                value={preferences[animation.name] && !off}
+                disabled={!preferences.ready || off}
+                label={animation.label}
+                dark={theme === "dark"}
+                onValueChange={(enabled) => save(animation.name, enabled)}
+              />
+            </SettingsRow>
+          </SettingsSection>
+        );
+      })}
     </SettingsContent>
   );
 }

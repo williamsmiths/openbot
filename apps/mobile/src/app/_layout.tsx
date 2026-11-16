@@ -12,6 +12,7 @@ import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ReducedMotionConfig, ReduceMotion } from "react-native-reanimated";
+import { enableFreeze } from "react-native-screens";
 import { useCSSVariable, useUniwind, withUniwind } from "uniwind";
 
 import { MobileAnalyticsLifecycle } from "@/features/analytics/lifecycle";
@@ -47,6 +48,7 @@ import { BloubStage } from "@/shared/components/bloub-stage/bloub-stage";
 import { BloubStageProvider, useBloubStageRequest } from "@/shared/components/bloub-stage/bloub-stage-context";
 import { BLOUB_PRIORITY } from "@/shared/components/bloub-stage/bloub-stage-store";
 import { headerFontOptions, navigationFonts } from "@/shared/lib/app-font";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 import { useReducedMotion } from "@/shared/lib/motion";
 import { nativeSplash } from "@/shared/lib/native-splash";
 import { isAndroid, isIOS } from "@/shared/lib/platform";
@@ -54,6 +56,10 @@ import { queryClient } from "@/shared/lib/query-client";
 import { useText } from "@/shared/lib/text";
 import { untilForeground } from "@/shared/lib/until-foreground";
 import { SplashContentReadyContext, useSplashGate } from "@/shared/lib/use-splash-gate";
+
+// kongCowork light build: a screen under another one stops rendering until it shows again, so a data
+// change does not render every screen of the stack on an old iPhone. It catches up when it comes back.
+if (KONG_LITE) enableFreeze(true);
 
 export const unstable_settings = {
   anchor: "index",

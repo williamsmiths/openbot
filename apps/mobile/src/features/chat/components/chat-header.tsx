@@ -349,6 +349,7 @@ export function ChatHeader({
           ) : null}
         </Stack.Toolbar>
         <SheetScrollEdgeEffect
+          solidBar
           style={{ height: topInset + 82, left: 0, position: "absolute", right: 0, top: 0, zIndex: 10 }}
         />
         {verticalBar ? (
@@ -399,6 +400,7 @@ export function ChatHeader({
         {trailingButtons}
       </View>
       <SheetScrollEdgeEffect
+        solidBar
         style={{ height: topInset + 82, left: 0, position: "absolute", right: 0, top: 0, zIndex: 10 }}
       />
     </>

@@ -5,6 +5,7 @@ import { Stack } from "expo-router/stack";
 import { useThemeColor } from "heroui-native/hooks";
 import { type PropsWithChildren, useCallback, useEffect, useMemo, useRef } from "react";
 import { TextInput } from "react-native";
+import { useReducedMotion as useSystemReducedMotion } from "react-native-reanimated";
 import { useCSSVariable } from "uniwind";
 import { AgentPinTransitionProvider } from "@/features/agents/components/agent-pin-transition";
 import { ChatListPaneProvider } from "@/features/agents/components/chat-list-pane-context";
@@ -40,6 +41,7 @@ import { queryKeys } from "@/features/workspace/model/query-keys";
 import { AdaptiveSplit, useSplitLayout } from "@/shared/components/adaptive-split";
 import { androidBackOptions } from "@/shared/components/android-header-button";
 import { headerFontOptions } from "@/shared/lib/app-font";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 import { useReducedMotion } from "@/shared/lib/motion";
 import { isAndroid, isIOS } from "@/shared/lib/platform";
 import { useText } from "@/shared/lib/text";
@@ -72,7 +74,11 @@ export const unstable_settings = {
 function AuthenticatedStack() {
   const segments = useSegments();
   // Reduced motion, from the device or from Settings, replaces the full-screen slide with a cross-fade.
-  const pushAnimation = useReducedMotion() ? "fade" : "slide_from_right";
+  // The light build turns the app animations off but keeps the native slide, which UIKit draws at no
+  // cost to JavaScript: a cross-fade over a screen that is still loading reads as a stutter.
+  const reducedMotion = useReducedMotion();
+  const systemReducedMotion = useSystemReducedMotion();
+  const pushAnimation = (KONG_LITE ? systemReducedMotion : reducedMotion) ? "fade" : "slide_from_right";
   // Beside the chat list pane, a chat takes the place of the chat before it, so it fades in place.
   const chatAnimation = useSplitLayout() ? "fade" : pushAnimation;
   const { t } = useText();

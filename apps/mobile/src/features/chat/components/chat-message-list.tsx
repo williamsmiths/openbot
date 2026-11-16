@@ -87,6 +87,7 @@ import { agentActivityMood, type MobileAgentActivity } from "@/features/workspac
 import type { PendingApproval } from "@/features/workspace/model/pending-approvals";
 import { useColumnWidth } from "@/shared/components/adaptive-split";
 import { haptics } from "@/shared/lib/haptics";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 import { useMotionPreference, useReducedMotion } from "@/shared/lib/motion";
 import { isAndroid } from "@/shared/lib/platform";
 import { useText } from "@/shared/lib/text";
@@ -183,6 +184,7 @@ const REPLY_APPEAR = { duration: 220, easing: Easing.bezier(0.23, 1, 0.32, 1), r
  * so a one-line bubble is a pill and a taller one keeps this corner, with no measurement.
  */
 const BUBBLE_CORNER = { borderCurve: "circular", borderRadius: 22 } as const;
+const PLAIN_REPLY = { borderRadius: 0, overflow: "visible" } as const;
 
 function ChatBubble({
   children,
@@ -202,7 +204,9 @@ function ChatBubble({
   // An animated size needs a layout event in JS for each new size. Android sends them late enough
   // that the background trails the text, so there, as with the animation off, the background fills
   // the bubble in the same layout pass as the text.
-  const sized = agent && animateSize && !isAndroid;
+  // The light build draws an agent reply as plain text on the canvas, with no background to size.
+  const bubbled = agent && !KONG_LITE;
+  const sized = bubbled && animateSize && !isAndroid;
   const size = useSharedValue({ width: 0, height: 0, measured: false });
   const shown = useSharedValue(collapsed ? 0 : 1);
   useEffect(() => {
@@ -221,7 +225,8 @@ function ChatBubble({
   return (
     <Animated.View
       className={className}
-      style={[style, BUBBLE_CORNER]}
+      // The light build's plain reply has no corners to clip: they cut the first and last letters.
+      style={bubbled || !agent ? [style, BUBBLE_CORNER] : [style, PLAIN_REPLY]}
       onLayout={
         sized
           ? ({ nativeEvent }) => {
@@ -237,7 +242,7 @@ function ChatBubble({
     >
       {/* Only the childless background resizes. The list measures the actual
           content once, without a layout animation moving its native anchor. */}
-      {agent ? (
+      {bubbled ? (
         <Animated.View
           // A new view when the setting changes, so a filled background keeps no animated size.
           key={sized ? "sized" : "filled"}
@@ -764,7 +769,10 @@ const MessageRow = memo(function MessageRow({
           className={
             message.author === "user"
               ? `max-w-full self-end px-4 py-3 ${userBubbleStyle || memberColor ? "" : "bg-control/60"}`
-              : `max-w-full self-start ${waiting ? "" : "px-4 py-3"}`
+              : KONG_LITE
+                ? // kongCowork light build: a reply reads as plain text across the list, as in most chat apps.
+                  `max-w-full self-stretch ${waiting ? "" : "py-1"}`
+                : `max-w-full self-start ${waiting ? "" : "px-4 py-3"}`
           }
           style={[
             { borderCurve: "circular", overflow: "hidden" },
@@ -969,7 +977,9 @@ const MessageRow = memo(function MessageRow({
       ref={selecting ? actions.selectionArea : undefined}
       className={
         message.author === "agent"
-          ? "max-w-full self-start gap-1"
+          ? KONG_LITE
+            ? "max-w-full self-stretch gap-1"
+            : "max-w-full self-start gap-1"
           : message.attachments?.length
             ? "max-w-full self-end gap-1"
             : "max-w-[92%] self-end gap-1"

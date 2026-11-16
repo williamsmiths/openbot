@@ -17,6 +17,7 @@ import { scheduleOnRN } from "react-native-worklets";
 import { AndroidBlurTarget, AndroidHeaderBlur } from "@/shared/components/android-header-blur";
 import { ANDROID_BLUR } from "@/shared/components/glass-capsule";
 import { SheetScrollEdgeEffect } from "@/shared/components/sheet-scroll-edge-effect";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 import { useReducedMotion } from "@/shared/lib/motion";
 import { useBarTop } from "@/shared/lib/native-bar";
 import { isAndroid, isIOS } from "@/shared/lib/platform";
@@ -130,6 +131,8 @@ export function LargeTitle({
       transform: [{ scale: interpolate(scrolled.get(), [-160, 0], [1.08, 1], Extrapolation.CLAMP) }],
     };
   });
+  // The light build shows the title in the bar only, so the content starts right under the bar.
+  if (KONG_LITE) return above ? <View>{above}</View> : null;
   const heading = (
     <Animated.View style={[{ transformOrigin: "left center" }, titleStyle]}>
       <Typography.Heading
@@ -204,7 +207,9 @@ export function LargeTitleBar({
 }>) {
   const insets = useSafeAreaInsets();
   const reduced = useReducedMotion();
-  const [collapsed, setCollapsed] = useState(false);
+  const [scrolledPast, setCollapsed] = useState(false);
+  // The light build has no big title, so the bar always shows the small one.
+  const collapsed = KONG_LITE || scrolledPast;
   // iPhone Duo can put its native bar above the top inset, in one strip with the status bar. There
   // the small title is centered on the bar buttons, which iOS places from the bottom of the bar that
   // the stack reports. With the vertical bar, the screen draws its own bar row.
@@ -240,7 +245,9 @@ export function LargeTitleBar({
     <>
       {isAndroid && ANDROID_BLUR && blurTarget ? (
         <AndroidHeaderBlur target={blurTarget} height={scroll.headerHeight} surface={surface} shape="screen" />
-      ) : isAndroid ? (
+      ) : isAndroid || KONG_LITE ? (
+        // The light build has no live blur on iOS: the bar is solid, as on Android, so the rows that
+        // scroll under it do not show through its title.
         <>
           <View
             pointerEvents="none"
@@ -274,8 +281,10 @@ export function LargeTitleBar({
       {hidden ? null : (
         <Animated.View
           pointerEvents="none"
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
+          // The big title is the heading for screen readers; in the light build the bar title is the only one.
+          accessibilityElementsHidden={!KONG_LITE}
+          importantForAccessibility={KONG_LITE ? "auto" : "no-hide-descendants"}
+          accessibilityRole={KONG_LITE ? "header" : undefined}
           style={[
             {
               position: "absolute",

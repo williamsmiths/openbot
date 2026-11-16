@@ -16,6 +16,7 @@ import { useMobileSession } from "@/features/auth/context/mobile-session-context
 import { SettingsContent, SettingsRow, SettingsSection } from "@/features/settings/components/settings-content";
 import { RowIcon } from "@/features/settings/components/settings-row-icon";
 import { ProfileAvatar } from "@/shared/components/profile-avatar";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 import { useText } from "@/shared/lib/text";
 
 export function SettingsScreen() {
@@ -72,18 +73,21 @@ export function SettingsScreen() {
           <Typography.Paragraph>{t("mobile.settings.conversations.hiddenChats")}</Typography.Paragraph>
         </SettingsRow>
       </SettingsSection>
-      <SettingsSection>
-        <SettingsRow
-          leading={<RowIcon icon={MessageCircleQuestionMark} />}
-          onPress={() => router.push("/settings/support")}
-          supportingText={t("mobile.settings.home.supportHint")}
-        >
-          <Typography.Paragraph>{t("mobile.settings.home.support")}</Typography.Paragraph>
-        </SettingsRow>
-        <SettingsRow leading={<RowIcon icon={Info} />} onPress={() => router.push("/settings/about")}>
-          <Typography.Paragraph>{t("mobile.settings.home.about")}</Typography.Paragraph>
-        </SettingsRow>
-      </SettingsSection>
+      {/* The light build for old iPhones has no Support and About. */}
+      {KONG_LITE ? null : (
+        <SettingsSection>
+          <SettingsRow
+            leading={<RowIcon icon={MessageCircleQuestionMark} />}
+            onPress={() => router.push("/settings/support")}
+            supportingText={t("mobile.settings.home.supportHint")}
+          >
+            <Typography.Paragraph>{t("mobile.settings.home.support")}</Typography.Paragraph>
+          </SettingsRow>
+          <SettingsRow leading={<RowIcon icon={Info} />} onPress={() => router.push("/settings/about")}>
+            <Typography.Paragraph>{t("mobile.settings.home.about")}</Typography.Paragraph>
+          </SettingsRow>
+        </SettingsSection>
+      )}
     </SettingsContent>
   );
 }

@@ -1,5 +1,9 @@
 import { useReducedMotion as useSystemReducedMotion } from "react-native-reanimated";
-import { type MotionPreference, useMotionPreferences } from "../../features/settings/model/motion";
+import {
+  followsAllAnimations,
+  type MotionPreference,
+  useMotionPreferences,
+} from "../../features/settings/model/motion";
 
 /**
  * True when the system Reduce Motion setting is on, or when Settings turns animations off in the app.
@@ -27,6 +31,7 @@ export function useTransitionMode(name: Exclude<MotionPreference, "allAnimations
 /** True when one animation plays: Settings keeps it on, and motion is not reduced. */
 export function useMotionPreference(name: Exclude<MotionPreference, "allAnimations">): boolean {
   const reduced = useReducedMotion();
+  const system = useSystemReducedMotion();
   const enabled = useMotionPreferences((state) => state[name]);
-  return enabled && !reduced;
+  return enabled && !(followsAllAnimations(name) ? reduced : system);
 }

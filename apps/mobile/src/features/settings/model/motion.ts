@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { KONG_LITE } from "@/shared/lib/kong-lite";
 
 /** Animation choices for this device. Each value is true when the animation plays. */
 export interface MotionPreferences {
@@ -17,15 +18,21 @@ export interface MotionPreferences {
 export type MotionPreference = keyof MotionPreferences;
 
 // kongCowork fork: the light build for old iPhones (`EXPO_PUBLIC_KONG_LITE=1`) starts with every
-// animation off. Settings > Animations turns them on again.
-const ANIMATIONS_ON = process.env.EXPO_PUBLIC_KONG_LITE !== "1";
+// animation off except the reply that types out, which plays without the others. Settings >
+// Animations turns them on again.
+const ANIMATIONS_ON = !KONG_LITE;
 const DEFAULTS: MotionPreferences = {
   allAnimations: ANIMATIONS_ON,
   agentFaces: ANIMATIONS_ON,
   composerResize: ANIMATIONS_ON,
-  textReveal: ANIMATIONS_ON,
+  textReveal: true,
   searchTransitions: ANIMATIONS_ON,
 };
+
+/** True when the animation stops while `allAnimations` is off. In the light build, the reply still types out. */
+export function followsAllAnimations(name: Exclude<MotionPreference, "allAnimations">): boolean {
+  return !(KONG_LITE && name === "textReveal");
+}
 export const MOTION_PREFERENCE_NAMES: readonly MotionPreference[] = [
   "allAnimations",
   "agentFaces",
