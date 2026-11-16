@@ -29,7 +29,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { request as httpRequest } from "node:http";
+import { createServer as createHttpServer, request as httpRequest } from "node:http";
 import { homedir, tmpdir } from "node:os";
 import { join, parse, resolve } from "node:path";
 import { isDeepStrictEqual } from "node:util";
@@ -235,6 +235,7 @@ import {
   INSTANCE_TRANSFER_CAPABILITY,
   INSTANCE_TRANSFER_ROUTES,
 } from "@openbot/contracts/team-protocol/instance-transfer-v1";
+import { KONG_GITHUB_CAPABILITY, KONG_GITHUB_ROUTES } from "@openbot/contracts/team-protocol/kong-github-v1";
 import {
   LIBRARY_FOLDERS_CAPABILITY,
   LIBRARY_FOLDERS_ROUTES,
@@ -391,6 +392,7 @@ import {
   INSTANCE_TRANSFER_MANIFEST,
   INSTANCE_TRANSFER_VERSION,
 } from "../src/main/instance-transfer-manifest";
+import { KongCompanion } from "../src/main/kong-companion";
 import { LibraryFoldersService, type LibraryFoldersSources } from "../src/main/library-folders-service";
 import { MachineAlertMonitor, MachineAlertPreferenceStore } from "../src/main/machine-alerts";
 import { MachineDetailsSampler } from "../src/main/machine-details";
@@ -1990,6 +1992,45 @@ const machine = new MachineAlertMonitor({
 });
 // The real sampler over this machine: it reads the OS, the CPU, `nvidia-smi` (when present) and /proc.
 const machineDetails = new MachineDetailsSampler(root);
+// `kong-github-v1`: a fake companion on a free loopback port, behind the real proxy and a token file.
+const KONG_FAKE_TOKEN = "kc-e2e-token-0123456789";
+const kongSeen: { method: string; url: string; authorization: string; body: string }[] = [];
+const kongCompanionServer = createHttpServer((incoming, outgoing) => {
+  const chunks: Buffer[] = [];
+  incoming.on("data", (chunk: Buffer) => chunks.push(chunk));
+  incoming.on("end", () => {
+    const body = Buffer.concat(chunks).toString("utf8");
+    kongSeen.push({
+      method: incoming.method ?? "",
+      url: incoming.url ?? "",
+      authorization: String(incoming.headers.authorization ?? ""),
+      body,
+    });
+    const reply = (status: number, value: unknown) => {
+      outgoing.writeHead(status, { "content-type": "application/json" });
+      outgoing.end(JSON.stringify(value));
+    };
+    if (incoming.headers.authorization !== `Bearer ${KONG_FAKE_TOKEN}`) return reply(401, { error: "no" });
+    if (body.includes("missing/none") || (incoming.url ?? "").includes("missing%2Fnone"))
+      return reply(404, { error: `not found ${KONG_FAKE_TOKEN}` });
+    if (body.includes("boom/boom")) return reply(500, { error: `boom ${KONG_FAKE_TOKEN}` });
+    if ((incoming.url ?? "").startsWith("/kc/github/analyses"))
+      return reply(200, { analyses: [{ repo: "a/b", status: "done", extra: 1 }] });
+    if ((incoming.url ?? "").startsWith("/kc/github/analysis"))
+      return reply(200, { repo: "a/b", status: "running", stage: "fetch", secret_extra: "x" });
+    return reply(200, {
+      kind: "trending",
+      since: "daily",
+      repos: [{ full_name: "a/b", owner: "a", name: "b", stars: 5, junk: 1 }],
+    });
+  });
+});
+await new Promise<void>((resolveListen) => kongCompanionServer.listen(0, "127.0.0.1", resolveListen));
+const kongAddress = kongCompanionServer.address();
+const kongPort = typeof kongAddress === "object" && kongAddress ? kongAddress.port : 0;
+const kongEnvPath = join(root, "kc-companion.env");
+writeFileSync(kongEnvPath, `# companion\nOTHER=1\nKC_APP_TOKEN="${KONG_FAKE_TOKEN}"\n`);
+const kongGithub = new KongCompanion(kongEnvPath, `http://127.0.0.1:${kongPort}`);
 const database = new OpenBotDatabase(join(root, "user-data"));
 let server: TeamApiServer | null = null;
 let channelHost: TeamApiServer | null = null;
@@ -2384,6 +2425,7 @@ try {
     browserProfiles,
     machine,
     machineDetails,
+    kongGithub,
     // The host reads its own Hermes folder: one profile under a token.
     hermesImport: {
       read: () =>
@@ -6536,6 +6578,71 @@ try {
     );
     machineDetails.close();
 
+    // ---- GitHub through the KongCowork companion (kong-github-v1) ----
+    const kongCapabilities = [KONG_GITHUB_CAPABILITY];
+    const kongCall = (path: string, json: Json, token = adaToken, withCapability = true) =>
+      call("POST", path, { token, json, ...(withCapability ? { capabilities: kongCapabilities } : {}) });
+    const kongWithout = await kongCall(KONG_GITHUB_ROUTES.analyses, {}, adaToken, false);
+    const kongMember = await kongCall(KONG_GITHUB_ROUTES.analyses, {}, bobToken);
+    check(
+      "kong github without the capability gets 400, and a member gets 403",
+      kongWithout.status === 400 && kongMember.status === 403,
+      [summary(kongWithout), summary(kongMember)],
+    );
+    kongSeen.length = 0;
+    const kongDiscover = await kongCall(KONG_GITHUB_ROUTES.discover, {
+      kind: "trending",
+      since: "daily",
+      lang: "typescript",
+      page: 2,
+    });
+    const kongAnalyses = await kongCall(KONG_GITHUB_ROUTES.analyses, {});
+    const kongRead = await kongCall(KONG_GITHUB_ROUTES.analysis, { repo: "a/b" });
+    const kongStart = await kongCall(KONG_GITHUB_ROUTES.analysis, { repo: "a/b", start: true, force: true });
+    const kongAsk = await kongCall(KONG_GITHUB_ROUTES.ask, { repo: "a/b", question: "What is it?" });
+    check(
+      "an admin reads discover, analyses, one analysis, starts it and asks: the host adds the token and trims the answer",
+      kongDiscover.status === 200 &&
+        isDeepStrictEqual(field(kongDiscover.body, "repos"), [{ full_name: "a/b", owner: "a", name: "b", stars: 5 }]) &&
+        kongAnalyses.status === 200 &&
+        kongRead.status === 200 &&
+        field(kongRead.body, "secret_extra") === undefined &&
+        kongStart.status === 200 &&
+        kongAsk.status === 200 &&
+        isDeepStrictEqual(
+          kongSeen.map((item) => [item.method, item.url]),
+          [
+            ["GET", "/kc/github/trending?since=daily&lang=typescript&page=2"],
+            ["GET", "/kc/github/analyses"],
+            ["GET", "/kc/github/analysis?repo=a%2Fb"],
+            ["POST", "/kc/github/analysis"],
+            ["POST", "/kc/github/analysis/ask"],
+          ],
+        ) &&
+        kongSeen.every((item) => item.authorization === `Bearer ${KONG_FAKE_TOKEN}`) &&
+        kongSeen[3]?.body === JSON.stringify({ repo: "a/b", force: true }) &&
+        kongSeen[4]?.body === JSON.stringify({ repo: "a/b", question: "What is it?" }),
+      [kongDiscover, kongAnalyses, kongRead, kongStart, kongAsk].map(summary),
+    );
+    const kongMissing = await kongCall(KONG_GITHUB_ROUTES.analysis, { repo: "missing/none" });
+    const kongBroken = await kongCall(KONG_GITHUB_ROUTES.ask, { repo: "boom/boom", question: "Why?" });
+    check(
+      "a companion 404 stays 404, a 500 becomes 502, and no answer holds the token",
+      kongMissing.status === 404 &&
+        kongBroken.status === 502 &&
+        !kongMissing.text.includes(KONG_FAKE_TOKEN) &&
+        !kongBroken.text.includes(KONG_FAKE_TOKEN),
+      [summary(kongMissing), summary(kongBroken)],
+    );
+    const kongNoKeyPath = join(root, "kc-companion-nokey.env");
+    writeFileSync(kongNoKeyPath, "OTHER=1\n");
+    check(
+      "the capability is not served without the token file or the key",
+      !new KongCompanion(kongNoKeyPath).available() &&
+        !new KongCompanion(join(root, "kc-companion-absent.env")).available() &&
+        kongGithub.available(),
+      null,
+    );
   }
 
   // ---- Keys of the key-only providers (providers-v8) ----
@@ -11310,6 +11417,7 @@ try {
   if (channelService) await Effect.runPromise(channelService.stop());
   if (server) await Effect.runPromise(server.stop());
   database.close();
+  await new Promise<void>((resolveClose) => kongCompanionServer.close(() => resolveClose()));
   rmSync(root, { recursive: true, force: true });
 }
 

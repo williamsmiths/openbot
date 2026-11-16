@@ -274,6 +274,7 @@ import { loadIngressQueueKey } from "./ingress-queue-key";
 import { InstanceTransferService } from "./instance-transfer-service";
 import { InterfaceSizeService } from "./interface-size-service";
 import { prepareToolRuntimeForTest } from "./ipc/mcp-server-handlers";
+import { KongCompanion } from "./kong-companion";
 import { LanguageService } from "./language-service";
 import { LibraryFoldersService } from "./library-folders-service";
 import { LinkAccountService } from "./link-account-service";
@@ -2782,6 +2783,8 @@ export async function createApplicationServices({
   teardown.push(TEARDOWN_ORDER.machineAlerts, "the machine alert check", () => machineAlerts.close());
   // Samples only while an owner or admin watches (`machine-resources-v2`).
   const machineDetails = new MachineDetailsSampler(storageSources.roots.data);
+  // `kong-github-v1`: advertised only while the companion token file holds the key.
+  const kongGithub = new KongCompanion();
   teardown.push(TEARDOWN_ORDER.machineAlerts, "the machine monitor", () => machineDetails.close());
   ingressHostId = () => teamStore.getIdentity()?.serverId ?? null;
   signalIngress.reconnect();
@@ -3185,6 +3188,7 @@ export async function createApplicationServices({
     machine: machineAlerts,
     // Present, so the host advertises `machine-resources-v2`. The route is admin-only.
     machineDetails,
+    kongGithub,
     // Present, so the host advertises `background-processes-v1`. The routes are admin-only. A Windows
     // host answers a null list, as Settings > Agents does there.
     backgroundProcesses: {

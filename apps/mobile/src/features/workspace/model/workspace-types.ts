@@ -179,6 +179,13 @@ import type {
   SaveEventRoutineResult,
   WebhookSecret,
 } from "@openbot/contracts/ipc-events";
+import type {
+  KongAnalysisRow,
+  KongRepoAnalysis,
+  KongTrendKind,
+  KongTrendList,
+  KongTrendSince,
+} from "@openbot/contracts/team-protocol/kong-github-v1";
 import type { LiveVoiceSessionResponse, LiveVoiceStartRequest } from "@openbot/contracts/team-protocol/live-voice-v1";
 import type { MachineDetails } from "@openbot/contracts/team-protocol/machine-resources-v2";
 import type { QueueEditRequest } from "@openbot/contracts/team-protocol/queue-edit-v1";

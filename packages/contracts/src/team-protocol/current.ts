@@ -94,6 +94,7 @@ import { HOST_UPDATE_CAPABILITY } from "./host-update-v1";
 import { HOSTED_SITES_CAPABILITY } from "./hosted-sites-v1";
 import { INSTANCE_TRANSFER_CHUNKS_CAPABILITY } from "./instance-transfer-chunks-v1";
 import { INSTANCE_TRANSFER_CAPABILITY } from "./instance-transfer-v1";
+import { KONG_GITHUB_CAPABILITY } from "./kong-github-v1";
 import { LIBRARY_FOLDERS_CAPABILITY } from "./library-folders-v1";
 import { LIVE_ACTIVITY_PUSH_CAPABILITY } from "./live-activity-push-v1";
 import { LIVE_VOICE_CAPABILITY } from "./live-voice-v1";
@@ -590,6 +591,7 @@ export const TEAM_CURRENT_CAPABILITIES = [
   LIBRARY_FOLDERS_CAPABILITY,
   PROVIDER_ACCOUNT_POOL_CAPABILITY,
   MACHINE_DETAILS_CAPABILITY,
+  KONG_GITHUB_CAPABILITY,
   PROVIDER_USAGE_TERTIARY_CAPABILITY,
   TEAM_AGENT_LANE_TURNS_CAPABILITY,
 ] as const;
@@ -709,6 +711,7 @@ export const TEAM_BOOTSTRAP_CAPABILITIES = TEAM_CURRENT_CAPABILITIES.filter(
     capability !== STORAGE_DISK_CAPABILITY &&
     capability !== MACHINE_RESOURCES_CAPABILITY &&
     capability !== MACHINE_DETAILS_CAPABILITY &&
+    capability !== KONG_GITHUB_CAPABILITY &&
     capability !== PROVIDER_USAGE_TERTIARY_CAPABILITY &&
     capability !== TEAM_AGENT_LANE_TURNS_CAPABILITY &&
     capability !== PROMPT_CACHE_TTL_CAPABILITY &&
@@ -893,6 +896,7 @@ export const TEAM_PROTOCOL_V9_ONLY_CAPABILITIES: ReadonlySet<string> = new Set<T
   LIBRARY_FOLDERS_CAPABILITY,
   PROVIDER_ACCOUNT_POOL_CAPABILITY,
   MACHINE_DETAILS_CAPABILITY,
+  KONG_GITHUB_CAPABILITY,
   PROVIDER_USAGE_TERTIARY_CAPABILITY,
   TEAM_AGENT_LANE_TURNS_CAPABILITY,
 ]);
@@ -970,6 +974,7 @@ export function legacyTeamCapabilities(capabilities: readonly string[]): string[
       capability !== STORAGE_DISK_CAPABILITY &&
       capability !== MACHINE_RESOURCES_CAPABILITY &&
       capability !== MACHINE_DETAILS_CAPABILITY &&
+      capability !== KONG_GITHUB_CAPABILITY &&
       capability !== PROVIDER_USAGE_TERTIARY_CAPABILITY &&
       capability !== TEAM_AGENT_LANE_TURNS_CAPABILITY &&
       capability !== PROMPT_CACHE_TTL_CAPABILITY &&

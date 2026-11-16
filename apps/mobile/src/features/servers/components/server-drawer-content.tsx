@@ -15,6 +15,7 @@ import Plus from "lucide-react-native/icons/plus";
 import Settings from "lucide-react-native/icons/settings";
 import Settings2 from "lucide-react-native/icons/settings-2";
 import Store from "lucide-react-native/icons/store";
+import TrendingUp from "lucide-react-native/icons/trending-up";
 import UsersRound from "lucide-react-native/icons/users-round";
 import Waypoints from "lucide-react-native/icons/waypoints";
 import {
@@ -653,6 +654,7 @@ function DrawerServerTools({
       routines: { pathname: "/server-routines", params: { serverId } },
       workflows: { pathname: "/server-workflows", params: { serverId } },
       marketplace: { pathname: "/server-marketplace", params: { serverId } },
+      trending: "/github-trending",
       usage: { pathname: "/server-usage", params: { serverId } },
       library: { pathname: "/server-library", params: { serverId } },
       remoteDesktop: { pathname: "/remote-desktop/[serverId]", params: { serverId } },
@@ -681,6 +683,7 @@ function DrawerServerTools({
         }
       : null,
     marketplace: { icon: Store, label: t("mobile.app.route.marketplace") },
+    trending: { icon: TrendingUp, label: t("mobile.app.route.trending") },
     usage: { icon: ChartArea, label: t("mobile.app.route.usage"), value: values.usage },
     library: library ? { icon: GalleryVerticalEnd, label: t("mobile.app.route.library") } : null,
     remoteDesktop: remoteDesktop ? { icon: Monitor, label: t("mobile.app.route.remoteDesktop") } : null,

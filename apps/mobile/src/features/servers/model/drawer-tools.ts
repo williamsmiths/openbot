@@ -9,6 +9,7 @@ const DRAWER_TOOL_IDS = [
   "routines",
   "workflows",
   "marketplace",
+  "trending",
   "usage",
   "library",
   "remoteDesktop",

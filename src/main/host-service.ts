@@ -139,6 +139,7 @@ interface HostServiceOptions {
   libraryFolders?: ForwardedApiOptions["libraryFolders"];
   machine?: ForwardedApiOptions["machine"];
   machineDetails?: ForwardedApiOptions["machineDetails"];
+  kongGithub?: ForwardedApiOptions["kongGithub"];
   backgroundProcesses?: ForwardedApiOptions["backgroundProcesses"];
   liveVoice?: ForwardedApiOptions["liveVoice"];
   hostedSites?: ForwardedApiOptions["hostedSites"];
@@ -506,6 +507,7 @@ export class HostService extends EventEmitter<HostEvents> {
       ...(options.libraryFolders === undefined ? {} : { libraryFolders: options.libraryFolders }),
       ...(options.machine === undefined ? {} : { machine: options.machine }),
       ...(options.machineDetails === undefined ? {} : { machineDetails: options.machineDetails }),
+      ...(options.kongGithub === undefined ? {} : { kongGithub: options.kongGithub }),
       ...(options.backgroundProcesses === undefined ? {} : { backgroundProcesses: options.backgroundProcesses }),
       ...(options.liveVoice === undefined ? {} : { liveVoice: options.liveVoice }),
       ...(options.hostedSites === undefined ? {} : { hostedSites: options.hostedSites }),

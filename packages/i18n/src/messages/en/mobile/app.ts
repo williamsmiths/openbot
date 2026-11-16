@@ -34,6 +34,7 @@ export const messages = defineMessages("mobile.app", {
   "mobile.app.route.usage": "Usage",
   "mobile.app.route.remoteDesktop": "Control computer",
   "mobile.app.route.marketplace": "Marketplace",
+  "mobile.app.route.trending": "GitHub Trending",
   "mobile.app.route.library": "Library",
   // The quick actions of the app icon, which the phone shows when the icon is held.
   "mobile.app.quickAction.search": "Search",

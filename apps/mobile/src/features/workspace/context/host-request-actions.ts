@@ -125,6 +125,13 @@ import { HOST_TIMEZONE_CAPABILITY } from "@openbot/contracts/team-protocol/host-
 import { HOST_UPDATE_CAPABILITY } from "@openbot/contracts/team-protocol/host-update-v1";
 import { HOSTED_SITES_CAPABILITY } from "@openbot/contracts/team-protocol/hosted-sites-v1";
 import { INSTANCE_TRANSFER_CAPABILITY } from "@openbot/contracts/team-protocol/instance-transfer-v1";
+import {
+  decodeKongAnalysisRows,
+  decodeKongRepoAnalysis,
+  decodeKongTrendList,
+  KONG_GITHUB_CAPABILITY,
+  KONG_GITHUB_ROUTES,
+} from "@openbot/contracts/team-protocol/kong-github-v1";
 import { LIVE_VOICE_CAPABILITY } from "@openbot/contracts/team-protocol/live-voice-v1";
 import {
   MACHINE_RESOURCES_CAPABILITY,

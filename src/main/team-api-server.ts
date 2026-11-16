@@ -177,6 +177,7 @@ import {
   type HostRestartState,
 } from "@openbot/contracts/team-protocol/host-update-v1";
 import { teamHttpCodec } from "@openbot/contracts/team-protocol/http-codecs";
+import { KONG_GITHUB_CAPABILITY } from "@openbot/contracts/team-protocol/kong-github-v1";
 import { LIBRARY_FOLDERS_CAPABILITY } from "@openbot/contracts/team-protocol/library-folders-v1";
 import { LIVE_VOICE_CAPABILITY } from "@openbot/contracts/team-protocol/live-voice-v1";
 import {
@@ -341,6 +342,7 @@ import { routeHostUpdate } from "./team-api/route-host-update";
 import { routeHostedSites } from "./team-api/route-hosted-sites";
 import { routeInstanceTransfer } from "./team-api/route-instance-transfer";
 import { routeInstanceTransferChunks } from "./team-api/route-instance-transfer-chunks";
+import { routeKongGithub } from "./team-api/route-kong-github";
 import { routeLibraryFolders } from "./team-api/route-library-folders";
 import { routeLiveActivityPush } from "./team-api/route-live-activity-push";
 import { liveVoiceWireEvent, routeLiveVoice, TeamLiveVoiceSessions } from "./team-api/route-live-voice";
@@ -2548,6 +2550,7 @@ export class TeamApiServer {
             return this.#options.storage !== undefined && this.#options.channels !== undefined;
           if (capability === MACHINE_RESOURCES_CAPABILITY) return this.#options.machine !== undefined;
           if (capability === MACHINE_DETAILS_CAPABILITY) return this.#options.machineDetails !== undefined;
+          if (capability === KONG_GITHUB_CAPABILITY) return this.#options.kongGithub?.available() === true;
           if (capability === BACKGROUND_PROCESSES_CAPABILITY) return this.#options.backgroundProcesses !== undefined;
           // The routes use the agent operations, which every host has. A channel owner also needs `channel-chats-v1`.
           if (capability === ROUTINES_ONCE_CAPABILITY) return true;

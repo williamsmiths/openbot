@@ -21,6 +21,7 @@ import type { HostEventsApi } from "../host-events-api";
 import type { HostEventsService } from "../host-events-service";
 import type { HostReleaseService } from "../host-release-service";
 import type { HostService } from "../host-service";
+import type { KongCompanion } from "../kong-companion";
 import type { MachineAlertMonitor } from "../machine-alerts";
 import type { MachineDetailsSampler } from "../machine-details";
 import type { MemoryReviewPreferenceStore } from "../memory-review-preference-store";
@@ -322,6 +323,8 @@ export type TeamApiMachine = Pick<
 >;
 /** `machine-resources-v2`: the live machine monitor. The route is admin-only. */
 export type TeamApiMachineDetails = Pick<MachineDetailsSampler, "details">;
+/** `kong-github-v1`: the KongCowork companion on this machine. The routes are admin-only. */
+export type TeamApiKongGithub = Pick<KongCompanion, "available" | "call">;
 /**
  * `background-processes-v1`: the programs that the host's agents left running. The routes are
  * admin-only. The list redacts each command line, as Settings > Agents on this computer does.
@@ -741,6 +744,7 @@ export interface TeamApiOptions {
   libraryFolders?: TeamApiLibraryFolders;
   machine?: TeamApiMachine;
   machineDetails?: TeamApiMachineDetails;
+  kongGithub?: TeamApiKongGithub;
   backgroundProcesses?: TeamApiBackgroundProcesses;
   liveVoice?: TeamApiLiveVoice;
   hostedSites?: TeamApiHostedSites;
